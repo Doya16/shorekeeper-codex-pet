@@ -1,0 +1,21 @@
+Shorekeeper companion 0.8 - bundled components
+
+Python: Python Software Foundation License. https://www.python.org/
+PySide6 / Qt 6.11.2: LGPLv3 / GPLv3 / commercial licensing. https://www.qt.io/qt-for-python
+The distributed Qt libraries remain dynamically linked in _internal and can be replaced.
+Pillow: HPND license. https://python-pillow.org/
+SoundFile: BSD 3-Clause; libsndfile: LGPL-2.1-or-later. https://python-soundfile.readthedocs.io/
+CFFI: MIT license. https://cffi.readthedocs.io/
+NumPy: BSD 3-Clause, with bundled dependency notices in _internal/numpy. https://numpy.org/
+imageio-ffmpeg 0.6.0: BSD-2-Clause. https://github.com/imageio/imageio-ffmpeg
+Bundled FFmpeg 7.1 essentials build by Gyan: GPL-3.0-or-later, invoked as a separate local converter.
+License, build configuration and source locations are included in licenses/.
+PyInstaller: GPL with bootloader distribution exception. https://pyinstaller.org/
+
+LXGW WenKai: SIL Open Font License 1.1. See fonts/LXGWWenKai-OFL.txt
+Source: https://github.com/lxgw/LxgwWenKai
+ZCOOL KuaiLe: SIL Open Font License 1.1. See fonts/ZCOOLKuaiLe-OFL.txt
+Source: https://github.com/google/fonts/tree/main/ofl/zcoolkuaile
+Fonts are unmodified; source URLs and SHA-256 hashes are in fonts/sources.json.
+
+Character artwork and voice assets are not covered by the software or font licenses above. Rights remain with their respective rights holders.

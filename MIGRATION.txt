@@ -1,0 +1,15 @@
+守岸人 Codex 桌宠 · Windows 便携版 0.8
+
+1. 在 Windows 10/11 x64 上安装并登录 Codex。
+2. 完整解压 ZIP 到可写目录，双击 Shorekeeper.exe。
+3. 右键 → 自动跟随当前任务。
+4. 交互工作室：为每种动作设置 GIF、播放、气泡和语音。
+5. GIF 素材 → 打开素材目录；放入 GIF/WebP/PNG/JPG/JPEG 后刷新并选择。
+6. 语音支持 WAV/MP3/OGG/FLAC/M4A/AAC；字体支持 TTF/OTF/TTC。
+7. 右键 → 调整大小，或 Ctrl + 滚轮实时缩放。
+8. 外观、声音与迁移 → 保存与迁移，可保存、导入或导出全部配置和素材。
+
+首次启动使用附带的默认配置。声音默认开启、音量 10%，可在声音页调整。
+修改自动保存在 settings.json；GIF、字体、音频和默认配置随 ZIP 迁移。
+再次迁移请导出 Windows 便携完整包，在新电脑完整解压后运行。
+CreateShortcut.vbs 可创建桌面快捷方式。

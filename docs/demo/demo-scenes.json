@@ -1,0 +1,130 @@
+{
+  "seconds": 98,
+  "width": 1600,
+  "height": 1000,
+  "fps": 15,
+  "example_task": true,
+  "desktop_capture": false,
+  "system_audio": false,
+  "voices": [
+    {
+      "state": "thinking",
+      "start": 5.27,
+      "seconds": 2.98,
+      "source_seconds": 2.98,
+      "complete": true
+    },
+    {
+      "state": "done",
+      "start": 24.16,
+      "seconds": 1.85,
+      "source_seconds": 1.85,
+      "complete": true
+    },
+    {
+      "state": "drag",
+      "start": 28.14,
+      "seconds": 2.74,
+      "source_seconds": 2.74,
+      "complete": true
+    },
+    {
+      "state": "drop",
+      "start": 32.12,
+      "seconds": 0.78,
+      "source_seconds": 0.78,
+      "complete": true
+    },
+    {
+      "state": "doubleclick",
+      "start": 35.2,
+      "seconds": 1.59,
+      "source_seconds": 1.59,
+      "complete": true
+    },
+    {
+      "state": "pet",
+      "start": 39.59,
+      "seconds": 4.24,
+      "source_seconds": 4.24,
+      "complete": true
+    },
+    {
+      "state": "thinking",
+      "start": 66.42,
+      "seconds": 1.54,
+      "source_seconds": 1.54,
+      "complete": true
+    }
+  ],
+  "scenes": [
+    {
+      "time": 0.0,
+      "scene": "cover"
+    },
+    {
+      "time": 5.0,
+      "scene": "thinking"
+    },
+    {
+      "time": 11.0,
+      "scene": "reading"
+    },
+    {
+      "time": 16.0,
+      "scene": "writing"
+    },
+    {
+      "time": 21.0,
+      "scene": "thinking-again"
+    },
+    {
+      "time": 24.0,
+      "scene": "done"
+    },
+    {
+      "time": 28.0,
+      "scene": "drag"
+    },
+    {
+      "time": 32.0,
+      "scene": "drop"
+    },
+    {
+      "time": 35.0,
+      "scene": "double"
+    },
+    {
+      "time": 39.0,
+      "scene": "pet"
+    },
+    {
+      "time": 45.0,
+      "scene": "gallery"
+    },
+    {
+      "time": 52.0,
+      "scene": "import"
+    },
+    {
+      "time": 59.0,
+      "scene": "playback"
+    },
+    {
+      "time": 66.0,
+      "scene": "voice"
+    },
+    {
+      "time": 76.0,
+      "scene": "size"
+    },
+    {
+      "time": 85.0,
+      "scene": "transfer"
+    },
+    {
+      "time": 94.0,
+      "scene": "outro"
+    }
+  ]
+}

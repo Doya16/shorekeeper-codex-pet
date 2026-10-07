@@ -2,7 +2,7 @@
 import json,pathlib
 from PySide6.QtCore import Qt,Signal
 from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QListWidget,QListWidgetItem,QLineEdit,QPlainTextEdit,QPushButton,QFileDialog,QLabel,QInputDialog
-from voice_pool import clean_clips,clip_bubble_text
+from .voice_pool import clean_clips,clip_bubble_text
 
 class VoicePoolEditor(QWidget):
     changed=Signal(list)

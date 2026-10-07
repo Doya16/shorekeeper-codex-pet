@@ -6,10 +6,11 @@ from PySide6.QtGui import QImage,QPainter,QColor
 from PySide6.QtWidgets import QApplication
 from PySide6.QtTest import QTest
 from PySide6.QtMultimedia import QMediaPlayer
-from audio_player import VoicePlayer
-from config_io import migrate_settings
-import pet as module
-
+from shorekeeper_pet.audio_player import VoicePlayer
+from shorekeeper_pet.audio_player import resolve_audio
+from shorekeeper_pet.presets import load_defaults
+from shorekeeper_pet.config_io import migrate_settings
+from shorekeeper_pet import pet as module
 app=QApplication([]); app.setQuitOnLastWindowClosed(False)
 checks=[]
 def wait_until(predicate,seconds=8):
@@ -27,7 +28,7 @@ with tempfile.TemporaryDirectory() as td:
     long=dict(file=str(root/'long.wav'),bubble_text='这句话会完整说完，标题跟随它的状态。')
     short=dict(file=str(root/'next.wav'),bubble_text='接下来的一句。')
     for state,clip in [('pet',long),('idle',short),('drop',short),('thinking',long)]:
-        companion.set_binding(state,audio_clips=[clip],bubble_mode='auto',bubble_seconds=.1)
+        companion.set_binding(state,audio_clips=[clip],bubble_mode='audio',bubble_seconds=.1)
     companion.set_binding('pet',playback='loop',loop_seconds=.15)
     finished=[]
     companion.voice.player.mediaStatusChanged.connect(lambda status:finished.append(companion.voice.selected_state) if status==QMediaPlayer.MediaStatus.EndOfMedia else None)
@@ -61,8 +62,8 @@ with tempfile.TemporaryDirectory() as td:
     companion.update_layout(); area=app.primaryScreen().availableGeometry()
     for x in [area.left(),area.right()]:
         companion.move(x,area.top()+300); companion.clamp_position(); companion.update_bubble(); app.processEvents()
-        assert companion.width()==round((companion.options['pet_size']+8)*companion.scale_factor)
-        assert companion.quota_rect.width()<=companion.pet_rect.width()
+        assert companion.width()==round(companion.scene_width*companion.scale_factor)
+        assert companion.quota_rect.width()<=companion.scene_width
         assert companion.quota_rect.center().x()==companion.pet_rect.center().x()
         assert area.contains(companion.bubble_window.frameGeometry())
     companion.move(area.left(),area.top()+300); companion.update_bubble(); app.processEvents()
@@ -89,10 +90,14 @@ with tempfile.TemporaryDirectory() as td:
     checks.append('quota state removed; bar click is passive; refresh menu updates data without animation or panel')
     companion.timer.stop(); companion.voice.stop(); companion.binding_editor.hide(); companion.hide()
 
-if '--audio-library' in sys.argv:
+if '--audio-library' in sys.argv or '--unbound-audio' in sys.argv:
     import soundfile
-    settings=json.loads((module.ROOT/'settings.json').read_text('utf8'))
-    paths=sorted({clip['file'] for binding in settings['bindings'].values() for clip in binding.get('audio_clips',[])})
+    settings=load_defaults(module.ROOT)
+    paths=sorted({str(resolve_audio(clip['file'],settings['appearance']['audio_directory'],module.ROOT)) for binding in settings['bindings'].values() for clip in binding.get('audio_clips',[])})
+    if '--unbound-audio' in sys.argv:
+        from shorekeeper_pet.audio_player import AUDIO_EXTS
+        bound=set(paths)
+        paths=sorted(str(p) for p in (module.ROOT/settings['appearance']['audio_directory']).rglob('*') if p.suffix.lower() in AUDIO_EXTS and str(p) not in bound)
     report=[]
     with tempfile.TemporaryDirectory() as td:
         voice=VoicePlayer(pathlib.Path(td)); errors=[]
@@ -116,7 +121,8 @@ if '--audio-library' in sys.argv:
             report.append(dict(file=pathlib.Path(path).name,expected_seconds=duration,end_ms=ended[0]))
             if (index+1)%5==0: print(json.dumps(dict(verified=index+1,total=len(paths))),flush=True)
         voice.stop()
-    (module.ROOT/'qa/v06-all-audio.json').write_text(json.dumps(dict(ok=True,clips=report),ensure_ascii=False,indent=2),encoding='utf8')
+    name='v06-unbound-audio.json' if '--unbound-audio' in sys.argv else 'v06-all-audio.json'
+    (module.ROOT/'qa'/name).write_text(json.dumps(dict(ok=True,clips=report),ensure_ascii=False,indent=2),encoding='utf8')
     checks.append(f'all {len(report)} imported clips reached real player EndOfMedia with matching full duration')
 
 result=dict(ok=True,checks=checks)

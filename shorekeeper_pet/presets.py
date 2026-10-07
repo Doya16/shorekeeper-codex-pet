@@ -1,6 +1,6 @@
 """Shipped defaults, kept separate from each user's automatically saved profile."""
 import copy,json,pathlib
-from audio_player import resolve_audio
+from .audio_player import resolve_audio
 
 def load_defaults(root):
     try:

@@ -3,7 +3,7 @@ import time
 from PySide6.QtCore import Qt,QSize,QTimer
 from PySide6.QtGui import QPixmap,QIcon
 from PySide6.QtWidgets import QDialog,QVBoxLayout,QHBoxLayout,QLabel,QListWidget,QListWidgetItem,QLineEdit,QComboBox,QPushButton,QAbstractItemView
-from bindings import PLAYBACKS
+from .bindings import PLAYBACKS
 
 TRIGGERS={
  'pet':('单击 / 摸头','单击角色，或从右键菜单选择“摸摸头”。'),

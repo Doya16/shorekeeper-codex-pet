@@ -1,8 +1,8 @@
 import json,pathlib,random,tempfile,unittest,zipfile
-from voice_pool import clean_clips,clips_for,pick_clip,TaskVoiceGate,task_key,clip_bubble_text
-from bindings import BindingMap
-from audio_player import resolve_audio
-from config_io import export_bundle,import_bundle
+from shorekeeper_pet.voice_pool import clean_clips,clips_for,pick_clip,TaskVoiceGate,task_key,clip_bubble_text
+from shorekeeper_pet.bindings import BindingMap
+from shorekeeper_pet.audio_player import resolve_audio
+from shorekeeper_pet.config_io import export_bundle,import_bundle
 
 class PoolTests(unittest.TestCase):
     def test_custom_bubble_preserves_source_subtitle_and_explicit_empty(self):

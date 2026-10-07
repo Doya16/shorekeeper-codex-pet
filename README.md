@@ -23,8 +23,8 @@
 ## 下载与使用
 
 1. 在 Windows 上安装并登录 **Codex**。
-2. 打开 [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest)，下载 **Shorekeeper-Windows-v0.8.3.zip**。
-3. 完整解压，运行 **Shorekeeper.exe**，保留同目录的其他文件夹。
+2. 打开 [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest)，下载 **Shorekeeper-Windows-v0.9.0.zip**。
+3. 完整解压，运行 **守岸人Codex桌宠启动.exe**，保留同目录的其他文件夹。
 4. 右键桌宠 → **自动跟随当前任务**；打开 **交互工作室**即可更换表情和语音。
 
 声音默认开启，音量为 10%。在「外观、声音与迁移 → 声音」中调整或关闭。
@@ -83,7 +83,7 @@
 | 配置与素材 ZIP | GIF / 图片、音频、字体、气泡文案、全部配置及默认配置 |
 | Windows 便携完整包 | 配置与素材，以及可运行程序 |
 
-换电脑时，先安装并登录 Codex，再完整解压便携包并运行 **Shorekeeper.exe**。连接会重新自动检测，自定义内容保留，也可以继续导出。
+换电脑时，先安装并登录 Codex，再完整解压便携包并运行 **守岸人Codex桌宠启动.exe**。连接会重新自动检测，自定义内容保留，也可以继续导出。
 
 ## 常见问题
 
@@ -113,8 +113,12 @@
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe pet.py
+.\.venv\Scripts\python.exe -m shorekeeper_pet
 ```
+
+源码入口：根目录的 **守岸人Codex桌宠启动.vbs**，或上述命令。程序模块位于 `shorekeeper_pet/`；构建、验证和快捷方式工具位于 `tools/`。从其他目录启动时，可使用 `python 项目路径/tools/run_pet.py`。
+
+构建便携版：先运行 `.\.venv\Scripts\python.exe -m pip install -r tools/requirements-build.txt`，再运行 `.\.venv\Scripts\python.exe tools/build_portable.py`。输出在 `dist/守岸人Codex桌宠/`。
 
 运行检查：`.\.venv\Scripts\python.exe -m unittest discover -s tests`。
 

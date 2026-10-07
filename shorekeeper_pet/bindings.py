@@ -1,6 +1,6 @@
 """Versioned and validated per-state presentation settings."""
 import copy,math
-from voice_pool import clean_clips,clips_for
+from .voice_pool import clean_clips,clips_for
 PLAYBACKS={'once':'播放一次','loop':'正向循环','pingpong':'往返循环'}
 MANUAL={'pet','feed','hover','drag','drop','doubleclick'}
 NUMBERS={'speed':(.1,4),'hold_seconds':(0,600),'loop_seconds':(0,3600),'bubble_seconds':(0,600),'font_size':(0,40),'audio_delay':(0,60)}

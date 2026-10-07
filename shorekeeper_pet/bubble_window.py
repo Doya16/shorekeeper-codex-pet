@@ -2,8 +2,8 @@
 from PySide6.QtCore import Qt,QRectF
 from PySide6.QtGui import QPainter,QPainterPath,QPen,QColor,QFontMetrics
 from PySide6.QtWidgets import QWidget
-from appearance import font
-from presentation_size import EdgeResize,paint_grips
+from .appearance import font
+from .presentation_size import EdgeResize,paint_grips
 
 class SpeechBubble(QWidget):
     def __init__(self,pet):

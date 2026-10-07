@@ -469,23 +469,23 @@
   },
   "schema_version": 7,
   "appearance": {
-    "font_family": "LXGW WenKai",
+    "font_family": "ZCOOL KuaiLe",
     "bubble_font_family": "ZCOOL KuaiLe",
-    "bubble_font_size": 19,
-    "quota_font_size": 17,
+    "bubble_font_size": 25,
+    "quota_font_size": 20,
     "ui_font_size": 17,
     "bubble_width": 389,
+    "bubble_width_ratio": 1.5688,
+    "quota_scale": 1.4642,
     "pet_size": 230,
     "volume": 10,
     "audio_enabled": true,
     "audio_cooldown": 8,
     "audio_directory": "defaults/audio",
     "codex_home": "",
-    "codex_executable": "",
-    "bubble_width_ratio": 1.0,
-    "quota_scale": 1.0
+    "codex_executable": ""
   },
   "pack": "163",
   "thread": "auto",
-  "scale": 0.85
+  "scale": 0.75
 }

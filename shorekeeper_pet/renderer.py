@@ -1,13 +1,13 @@
 import math,time
 from PySide6.QtCore import Qt,QRectF
 from PySide6.QtGui import QPainter,QPainterPath,QPen,QColor,QFontMetrics
-from appearance import font
-from bindings import MANUAL
-from voice_pool import clip_bubble_text
-from bubble_window import SpeechBubble
+from .appearance import font
+from .bindings import MANUAL
+from .voice_pool import clip_bubble_text
+from .bubble_window import SpeechBubble
 from PySide6.QtWidgets import QApplication
-from sizing import fitted_scale
-from presentation_size import paint_grips
+from .sizing import fitted_scale
+from .presentation_size import paint_grips
 
 def wrap_text(text,metrics,width):
     lines=[]; line=''

@@ -1,5 +1,5 @@
 import json,unittest
-from bindings import BindingMap
+from shorekeeper_pet.bindings import BindingMap
 
 class BindingTests(unittest.TestCase):
     def setUp(self):

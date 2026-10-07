@@ -1,11 +1,11 @@
 """Optional local-file audio. Missing or disabled audio is a no-op."""
 import pathlib,time,os,sys,threading,copy
-from voice_pool import clips_for,pick_clip,TaskVoiceGate,clip_bubble_text
-from audio_convert import playable_path
+from .voice_pool import clips_for,pick_clip,TaskVoiceGate,clip_bubble_text
+from .audio_convert import playable_path
 if sys.platform=='win32': os.environ.setdefault('QT_MEDIA_BACKEND','windows')
 from PySide6.QtCore import QObject,QTimer,QUrl,Signal
 from PySide6.QtMultimedia import QMediaPlayer
-from pcm_player import PcmPlayer
+from .pcm_player import PcmPlayer
 AUDIO_EXTS={'.wav','.mp3','.ogg','.flac','.m4a','.aac'}
 def resolve_audio(value,directory,root):
     if not isinstance(value,str) or not value.strip(): return None

@@ -1,5 +1,7 @@
 """Exercise the distributed executable without access to development runtimes."""
 import argparse,json,os,pathlib,subprocess,sys,zipfile
+sys.path.insert(0,str(pathlib.Path(__file__).resolve().parents[1]))
+from shorekeeper_pet.paths import EXECUTABLE_NAME
 
 def verify(folder):
     folder=pathlib.Path(folder).resolve()
@@ -12,7 +14,7 @@ def verify(folder):
     env['QT_QPA_PLATFORM']='windows'
     for key in ('PYTHONPATH','PYTHONHOME','QT_PLUGIN_PATH','QML2_IMPORT_PATH'):
         env.pop(key,None)
-    result=subprocess.run([str(folder/'Shorekeeper.exe'),'--verify-package'],cwd=folder,env=env,timeout=45,creationflags=subprocess.CREATE_NO_WINDOW)
+    result=subprocess.run([str(folder/EXECUTABLE_NAME),'--verify-package'],cwd=folder.parent,env=env,timeout=45,creationflags=subprocess.CREATE_NO_WINDOW)
     if result.returncode or not report.exists():
         error=folder/'startup-error.log'
         raise RuntimeError(error.read_text('utf8') if error.exists() else f'Package failed, exit={result.returncode}')

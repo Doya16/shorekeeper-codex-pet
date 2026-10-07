@@ -3,13 +3,13 @@ import time
 from PySide6.QtCore import Qt,QSize,QTimer,QUrl
 from PySide6.QtGui import QPixmap,QIcon,QFontDatabase,QDesktopServices
 from PySide6.QtWidgets import QDialog,QWidget,QVBoxLayout,QHBoxLayout,QFormLayout,QLabel,QListWidget,QListWidgetItem,QLineEdit,QComboBox,QPushButton,QAbstractItemView,QTabWidget,QScrollArea,QDoubleSpinBox,QSpinBox,QCheckBox,QPlainTextEdit,QFileDialog
-from binding_editor import TRIGGERS
-from bindings import PLAYBACKS
-from appearance import stylesheet
-from voice_editor import VoicePoolEditor
-from control_guard import GuardedField
-from presentation_size import PresentationControl
-from media_library import IMAGE_FILTER,IMAGE_HELP,import_images
+from .binding_editor import TRIGGERS
+from .bindings import PLAYBACKS
+from .appearance import stylesheet
+from .voice_editor import VoicePoolEditor
+from .control_guard import GuardedField
+from .presentation_size import PresentationControl
+from .media_library import IMAGE_FILTER,IMAGE_HELP,import_images
 import pathlib
 
 class BindingEditor(QDialog):

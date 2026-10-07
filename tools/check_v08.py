@@ -3,12 +3,12 @@ import json,pathlib,shutil,sys,tempfile
 from unittest.mock import patch
 root=pathlib.Path(__file__).resolve().parents[1]; sys.path.insert(0,str(root))
 from PIL import Image
+from PySide6.QtGui import QFontDatabase
 from PySide6.QtWidgets import QApplication
 from PySide6.QtCore import Qt
-from config_io import export_bundle,import_bundle
-from presets import load_defaults
-import pet as module
-
+from shorekeeper_pet.config_io import export_bundle,import_bundle
+from shorekeeper_pet.presets import load_defaults
+from shorekeeper_pet import pet as module
 app=QApplication([]); app.setQuitOnLastWindowClosed(False)
 original=(root/'settings.json').read_bytes() if (root/'settings.json').is_file() else None; checks=[]
 with tempfile.TemporaryDirectory() as directory:
@@ -18,10 +18,10 @@ with tempfile.TemporaryDirectory() as directory:
     pet=module.Pet(offline=True); pet.options['audio_enabled']=False; pet.voice.gate.path=local/'voice-history.json'; pet.show(); pet.open_bindings(); editor=pet.binding_editor
     assert pet.requested_scale==load_defaults(local)['scale']
     assert pet.binding('thinking')['asset']==load_defaults(local)['bindings']['thinking']['asset']
-    with patch('studio.QDesktopServices.openUrl',return_value=True) as opened:
+    with patch('shorekeeper_pet.studio.QDesktopServices.openUrl',return_value=True) as opened:
         editor.directory_button.click(); assert pathlib.Path(opened.call_args.args[0].toLocalFile())==local/'assets/custom'
     source=temp/'my-picture.webp'; Image.new('RGB',(80,40),'#659bda').save(source)
-    with patch('studio.QFileDialog.getOpenFileNames',return_value=([str(source)],'')): editor.import_button.click()
+    with patch('shorekeeper_pet.studio.QFileDialog.getOpenFileNames',return_value=([str(source)],'')): editor.import_button.click()
     aid=next(row['id'] for row in module.CATALOG if row['name']=='my-picture.webp')
     for i in range(editor.gallery.count()):
         if editor.gallery.item(i).data(Qt.ItemDataRole.UserRole)==aid: editor.gallery.setCurrentRow(i); break
@@ -38,6 +38,6 @@ with tempfile.TemporaryDirectory() as directory:
     assert restored['bindings']['pet']['asset']==aid
     editor.reset_button.click(); assert pet.binding('pet')['asset']==load_defaults(local)['bindings']['pet']['asset']
     checks.append('manual folder additions refresh; selected asset and shipped defaults survive export/import; reset restores shipped preset')
-    pet.timer.stop(); pet.voice.stop(); editor.hide(); pet.hide()
+    pet.timer.stop(); pet.voice.stop(); editor.hide(); pet.hide(); QFontDatabase.removeAllApplicationFonts()
 assert ((root/'settings.json').read_bytes() if (root/'settings.json').is_file() else None)==original
 result=dict(ok=True,checks=checks); (root/'qa/v08-ui-checks.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf8'); print(json.dumps(result))

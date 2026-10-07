@@ -5,15 +5,15 @@ from PySide6.QtCore import Qt,QPoint,QPointF,QRect
 from PySide6.QtGui import QWheelEvent,QImage,QPainter,QColor
 from PySide6.QtWidgets import QApplication
 from PySide6.QtTest import QTest
-import pet as module
-from sizing import normalize_scale,fitted_scale
-from config_io import save_atomic,export_bundle,import_bundle
+from shorekeeper_pet import pet as module
+from shorekeeper_pet.sizing import normalize_scale,fitted_scale
+from shorekeeper_pet.config_io import save_atomic,export_bundle,import_bundle
 
 app=QApplication([]); app.setQuitOnLastWindowClosed(False); checks=[]; prefix='v07-dpi'+os.environ['QT_SCALE_FACTOR'] if os.environ.get('QT_SCALE_FACTOR') else 'v07'
 original=(root/'settings.json').read_bytes() if (root/'settings.json').is_file() else None
 with tempfile.TemporaryDirectory() as directory:
     temp=pathlib.Path(directory); module.SETTINGS=temp/'settings.json'
-    from presets import load_defaults
+    from shorekeeper_pet.presets import load_defaults
     data=json.loads(original) if original else load_defaults(root); data['appearance']['audio_enabled']=False; save_atomic(module.SETTINGS,data)
     pet=module.Pet(offline=True); pet.voice.gate.path=temp/'voice-history.json'; pet.show(); pet.hover_timer.stop()
     pet.quota_data=dict(windows=[dict(remaining=98,label='每周',name='codex',resets_at=time.time()+1000)],updated_at=time.time(),source='live')
@@ -24,7 +24,7 @@ with tempfile.TemporaryDirectory() as directory:
         assert pet.requested_scale==percent/100 and control.percent.value()==percent
         assert pet.width()==round(pet.scene_width*pet.scale_factor)
         assert pet.screen_area().contains(pet.frameGeometry())
-        assert pet.quota_rect.width()<=pet.pet_rect.width()
+        assert pet.quota_rect.width()<=pet.scene_width
         assert pet.quota_rect.center().x()==pet.pet_rect.center().x()
         assert json.loads(module.SETTINGS.read_text('utf8'))['scale']==percent/100
     control.percent.setValue(125); assert control.slider.value()==125 and pet.requested_scale==1.25
@@ -44,6 +44,7 @@ with tempfile.TemporaryDirectory() as directory:
     restored.timer.stop(); restored.voice.stop(); restored.hide()
     checks.append('quick slider and preferences stay synchronized; restart restores size and all prior customization')
 
+    pet.set_bubble_preview('screen-test',True)
     actual_area=pet.screen_area
     for area in (QRect(0,0,800,600),QRect(0,0,1280,720),QRect(1920,0,2560,1440)):
         pet.screen_area=lambda area=area:area
@@ -55,6 +56,7 @@ with tempfile.TemporaryDirectory() as directory:
             assert area.contains(pet.bubble_window.frameGeometry()),(area,pet.bubble_window.frameGeometry())
             assert pet.requested_scale==2
     pet.screen_area=actual_area; pet.options.update(data['appearance']); pet.set_scale(1)
+    pet.set_bubble_preview('screen-test',False)
     pet.move(actual_area().left(),actual_area().top()+200); pet.clamp_position(); pet.update_layout()
     assert normalize_scale(float('nan'))==1 and normalize_scale('bad')==1
     checks.append('simulated 800×600, 1280×720, 2560×1440 and second monitor: body/bubble fit, centered bar, requested size retained')

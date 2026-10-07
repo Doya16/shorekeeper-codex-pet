@@ -2,11 +2,11 @@ import copy,datetime,json,pathlib,shutil,threading
 from PySide6.QtCore import Qt,QObject,Signal
 from PySide6.QtGui import QFontDatabase
 from PySide6.QtWidgets import QDialog,QWidget,QVBoxLayout,QHBoxLayout,QFormLayout,QLabel,QTabWidget,QScrollArea,QComboBox,QSpinBox,QCheckBox,QPushButton,QLineEdit,QFileDialog,QMessageBox
-from appearance import stylesheet,load_fonts
-from config_io import export_bundle,import_bundle,save_atomic
-from paths import ROOT,CODEX_HOME
-from sizing import SizeControl
-from presentation_size import PresentationControl
+from .appearance import stylesheet,load_fonts
+from .config_io import export_bundle,import_bundle,save_atomic
+from .paths import ROOT,CODEX_HOME
+from .sizing import SizeControl
+from .presentation_size import PresentationControl
 
 class Jobs(QObject):
     finished=Signal(str); failed=Signal(str)

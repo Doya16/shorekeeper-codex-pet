@@ -17,8 +17,8 @@
 ## 开始使用
 
 1. 在 Windows 10/11 x64 上安装并登录 Codex。
-2. 从 Releases 下载 **Shorekeeper-Windows-v0.8.3.zip**，完整解压到可写目录。
-3. 双击 **Shorekeeper.exe**。保留同目录下的其他文件夹。
+2. 从 Releases 下载 **Shorekeeper-Windows-v0.9.0.zip**，完整解压到可写目录。
+3. 双击 **守岸人Codex桌宠启动.exe**。保留同目录下的其他文件夹。
 4. 右键桌宠，选择 **自动跟随当前任务**。
 5. 右键 → **交互工作室**，开始选择你喜欢的表情和声音。
 
@@ -111,7 +111,7 @@ GIF 切换后，当前语音会继续说完；配对气泡也会保留到语音�
 - **配置与素材 ZIP**：保存配置、GIF / 图片、气泡文案、字体、音频及默认配置。
 - **Windows 便携完整包**：额外包含运行程序，适合直接带到新电脑。
 
-新电脑先安装并登录 Codex，再完整解压便携包并运行 **Shorekeeper.exe**。连接路径和会话会重新自动检测；自定义内容保留。以后仍可从新电脑继续导出。
+新电脑先安装并登录 Codex，再完整解压便携包并运行 **守岸人Codex桌宠启动.exe**。连接路径和会话会重新自动检测；自定义内容保留。以后仍可从新电脑继续导出。
 
 ![保存和迁移入口](demo/save-transfer-panel.png)
 
@@ -141,7 +141,7 @@ GIF 切换后，当前语音会继续说完；配对气泡也会保留到语音�
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe pet.py
+.\.venv\Scripts\python.exe -m shorekeeper_pet
 ```
 
 运行检查：`.\.venv\Scripts\python.exe -m unittest discover -s tests`。

@@ -3,7 +3,7 @@ from __future__ import annotations
 import json, os, pathlib, queue, re, shutil, sqlite3, subprocess, threading, time
 from datetime import datetime
 
-from paths import ROOT,CODEX_HOME
+from .paths import ROOT,CODEX_HOME
 
 def timestamp(value):
     try:

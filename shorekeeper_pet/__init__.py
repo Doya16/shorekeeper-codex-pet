@@ -1,0 +1,1 @@
+"""Shorekeeper Codex desktop companion."""

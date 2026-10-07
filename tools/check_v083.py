@@ -5,10 +5,9 @@ from PySide6.QtCore import QPoint,Qt
 from PySide6.QtGui import QImage,QPainter,QColor
 from PySide6.QtWidgets import QApplication
 from PySide6.QtTest import QTest
-from config_io import save_atomic
-from presets import load_defaults
-import pet as module
-
+from shorekeeper_pet.config_io import save_atomic
+from shorekeeper_pet.presets import load_defaults
+from shorekeeper_pet import pet as module
 app=QApplication([]); app.setQuitOnLastWindowClosed(False)
 qa=root/'qa'; qa.mkdir(exist_ok=True)
 original=(root/'settings.json').read_bytes() if (root/'settings.json').is_file() else None

@@ -4,10 +4,10 @@ from unittest.mock import patch
 from PySide6.QtCore import QRect,Qt,QPointF,QEvent
 from PySide6.QtGui import QFontMetrics,QFontDatabase,QMouseEvent
 from PySide6.QtWidgets import QApplication
-import pet as module
-from renderer import wrap_text
-from config_io import migrate_settings,save_atomic,export_bundle,import_bundle
-from voice_pool import clean_clips
+from shorekeeper_pet import pet as module
+from shorekeeper_pet.renderer import wrap_text
+from shorekeeper_pet.config_io import migrate_settings,save_atomic,export_bundle,import_bundle
+from shorekeeper_pet.voice_pool import clean_clips
 
 
 class BubbleMigrationTests(unittest.TestCase):
@@ -128,7 +128,7 @@ class BubbleWidgetTests(unittest.TestCase):
         self.assertLessEqual(p.bubble_window.width(),500); self.assertTrue(p.screen_area().contains(p.frameGeometry()))
         self.assertEqual(p.options['bubble_width_ratio'],2.15); self.assertEqual(p.options['quota_scale'],1.6)
         p.save_settings(); cfg=module.load_settings()
-        from appearance import appearance
+        from shorekeeper_pet.appearance import appearance
         self.assertEqual(appearance(cfg)['bubble_width_ratio'],2.15)
         self.assertEqual(appearance(cfg)['quota_scale'],1.6)
         archive=self.root.parent/'sizing.zip'; self.assertEqual(export_bundle(archive,cfg,self.root),[])
@@ -196,7 +196,7 @@ class BubbleWidgetTests(unittest.TestCase):
     def test_mode_controls_and_long_pairs_survive_two_exports(self):
         p=self.pet
         # Restrict the test gallery to its fixture instead of loading all 83 GIFs.
-        from studio import BindingEditor
+        from shorekeeper_pet.studio import BindingEditor
         p.binding_editor=BindingEditor(p,[module.ASSETS[self.aid]],module.ASSETS,self.root)
         editor=p.binding_editor; combo=editor.controls['bubble_mode']
         self.assertGreaterEqual(combo.findText('自定义音频+字幕'),0)

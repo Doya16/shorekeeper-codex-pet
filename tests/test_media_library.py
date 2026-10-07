@@ -1,9 +1,9 @@
 import json,pathlib,tempfile,unittest
 from PIL import Image
-from media_library import load_catalog,import_images
-from config_io import export_bundle,import_bundle
-from bindings import BindingMap
-from presets import load_defaults,default_bindings
+from shorekeeper_pet.media_library import load_catalog,import_images
+from shorekeeper_pet.config_io import export_bundle,import_bundle
+from shorekeeper_pet.bindings import BindingMap
+from shorekeeper_pet.presets import load_defaults,default_bindings
 
 class MediaLibraryTests(unittest.TestCase):
     def setUp(self):

@@ -18,6 +18,6 @@ pet.lock
 *.spec
 package-check.json
 connection-check.json
-Shorekeeper.lnk
+*.lnk
 /audio/
 /assets/custom/*

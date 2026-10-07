@@ -1,5 +1,5 @@
 import json, pathlib, tempfile, unittest
-from bridge import SessionReader, windows_from_limits,tool_phase,Monitor
+from shorekeeper_pet.bridge import SessionReader, windows_from_limits,tool_phase,Monitor
 from unittest.mock import patch
 
 class SessionTests(unittest.TestCase):
@@ -76,8 +76,8 @@ class SessionTests(unittest.TestCase):
         monitor=Monitor(self.path.parent); monitor.discover=lambda:None
         monitor.threads=[dict(id='old',title='old',path=str(old)),dict(id='new',title='new',path=str(self.path))]
         monitor.selected='old'
-        from bridge import timestamp
-        with patch('bridge.time.time',return_value=timestamp('2026-10-06T20:00:01Z')):
+        from shorekeeper_pet.bridge import timestamp
+        with patch('shorekeeper_pet.bridge.time.time',return_value=timestamp('2026-10-06T20:00:01Z')):
             self.assertEqual(monitor.poll()['state'],'done')
             monitor.selected='auto'; status=monitor.poll()
             self.assertEqual(status['thread_id'],'new'); self.assertEqual(status['state'],'thinking')

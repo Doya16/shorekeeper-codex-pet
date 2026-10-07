@@ -1,7 +1,8 @@
 import json,pathlib,tempfile,unittest,zipfile
-from bindings import BindingMap,PlaybackController
-from audio_player import resolve_audio
-from config_io import export_bundle,import_bundle,save_atomic,migrate_settings
+from shorekeeper_pet.paths import EXECUTABLE_NAME,PORTABLE_DIRNAME
+from shorekeeper_pet.bindings import BindingMap,PlaybackController
+from shorekeeper_pet.audio_player import resolve_audio
+from shorekeeper_pet.config_io import export_bundle,import_bundle,save_atomic,migrate_settings
 
 class TimelineTests(unittest.TestCase):
     def setUp(self):
@@ -57,12 +58,12 @@ class TransferTests(unittest.TestCase):
         self.assertIsNotNone(audio); self.assertEqual(audio.read_bytes(),b'RIFF test data')
         self.assertTrue((target/'fonts/font.ttf').exists())
     def test_portable_resets_machine_connection_and_excludes_private_files(self):
-        runtime=self.root/'dist/Shorekeeper'; (runtime/'_internal').mkdir(parents=True); (runtime/'Shorekeeper.exe').write_bytes(b'MZtest'); (runtime/'_internal/core.dll').write_bytes(b'core')
+        runtime=self.root/'dist'/PORTABLE_DIRNAME; (runtime/'_internal').mkdir(parents=True); (runtime/EXECUTABLE_NAME).write_bytes(b'MZtest'); (runtime/'_internal/core.dll').write_bytes(b'core')
         (self.root/'auth.json').write_text('secret'); (self.root/'runtime.json').write_text('private')
         dest=self.root.parent/'portable.zip'; export_bundle(dest,self.settings,self.root,True)
         with zipfile.ZipFile(dest) as z:
             names=z.namelist(); cfg=json.loads(z.read('settings.json'))
-            self.assertNotIn('auth.json',names); self.assertNotIn('runtime.json',names); self.assertIn('Shorekeeper.exe',names)
+            self.assertNotIn('auth.json',names); self.assertNotIn('runtime.json',names); self.assertIn(EXECUTABLE_NAME,names)
             self.assertEqual(cfg['thread'],'auto'); self.assertEqual(cfg['appearance']['codex_home'],'')
     def test_path_traversal_is_rejected_before_writes(self):
         dest=self.root.parent/'bad.zip'

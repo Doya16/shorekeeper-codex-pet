@@ -11,12 +11,11 @@ from PySide6.QtCore import Qt,QTimer,QPoint,QPointF,QRectF,QEvent
 from PySide6.QtGui import QImage,QPainter,QColor,QPen,QMouseEvent,QPainterPath
 from PySide6.QtWidgets import QApplication
 from PySide6.QtMultimedia import QMediaPlayer
-from appearance import font
-from config_io import save_atomic
-from presets import load_defaults
-from media_library import import_images
-import pet as module
-
+from shorekeeper_pet.appearance import font
+from shorekeeper_pet.config_io import save_atomic
+from shorekeeper_pet.presets import load_defaults
+from shorekeeper_pet.media_library import import_images
+from shorekeeper_pet import pet as module
 WIDTH,HEIGHT,FPS,SECONDS=1600,1000,15,98
 out=root/'docs/demo'; out.mkdir(parents=True,exist_ok=True)
 work=tempfile.TemporaryDirectory(prefix='shorekeeper-demo-'); sandbox=pathlib.Path(work.name)
@@ -85,7 +84,7 @@ scenes=[
  (66,'voice','多条语音 · 各自配一句台词','选择一条语音，填写它自己的气泡文案；可以逐条试听。'),
  (76,'size','大小与字体 · 实时调整','右键 → 调整大小；也可以按住 Ctrl 滚轮缩放。'),
  (85,'transfer','保存配置 · 带到新电脑','外观、声音与迁移 → 保存与迁移 → 导出 Windows 便携完整包。'),
- (94,'outro','开始你的桌面陪伴','下载完整包，解压后运行 Shorekeeper.exe。'),
+ (94,'outro','开始你的桌面陪伴','下载完整包，解压后运行 守岸人Codex桌宠启动.exe。'),
 ]
 def enter_scene(name,new_title,new_instruction):
     global current_scene,title,instruction,visible_panel,cursor

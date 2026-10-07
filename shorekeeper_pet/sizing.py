@@ -2,8 +2,8 @@
 import math
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget,QDialog,QVBoxLayout,QHBoxLayout,QLabel,QSlider,QSpinBox,QPushButton,QScrollArea
-from appearance import stylesheet
-from presentation_size import PresentationControl
+from .appearance import stylesheet
+from .presentation_size import PresentationControl
 
 def normalize_scale(value):
     try: value=float(value)

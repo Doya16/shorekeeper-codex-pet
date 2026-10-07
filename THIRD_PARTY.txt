@@ -30,3 +30,10 @@ https://emoji.wuwa.games/
 感谢所有为本项目使用的守岸人表情包参与众筹、出资支持的守岸人厨子们。谢谢你们让这些可爱的表情与大家见面，也让守岸人能够以更多模样陪在桌面上。
 
 角色、表情包图片与原版语音的权利归各自权利人所有。素材来源说明不改变原有使用条件；表情包仅供个人、非商业使用，请勿倒卖或用于付费分发。程序及字体的许可不适用于角色素材。
+
+Promotional media
+- BGM: 溯而复始 / Shorekeeper character PV soundtrack, produced by 鸣潮先约电台.
+  Official source: https://www.bilibili.com/video/BV1jL4PeYEn8/
+  The demonstration videos use an excerpt; the full music recording is not bundled.
+- Codex product icon: OpenAI, from the Codex application UI.
+  Music and product marks remain the property of their respective owners.

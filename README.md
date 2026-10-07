@@ -4,7 +4,7 @@
 
 **跟随 Codex 任务切换表情，支持自定义 GIF、语音和气泡台词。**
 
-[下载 Windows 版](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) · [观看演示](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.0/shorekeeper-landscape.mp4) · [使用指南](docs/USAGE.md) · [问题反馈](https://github.com/Doya16/shorekeeper-codex-pet/issues)
+[下载 Windows 版](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) · [观看演示](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.0/shorekeeper-landscape-r2.mp4) · [使用指南](docs/USAGE.md) · [问题反馈](https://github.com/Doya16/shorekeeper-codex-pet/issues)
 
 ![守岸人 Codex 桌宠](docs/social/cover-landscape.jpg)
 
@@ -16,9 +16,9 @@
 
 ![思考、查阅、编辑时切换表情](docs/demo/preview.gif)
 
-[横屏视频：互动与完整设置演示](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.0/shorekeeper-landscape.mp4) · [竖屏视频](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.0/shorekeeper-portrait.mp4)
+[横屏视频：互动与完整设置演示](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.0/shorekeeper-landscape-r2.mp4) · [竖屏视频](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.0/shorekeeper-portrait-r2.mp4)
 
-视频包含角色语音与 BGM。画面中的任务和额度为演示示例。
+视频包含角色语音与守岸人角色曲 [《溯而复始》](https://www.bilibili.com/video/BV1jL4PeYEn8/)（鸣潮先约电台出品）。画面中的任务和额度为演示示例。
 
 ## 下载与使用
 

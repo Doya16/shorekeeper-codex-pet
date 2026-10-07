@@ -18,7 +18,7 @@
 
 [横屏视频：互动与完整设置演示](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.1/shorekeeper-landscape.mp4) · [竖屏视频](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.1/shorekeeper-portrait.mp4)
 
-视频包含角色语音与守岸人角色曲 [《溯而复始》](https://www.bilibili.com/video/BV1jL4PeYEn8/)（鸣潮先约电台出品）。展示页采用鸣潮角色界面的动态星空背景，右侧表情循环播放。画面中的任务和额度为演示示例。
+画面中的任务和额度为演示示例。
 
 ## 下载与使用
 

@@ -23,13 +23,14 @@ with tempfile.TemporaryDirectory() as td:
     for name,length in [('long',1.2),('next',.3)]:
         with wave.open(str(root/(name+'.wav')),'wb') as audio:
             audio.setnchannels(1); audio.setsampwidth(2); audio.setframerate(16000); audio.writeframes(b'\0\0'*round(16000*length))
-    companion=module.Pet(offline=True); companion.options.update(audio_enabled=True,volume=0,audio_cooldown=0)
+    companion=module.Pet(offline=True); companion.options.update(audio_enabled=False,volume=0,audio_cooldown=0)
     companion.voice.gate.path=root/'history.json'; companion.quiet=True; companion.show()
     long=dict(file=str(root/'long.wav'),bubble_text='这句话会完整说完，标题跟随它的状态。')
     short=dict(file=str(root/'next.wav'),bubble_text='接下来的一句。')
     for state,clip in [('pet',long),('idle',short),('drop',short),('thinking',long)]:
         companion.set_binding(state,audio_clips=[clip],bubble_mode='audio',bubble_seconds=.1)
     companion.set_binding('pet',playback='loop',loop_seconds=.15)
+    companion.options['audio_enabled']=True
     finished=[]
     companion.voice.player.mediaStatusChanged.connect(lambda status:finished.append(companion.voice.selected_state) if status==QMediaPlayer.MediaStatus.EndOfMedia else None)
     companion.react('pet'); generation=companion.voice.generation

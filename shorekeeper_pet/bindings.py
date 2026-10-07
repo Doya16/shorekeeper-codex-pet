@@ -3,7 +3,7 @@ import copy,math
 from .voice_pool import clean_clips,clips_for
 PLAYBACKS={'once':'播放一次','loop':'正向循环','pingpong':'往返循环'}
 MANUAL={'pet','feed','hover','drag','drop','doubleclick'}
-NUMBERS={'speed':(.1,4),'hold_seconds':(0,600),'loop_seconds':(0,3600),'bubble_seconds':(0,600),'font_size':(0,40),'audio_delay':(0,60)}
+NUMBERS={'speed':(.1,4),'hold_seconds':(0,600),'loop_seconds':(0,3600),'bubble_seconds':(0,600),'font_size':(0,40),'audio_delay':(0,60),'audio_chance':(0,100),'audio_min_interval':(0,3600)}
 
 class BindingMap:
     def __init__(self,defaults,assets,once_states,saved=None,baseline=None):
@@ -23,7 +23,7 @@ class BindingMap:
             elif key=='playback' and isinstance(value,str) and value in PLAYBACKS: result[key]=value
             elif key=='next_state' and isinstance(value,str) and value in self.states|{'auto','hold'}: result[key]=value
             elif key=='bubble_mode' and value in ('auto','custom','audio','off'): result[key]=value
-            elif key=='audio_policy' and value in ('entry','turn'): result[key]=value
+            elif key=='audio_policy' and value in ('entry','turn','session','occasional'): result[key]=value
             elif key in NUMBERS and isinstance(value,(int,float)) and not isinstance(value,bool) and math.isfinite(value):
                 low,high=NUMBERS[key]; result[key]=max(low,min(high,float(value)))
             elif key=='bubble_text' and isinstance(value,str): result[key]=value
@@ -35,7 +35,7 @@ class BindingMap:
     def resolve(self,pack,state):
         preset=self.defaults[pack]; item=self.overrides.get(state,{})
         result=dict(asset=preset.get(state,preset['idle']),playback='once' if state in self.once_states else 'pingpong',speed=1.0,hold_seconds=2.0,loop_seconds=5.0 if state in MANUAL-{'drag','hover'} else 0.0,next_state='auto',interruptible=state not in MANUAL|{'done','error'},bubble_mode='auto',bubble_text='',bubble_seconds=10.0,font_family='',font_size=0.0,audio_file='',audio_enabled=True,audio_delay=0.0)
-        result.update(audio_avoid_repeat=True,audio_subtitles=True,audio_policy='turn' if state=='thinking' else 'entry')
+        result.update(audio_avoid_repeat=True,audio_subtitles=True,audio_policy='turn' if state=='thinking' else ('session' if state=='idle' else 'entry'),audio_chance=20.0,audio_min_interval=300.0)
         base=self.baseline.get(state,{})
         result.update(base); result.update(item)
         voice=item if 'audio_clips' in item or 'audio_file' in item else base
@@ -66,7 +66,7 @@ class PlaybackController:
         self.hard_deadline=now+hard_limit if hard_limit is not None else None
     def set_live(self,state,key,now):
         changed=key!=self.live_key; self.live_state=state; self.live_key=key
-        if changed and self.owner!='preview' and (self.serial==0 or self.resolve(self.state)['interruptible']): self.enter(state,now,'live')
+        if changed and self.owner not in ('preview','notification') and (self.serial==0 or self.resolve(self.state)['interruptible']): self.enter(state,now,'live')
     def resume(self,now): self.enter('idle' if self.consumed_key==self.live_key else self.live_state,now,'live')
     def tick(self,now):
         b=self.resolve(self.state); duration,ping=self.duration(b['asset']); deadline=playback_seconds(b,duration,ping)

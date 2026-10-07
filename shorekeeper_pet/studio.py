@@ -69,8 +69,10 @@ class BindingEditor(QDialog):
         voice=self.form_tab('语音与配对气泡')
         paired=QLabel('配对气泡请在“气泡与字体 → 气泡内容”选择“自定义音频+字幕”。'); paired.setWordWrap(True); voice.addRow(paired)
         self.voice_pool=VoicePoolEditor(pet,lambda:self.state); self.voice_pool.changed.connect(lambda rows:self.change('audio_clips',rows)); voice.addRow(self.voice_pool)
-        voice.addRow('自动播报频率',self.combo('audio_policy',[('每次进入状态（遵守冷却时间）','entry'),('同一轮任务只播一次','turn')]))
-        notice=QLabel('自动语音先说完整句，切换 GIF 不会掐断。忙时保留一条待播提醒，待机／悬停不插队；主动试听和“停止声音”仍可中断。思考每轮只播一次，试听不占用次数。'); notice.setWordWrap(True); voice.addRow(notice)
+        voice.addRow('自动播报频率',self.combo('audio_policy',[('每次进入状态（遵守冷却时间）','entry'),('本次桌宠启动只播一次','session'),('偶尔播放','occasional'),('同一轮任务只播一次','turn')]))
+        voice.addRow('偶尔播放 · 每次进入时的概率',self.number('audio_chance',0,100,5,' %'))
+        voice.addRow('偶尔播放 · 最短间隔',self.number('audio_min_interval',0,3600,30,' 秒'))
+        notice=QLabel('自动语音先说完整句，切换 GIF 不会掐断。多会话完成提醒依次播放；忙时其他交互保留一条待播提醒，待机／悬停不插队；主动试听和“停止声音”仍可中断。思考每轮只播一次，试听不占用次数。'); notice.setWordWrap(True); voice.addRow(notice)
         enabled=QCheckBox('此状态允许播放音频（还需打开全局语音开关）'); self.controls['audio_enabled']=enabled; enabled.toggled.connect(lambda v:self.change('audio_enabled',v)); voice.addRow(enabled)
         for key,label in [('audio_avoid_repeat','有多条可用语音时，避免连续抽中同一条')]:
             control=QCheckBox(label); self.controls[key]=control; control.toggled.connect(lambda value,key=key:self.change(key,value)); voice.addRow(control)
@@ -163,6 +165,10 @@ class BindingEditor(QDialog):
             self.guards[key].lock(f'“此状态不显示气泡”模式下无法修改“{label}”；请先开启气泡。' if b['bubble_mode']=='off' else '')
         if b['bubble_mode']=='audio': self.guards['bubble_seconds'].lock('“自定义音频+字幕”模式下无法修改“气泡显示时长”；气泡随配对语音播放，播完收起。')
         self.guards['audio_delay'].lock('“此状态关闭音频”模式下无法修改“进入状态后延迟”；请先勾选“此状态允许播放音频”。' if not b['audio_enabled'] else '')
+        for key,label in [('audio_chance','播放概率'),('audio_min_interval','最短间隔')]:
+            hint='“非偶尔播放”模式下无法修改“'+label+'”；请将自动播报频率设为“偶尔播放”。' if b['audio_policy']!='occasional' else ''
+            if not b['audio_enabled']:hint='“此状态关闭音频”模式下无法修改“'+label+'”；请先开启此状态的音频。'
+            self.guards[key].lock(hint)
     def change(self,key,value):
         if self.loading: return
         ok=self.pet.set_binding(self.state,**{key:value}); self.saved.setText('已自动保存' if ok else '保存失败，请检查文件夹是否可写。'); self.refresh_labels(); self.update_timing()

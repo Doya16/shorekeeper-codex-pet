@@ -1,6 +1,6 @@
 import math
 from PySide6.QtGui import QFont,QFontDatabase
-DEFAULTS=dict(font_family='LXGW WenKai',bubble_font_family='ZCOOL KuaiLe',bubble_font_size=19,quota_font_size=17,ui_font_size=17,bubble_width=390,bubble_width_ratio=1.0,quota_scale=1.0,pet_size=230,volume=75,audio_enabled=False,audio_cooldown=12,audio_directory='audio',codex_home='',codex_executable='')
+DEFAULTS=dict(font_family='LXGW WenKai',bubble_font_family='ZCOOL KuaiLe',bubble_font_size=19,quota_font_size=17,ui_font_size=17,bubble_width=390,bubble_width_ratio=1.0,quota_scale=1.0,pet_size=230,volume=75,audio_enabled=False,audio_cooldown=12,audio_directory='audio',codex_home='',codex_executable='',launch_with_codex=False)
 
 def load_fonts(root):
     families=[]
@@ -17,6 +17,7 @@ def appearance(settings):
         value=result[key]; result[key]=max(low,min(high,value)) if isinstance(value,(float,int)) and math.isfinite(value) else DEFAULTS[key]
     for key in ('font_family','bubble_font_family','audio_directory','codex_home','codex_executable'):
         if not isinstance(result[key],str): result[key]=DEFAULTS[key]
+    result['launch_with_codex']=result['launch_with_codex'] is True
     return result
 
 def font(family,size,bold=False):

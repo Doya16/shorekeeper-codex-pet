@@ -1,5 +1,5 @@
 """Optional local-file audio. Missing or disabled audio is a no-op."""
-import pathlib,time,os,sys,threading,copy
+import pathlib,time,os,sys,threading,copy,random
 from .voice_pool import clips_for,pick_clip,TaskVoiceGate,clip_bubble_text
 from .audio_convert import playable_path
 if sys.platform=='win32': os.environ.setdefault('QT_MEDIA_BACKEND','windows')
@@ -25,6 +25,7 @@ class VoicePlayer(QObject):
         self.pending=QTimer(self); self.pending.setSingleShot(True); self.pending.timeout.connect(self._play_pending)
         self.last_play={}; self.last_clip={}; self.next_path=None; self.selected_clip=None; self.selected_state=None; self.generation=0; self.gate=TaskVoiceGate(root/'voice-history.json')
         self.busy=False; self.queued=None; self.selected_binding={}; self.started_at=0
+        self.session_played=set(); self.selected_automatic=False
         self.prepared.connect(self._prepared)
         self.player.errorOccurred.connect(self._error)
         self.player.mediaStatusChanged.connect(self._media_status)
@@ -48,9 +49,11 @@ class VoicePlayer(QObject):
         if state in ('error','waiting','done','paused'): return 3
         if binding.get('audio_policy')=='turn': return 2
         return 1
-    def trigger(self,state,binding,options,preview=False,now=None,task=None):
+    def trigger(self,state,binding,options,preview=False,now=None,task=None,notification=False):
         if not preview and (not options.get('audio_enabled') or not binding.get('audio_enabled',True)): return False
-        once=binding.get('audio_policy')=='turn' and not preview
+        policy=binding.get('audio_policy','entry')
+        if not preview and policy=='session' and state in self.session_played: return False
+        once=(policy=='turn' or notification) and not preview
         if once and (task is None or self.gate.contains(state,task)): return False
         candidates=[]; seen=set()
         for clip in clips_for(binding):
@@ -73,6 +76,9 @@ class VoicePlayer(QObject):
             request=dict(state=state,binding=copy.deepcopy(binding),options=dict(options),task=task)
             if not self.queued or self.priority(state,binding)>=self.priority(self.queued['state'],self.queued['binding']): self.queued=request
             return False
+        if not preview and policy=='occasional':
+            if now-self.last_play.get(state,-1e12)<binding.get('audio_min_interval',300): return False
+            if random.random()*100>=binding.get('audio_chance',20): return False
         selected=pick_clip(candidates,self.last_clip.get(state),binding.get('audio_avoid_repeat',True))
         deferred=self.queued if not preview else None
         self.stop()
@@ -80,6 +86,7 @@ class VoicePlayer(QObject):
         if once: self.gate.mark(state,task)
         path=selected['path']; self.selected_clip=selected; self.selected_state=state; self.last_clip[state]=selected['identity']
         self.selected_binding=copy.deepcopy(binding); self.started_at=time.monotonic(); self.busy=True
+        self.selected_automatic=not preview
         self.output.setVolume(options.get('volume',75)/100); self.next_path=path
         if not preview: self.last_play[state]=now
         self.pending.start(round((0 if preview else binding.get('audio_delay',0))*1000)); self.changed.emit(); return True
@@ -99,4 +106,6 @@ class VoicePlayer(QObject):
         self.player.setSource(QUrl.fromLocalFile(str(pathlib.Path(path).resolve())))
         if self.player.error()!=QMediaPlayer.Error.NoError: return
         self.player.play()
-        if self.player.error()==QMediaPlayer.Error.NoError: self.status.emit('正在播放：'+(self.selected_clip.get('title') or pathlib.Path(path).name))
+        if self.player.error()==QMediaPlayer.Error.NoError:
+            if self.selected_automatic: self.session_played.add(self.selected_state)
+            self.status.emit('正在播放：'+(self.selected_clip.get('title') or pathlib.Path(path).name))

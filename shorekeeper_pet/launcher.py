@@ -4,6 +4,9 @@ from .paths import ROOT
 
 def run():
     try:
+        if '--watch-codex' in sys.argv:
+            from .startup import watch
+            return watch()
         from .pet import main
         return main()
     except Exception:

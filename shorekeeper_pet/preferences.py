@@ -35,7 +35,7 @@ class Preferences(QDialog):
         voice.addRow('音量',self.spin('volume',0,100,' %'))
         voice.addRow('同一状态最短播报间隔',self.spin('audio_cooldown',0,300,' 秒'))
         row,self.audio_dir=self.path_control('audio_directory','选择音频目录',directory=True); voice.addRow('音频目录',row)
-        note=QLabel('自动播报会先说完整句，GIF 切换不会截断声音。忙时保留一条待播提醒，优先任务通知；待机／悬停不插队。思考默认每轮只播一次，轮次在实际播放时记账。主动试听或停止声音可以中断。'); note.setWordWrap(True); voice.addRow(note)
+        note=QLabel('自动播报会先说完整句，GIF 切换不会截断声音。多会话完成提醒依次播放；忙时其他交互保留一条待播提醒，优先任务通知；待机／悬停不插队。思考默认每轮只播一次，轮次在实际播放时记账。主动试听或停止声音可以中断。'); note.setWordWrap(True); voice.addRow(note)
         stop=QPushButton('停止当前声音'); stop.clicked.connect(pet.voice.stop); voice.addRow(stop)
         transfer=self.tab('保存与迁移')
         note=QLabel('修改会自动保存。你也可以立即保存快照，或把 GIF、字体、已绑定音频和配置一起打包。便携包还包含 Windows 运行程序。'); note.setWordWrap(True); transfer.addRow(note)
@@ -46,6 +46,8 @@ class Preferences(QDialog):
         self.add_button(transfer,'导入配置与素材包…',self.import_file)
         tip=QLabel('迁移包会重置当前会话和本机连接路径，新电脑自动寻找当地已登录的 Codex。不会包含账户凭据、聊天记录或额度缓存。'); tip.setWordWrap(True); transfer.addRow(tip)
         connect=self.tab('连接 Codex')
+        launch=QCheckBox('随 Codex 启动桌宠'); launch.toggled.connect(lambda value:self.change('launch_with_codex',value)); self.controls['launch_with_codex']=launch; connect.addRow(launch)
+        note=QLabel('勾选后，登录 Windows 时会在后台等待 Codex 打开，再启动桌宠。取消勾选会移除本机的启动联动。该选项随配置迁移，在新电脑首次手动启动桌宠后恢复。'); note.setWordWrap(True); connect.addRow(note)
         self.sessions=QComboBox(); self.sessions.currentIndexChanged.connect(self.select_thread); connect.addRow('跟随的会话',self.sessions)
         note=QLabel('推荐自动跟随最近活动。固定到已结束的旧会话后，其他会话的思考、查阅和编辑动画不会触发。'); note.setWordWrap(True); connect.addRow(note)
         row,self.codex_home=self.path_control('codex_home','选择 Codex 数据目录',True); connect.addRow('数据目录',row)
@@ -97,7 +99,10 @@ class Preferences(QDialog):
         ok=self.pet.select_thread(self.sessions.currentData() or 'auto'); self.status.setText('跟随设置已保存' if ok else '跟随设置保存失败')
     def change(self,key,value):
         if self.loading: return
-        ok=self.pet.set_option(key,value); self.status.setText('已自动保存' if ok else '保存失败，请检查目录权限。')
+        try:
+            ok=self.pet.set_option(key,value); self.status.setText('已自动保存' if ok else '保存失败，请检查目录权限。')
+        except OSError as error:
+            self.refresh_controls(); self.status.setText('设置未更改：'+str(error))
     def apply_style(self): self.setStyleSheet(stylesheet(self.pet.options)+'QLabel#settingsTitle{font-size:25px;font-weight:600;color:#2e5280;}')
     def save_now(self): self.status.setText('全部配置已保存' if self.pet.save_settings() else '保存失败')
     def snapshot(self):

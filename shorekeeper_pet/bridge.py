@@ -132,8 +132,23 @@ class SessionReader:
         self.active=False
         self.rate=None
         self.revision=0
+        self.events=[]; self.terminal_seen=set()
         self.recent_tool_state=None; self.tool_visible_until=0
         self.poll()
+
+    def terminal(self,state,when,turn_id=None):
+        turn_id=turn_id or self.turn_id
+        key=(state,turn_id or self.started or when)
+        if key in self.terminal_seen:return
+        if key not in self.terminal_seen:
+            self.terminal_seen.add(key)
+            self.events.append(dict(state=state,turn_id=turn_id,started=self.started,ended=when))
+        # A delayed completion for an older turn must not end a newer turn.
+        if turn_id and self.turn_id and turn_id!=self.turn_id: return
+        self.active=False; self.ended=when; self.state=state
+
+    def drain_events(self):
+        events=self.events; self.events=[]; return events
 
     def accept(self, obj):
         payload=obj.get('payload') or {}
@@ -148,15 +163,14 @@ class SessionReader:
                 self.state='thinking'; self.public_note=''
                 self.recent_tool_state=None; self.tool_visible_until=0
             elif kind in ('task_complete','task_completed','turn_aborted'):
-                self.active=False; self.ended=when
-                self.state='done' if kind!='turn_aborted' else 'paused'
+                self.terminal('done' if kind!='turn_aborted' else 'paused',when,payload.get('turn_id'))
             elif kind=='token_count':
                 limits=payload.get('rate_limits')
                 if limits:
                     self.rate=dict(windows=windows_from_limits({'rateLimits':limits}),updated_at=when,source='session',error=None)
                 return
             elif kind in ('error','turn_failed'):
-                self.active=False; self.ended=when; self.state='error'
+                self.terminal('error',when,payload.get('turn_id'))
             else: return
         elif category=='response_item':
             # Ignore reasoning items, user messages, tool arguments and outputs as text.
@@ -165,7 +179,7 @@ class SessionReader:
                     text=' '.join(c.get('text','') for c in payload.get('content',[]) if c.get('type') in ('output_text','text'))
                     self.public_note=re.sub(r'\s+',' ',text).strip()[:260]
                 elif payload.get('phase')=='final_answer':
-                    self.state='done'; self.active=False; self.ended=when
+                    self.terminal('done',when)
                 else: return
             elif kind in ('function_call','custom_tool_call'):
                 self.state=tool_phase(payload); self.recent_tool_state=self.state; self.tool_visible_until=0
@@ -211,6 +225,7 @@ class Monitor:
         self.last_discovery=0
         self.selected='auto'
         self.error=None
+        self.observe_since=time.time()
 
     def discover(self):
         candidates=sorted(self.home.glob('state_*.sqlite'),key=lambda p:p.stat().st_mtime,reverse=True)
@@ -218,8 +233,10 @@ class Monitor:
         try:
             with sqlite3.connect(candidates[0].as_uri()+'?mode=ro',uri=True,timeout=0.5) as db:
                 # Do not select message bodies, auth or account fields.
-                rows=db.execute("SELECT id,title,rollout_path,updated_at FROM threads WHERE archived=0 AND (agent_path IS NULL OR agent_path='/root') ORDER BY updated_at DESC LIMIT 16").fetchall()
-            self.threads=[dict(id=r[0],title=r[1],path=r[2],updated=r[3]) for r in rows if r[2] and pathlib.Path(r[2]).is_file()]
+                rows=db.execute("SELECT id,title,rollout_path,updated_at FROM threads WHERE archived=0 AND (agent_path IS NULL OR agent_path='/root') ORDER BY updated_at DESC LIMIT 64").fetchall()
+            latest=[dict(id=r[0],title=r[1],path=r[2],updated=r[3]) for r in rows if r[2] and pathlib.Path(r[2]).is_file()]
+            ids={r['id'] for r in latest}
+            self.threads=latest+[r for r in self.threads if r['id'] not in ids and r['id'] in self.readers and self.readers[r['id']].active]
             self.error=None
         except sqlite3.Error:
             self.error='会话列表暂不可读，稍后重试'
@@ -228,9 +245,14 @@ class Monitor:
         now=time.time()
         if now-self.last_discovery>5:
             self.discover(); self.last_discovery=now
+        events=[]
         for row in self.threads:
             if row['id'] not in self.readers: self.readers[row['id']]=SessionReader(row['path'])
             else: self.readers[row['id']].poll()
+            for event in self.readers[row['id']].drain_events():
+                if event['ended']>=self.observe_since:
+                    events.append(dict(event,thread_id=row['id'],title=row['title']))
+        events.sort(key=lambda event:event['ended'])
         # Keep bounded history, but retain an explicitly pinned conversation.
         keep={row['id'] for row in self.threads}|{self.selected}
         self.readers={key:r for key,r in self.readers.items() if key in keep}
@@ -239,12 +261,12 @@ class Monitor:
             active=[r for r in self.threads if self.readers[r['id']].active and now-self.readers[r['id']].last_event<600]
             chosen=max(active or self.threads,key=lambda r:self.readers[r['id']].last_event)
         if not chosen:
-            return dict(state='idle',message=self.error or '我在这里，等你开始下一件事。',title='',thread_id=None,stale=False,revision=0)
+            return dict(state='idle',message=self.error or '我在这里，等你开始下一件事。',title='',thread_id=None,stale=False,revision=0,events=events)
         reader=self.readers[chosen['id']]
         age=now-reader.last_event
         stale=reader.active and age>180
         state='unknown' if stale else reader.display_state(now)
-        return dict(state=state,message=reader.public_note,title=chosen['title'],thread_id=chosen['id'],turn_id=reader.turn_id,stale=stale,revision=reader.revision,last_event=reader.last_event,active=reader.active,age=age,started=reader.started,ended=reader.ended)
+        return dict(state=state,message=reader.public_note,title=chosen['title'],thread_id=chosen['id'],turn_id=reader.turn_id,stale=stale,revision=reader.revision,last_event=reader.last_event,active=reader.active,age=age,started=reader.started,ended=reader.ended,events=events)
 
     def cached_rate(self):
         rates=[r.rate for r in self.readers.values() if r.rate]

@@ -93,7 +93,9 @@
         }
       ],
       "bubble_seconds": 3.0,
-      "audio_policy": "turn"
+      "audio_policy": "session",
+      "audio_chance": 20,
+      "audio_min_interval": 300
     },
     "doubleclick": {
       "asset": "p1-09",
@@ -475,7 +477,7 @@
     "quota_font_size": 20,
     "ui_font_size": 17,
     "bubble_width": 389,
-    "bubble_width_ratio": 1.5688,
+    "bubble_width_ratio": 1.7891,
     "quota_scale": 1.4642,
     "pet_size": 230,
     "volume": 10,
@@ -483,7 +485,8 @@
     "audio_cooldown": 8,
     "audio_directory": "defaults/audio",
     "codex_home": "",
-    "codex_executable": ""
+    "codex_executable": "",
+    "launch_with_codex": false
   },
   "pack": "163",
   "thread": "auto",

@@ -7,7 +7,7 @@ from PySide6.QtCore import Qt, QTimer, QRectF, QPoint, QSize, Signal, QObject, Q
 from PySide6.QtGui import QColor, QPainter, QPainterPath, QPen, QFont, QImage, QPixmap, QIcon, QAction, QCursor
 from PySide6.QtWidgets import QApplication, QWidget, QMenu, QSystemTrayIcon, QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QComboBox, QCheckBox, QGroupBox, QListWidget, QAbstractItemView,QScrollArea
 from .bridge import Monitor, RateClient, ROOT
-from .bindings import BindingMap,PlaybackController,MANUAL
+from .bindings import BindingMap,PlaybackController,MANUAL,playback_seconds
 from .studio import BindingEditor
 from .preferences import Preferences
 from .appearance import appearance,load_fonts,stylesheet,font
@@ -171,6 +171,7 @@ class Pet(PetRenderer,QWidget):
         self.state='idle'; self.override=None; self.override_until=0; self.override_text=''; self.preview_id=None
         self.bubble_until=time.monotonic()+12
         self.live_status={'state':'idle','message':'','title':''}
+        self.notifications=collections.deque(); self.notification=None; self.notification_until=0; self.notification_seen=set()
         self.quota_data={}; self.thread_list=[]; self.panel=None; self.binding_editor=None
         self.monitor=Monitor(self.options['codex_home'] or CODEX_HOME); self.monitor.selected=self.settings.get('thread','auto')
         self.rate_client=RateClient(self.options['codex_executable'],self.options['codex_home']); self.worker=BridgeWorker(); self.stop_event=threading.Event(); self.refresh_event=threading.Event()
@@ -185,7 +186,7 @@ class Pet(PetRenderer,QWidget):
         self.icon=QIcon(str(ROOT/'assets/shorekeeper.ico'))
         if self.icon.isNull(): self.icon=QIcon(QPixmap.fromImage(icon_im))
         self.setWindowIcon(self.icon); QApplication.instance().setWindowIcon(self.icon)
-        self.tray=QSystemTrayIcon(self.icon,self); self.tray.setToolTip('守岸人 · 点击回来陪你')
+        self.tray=QSystemTrayIcon(self.icon,self); self.tray.setToolTip('守岸人 · 点击唤醒/隐藏')
         menu=QMenu(); menu.addAction('显示 / 隐藏',self.toggle_visible); menu.addAction('调整大小…',self.open_size); menu.addAction('自动跟随当前任务',lambda:self.select_thread('auto')); menu.addAction('陪伴面板',self.open_panel); menu.addAction('交互工作室',self.open_bindings); menu.addAction('外观、声音与迁移',self.open_preferences); menu.addAction('刷新额度',self.refresh_quota); menu.addSeparator(); menu.addAction('退出守岸人',self.shutdown); self.tray.setContextMenu(menu)
         self.tray.activated.connect(lambda reason:self.toggle_visible() if reason==QSystemTrayIcon.ActivationReason.Trigger else None)
         if not offline: self.tray.show()
@@ -278,12 +279,19 @@ class Pet(PetRenderer,QWidget):
     def on_status(self, status):
         changed=status.get('state')!=self.live_status.get('state') or status.get('thread_id')!=self.live_status.get('thread_id')
         self.live_status=status
+        for event in status.get('events',[]):
+            identity=(event.get('state'),task_key(event) or (event.get('thread_id'),event.get('ended')))
+            if event.get('state') in ('done','error','paused') and identity not in self.notification_seen:
+                self.notification_seen.add(identity); self.notifications.append(dict(event))
         # Polling may first observe reading/writing after the initial thinking
         # event. Offer the start notice once as soon as this turn is discovered.
-        if status.get('active') and not status.get('stale') and self.binding('thinking')['audio_policy']=='turn':
+        if not self.notification and not self.notifications and status.get('active') and not status.get('stale') and self.binding('thinking')['audio_policy']=='turn':
             self.voice.trigger('thinking',self.binding('thinking'),self.options,task=task_key(status))
         state=status.get('state','idle')
         if state not in STATES: state='unknown'
+        # Terminal events are presented through the queue exactly once, even
+        # while another project's conversation remains active.
+        if 'events' in status and state in ('done','error','paused'): state='idle'
         key=(status.get('thread_id'),state,status.get('started'),status.get('ended'))
         self.controller.set_live(state,key,time.monotonic()); self.tick(); self.update_layout()
         if changed:
@@ -320,7 +328,18 @@ class Pet(PetRenderer,QWidget):
 
     def tick(self):
         now=time.monotonic()
-        self.controller.tick(now)
+        if self.notification and self.controller.owner!='notification': self.notification=None
+        if self.notification and now>=self.notification_until and not self.voice.busy:
+            self.notification=None; self.controller.resume(now)
+        if not self.notification and self.notifications and not self.voice.busy and self.controller.owner!='preview' and self.drag_offset is None:
+            self.notification=self.notifications.popleft()
+            state=self.notification['state']; b=self.binding(state)
+            duration=playback_seconds(b,*self.animation_duration(b['asset']))
+            self.notification_until=now+max(1,duration or 6)
+            self.preview_id=None; self.override_text=''
+            self.controller.enter(state,now,'notification')
+            self.bubble_until=self.notification_until
+        if not self.notification: self.controller.tick(now)
         entered=self.controller.serial!=self.last_serial
         if entered:
             self.last_serial=self.controller.serial; self.state=self.controller.state; self.anim_start=self.controller.started
@@ -332,7 +351,7 @@ class Pet(PetRenderer,QWidget):
             binding=self.binding(self.state)
             if self.controller.owner=='preview' and self.preview_audio_clip is not None:
                 binding=dict(binding,audio_clips=[dict(self.preview_audio_clip,enabled=True)])
-            self.voice.trigger(self.state,binding,self.options,preview=self.controller.owner=='preview',task=task_key(self.live_status)); self.update_layout()
+            self.voice.trigger(self.state,binding,self.options,preview=self.controller.owner=='preview',task=task_key(self.notification or self.live_status),notification=self.controller.owner=='notification'); self.update_layout()
         self.update_bubble()
         self.update()
 
@@ -370,7 +389,8 @@ class Pet(PetRenderer,QWidget):
         return STATES.get(self.state,STATES['idle'])[1]
 
     def format_bubble(self,text):
-        for key,value in {'state':self.state_title(self.bubble_state()),'quota':self.quota_label(),'task':self.live_status.get('title',''),'progress':self.live_status.get('message','')}.items(): text=text.replace('{'+key+'}',value)
+        context=self.notification or self.live_status
+        for key,value in {'state':self.state_title(self.bubble_state()),'quota':self.quota_label(),'task':context.get('title',''),'progress':context.get('message','')}.items(): text=text.replace('{'+key+'}',value)
         return text
 
     def mousePressEvent(self, event):
@@ -476,6 +496,9 @@ class Pet(PetRenderer,QWidget):
         path=pathlib.Path(self.options['audio_directory'] or 'audio'); return path if path.is_absolute() else ROOT/path
 
     def set_option(self,key,value):
+        if key=='launch_with_codex' and not self.offline:
+            from .startup import configure
+            configure(bool(value),ROOT)
         self.options[key]=value; self.settings['appearance']=dict(self.options); self.options=appearance(self.settings)
         ok=self.save_settings(); self.apply_style(); self.update_layout(); self.update()
         if key=='audio_enabled' and not value: self.voice.stop()
@@ -505,6 +528,9 @@ class Pet(PetRenderer,QWidget):
 
     def apply_settings(self,data):
         data=migrate_settings(data)
+        if not self.offline:
+            from .startup import configure
+            configure(appearance(data)['launch_with_codex'],ROOT)
         self.settings=data; self.pack=data.get('pack','163')
         if self.pack not in PACKS: self.pack='163'
         self.refresh_assets()
@@ -593,6 +619,11 @@ def main():
     app=QApplication(sys.argv); app.setApplicationName('Shorekeeper'); app.setQuitOnLastWindowClosed(False)
     lock=QLockFile(str(ROOT/'pet.lock')); lock.setStaleLockTime(0)
     if not args.preview and not args.smoke_test and not args.verify_package and not lock.tryLock(100): return 0
+    if not args.preview and not args.smoke_test and not args.verify_package:
+        from .startup import configure
+        if appearance(load_settings())['launch_with_codex']:
+            try:configure(True,ROOT)
+            except OSError:pass
     pet=Pet(offline=args.preview or args.smoke_test or args.verify_package); pet.show()
     if args.bindings: pet.open_bindings()
     if args.settings: pet.open_preferences()
@@ -616,7 +647,11 @@ def main():
                 bubble_bounds=pet.bubble_window.width()<=pet.screen_area().width()
                 audio_mode=pet.binding_editor.controls['bubble_mode'].findText('自定义音频+字幕')>=0
                 resize_controls=all(key in pet.size_dialog.presentation_control.controls for key in ('bubble_width_ratio','quota_scale'))
-                report=dict(ok=len(pet.font_families)>=2 and decoder_ok and output_ok and bubble_bounds and audio_mode and resize_controls,audio_decoder=decoder_ok,audio_output=output_ok,bubble_bounds=bubble_bounds,audio_subtitle_mode=audio_mode,resize_controls=resize_controls,version=VERSION,fonts=pet.font_families,assets=len(ASSETS),bindings=len(pet.bindings.overrides),root=str(ROOT),frozen=bool(getattr(sys,'frozen',False)),scale=pet.requested_scale,size_control_percent=pet.size_dialog.control.percent.value())
+                from .startup import codex_processes
+                frequency_controls=all(pet.binding_editor.controls['audio_policy'].findData(mode)>=0 for mode in ('entry','session','occasional','turn'))
+                startup_control='launch_with_codex' in pet.preferences.controls
+                desktop_detected=bool(codex_processes())
+                report=dict(ok=len(pet.font_families)>=2 and decoder_ok and output_ok and bubble_bounds and audio_mode and resize_controls and frequency_controls and startup_control,audio_decoder=decoder_ok,audio_output=output_ok,bubble_bounds=bubble_bounds,audio_subtitle_mode=audio_mode,resize_controls=resize_controls,voice_frequency_controls=frequency_controls,startup_control=startup_control,desktop_detected=desktop_detected,version=VERSION,fonts=pet.font_families,assets=len(ASSETS),bindings=len(pet.bindings.overrides),root=str(ROOT),frozen=bool(getattr(sys,'frozen',False)),scale=pet.requested_scale,size_control_percent=pet.size_dialog.control.percent.value())
                 (ROOT/'package-check.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf8')
             except Exception:
                 import traceback

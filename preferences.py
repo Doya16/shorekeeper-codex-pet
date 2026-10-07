@@ -25,7 +25,7 @@ class Preferences(QDialog):
         visual.addRow('气泡文字',self.spin('bubble_font_size',12,40,' px'))
         visual.addRow('额度条文字',self.spin('quota_font_size',12,32,' px'))
         visual.addRow('设置面板文字',self.spin('ui_font_size',13,28,' px'))
-        visual.addRow('气泡宽度',self.spin('bubble_width',300,650,' px'))
+        bubble_note=QLabel('跟随角色当前大小；长文案自动换行，向下延伸。'); bubble_note.setWordWrap(True); visual.addRow('气泡宽度',bubble_note)
         visual.addRow('角色基础大小（100%）',self.spin('pet_size',140,420,' px'))
         add=QPushButton('添加本地字体文件…'); add.clicked.connect(self.add_font); visual.addRow(add)
         note=QLabel('已内置站酷快乐体与霞鹜文楷，随迁移包携带，无需安装到系统。单个状态也可以单独设置字体与字号。'); note.setWordWrap(True); visual.addRow(note)

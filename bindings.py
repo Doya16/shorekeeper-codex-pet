@@ -22,11 +22,12 @@ class BindingMap:
             if key=='asset' and isinstance(value,str) and value in self.assets: result[key]=value
             elif key=='playback' and isinstance(value,str) and value in PLAYBACKS: result[key]=value
             elif key=='next_state' and isinstance(value,str) and value in self.states|{'auto','hold'}: result[key]=value
-            elif key=='bubble_mode' and value in ('auto','custom','off'): result[key]=value
+            elif key=='bubble_mode' and value in ('auto','custom','audio','off'): result[key]=value
             elif key=='audio_policy' and value in ('entry','turn'): result[key]=value
             elif key in NUMBERS and isinstance(value,(int,float)) and not isinstance(value,bool) and math.isfinite(value):
                 low,high=NUMBERS[key]; result[key]=max(low,min(high,float(value)))
-            elif key in ('bubble_text','font_family','audio_file') and isinstance(value,str): result[key]=value[:2000]
+            elif key=='bubble_text' and isinstance(value,str): result[key]=value
+            elif key in ('font_family','audio_file') and isinstance(value,str): result[key]=value[:2000]
             elif key in ('audio_enabled','interruptible','audio_avoid_repeat','audio_subtitles') and isinstance(value,bool): result[key]=value
             elif key=='audio_clips' and isinstance(value,list): result[key]=clean_clips(value)
         return result

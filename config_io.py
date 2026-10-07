@@ -1,15 +1,19 @@
 """Atomic config snapshots and portable exports. Never includes Codex account data."""
 import copy,hashlib,json,os,pathlib,re,shutil,tempfile,time,zipfile
 from audio_player import resolve_audio,AUDIO_EXTS
-from voice_pool import clips_for
+from voice_pool import clips_for,clip_bubble_text
 
 def migrate_settings(settings):
-    result=copy.deepcopy(settings); result['schema_version']=6
+    result=copy.deepcopy(settings); version=result.get('schema_version',0)
+    legacy=not isinstance(version,int) or version<7; result['schema_version']=7
     bindings=result.get('bindings',{})
     if isinstance(bindings,dict):
         bindings.pop('quota',None)
         for binding in bindings.values():
-            if isinstance(binding,dict) and binding.get('next_state')=='quota': binding['next_state']='auto'
+            if not isinstance(binding,dict): continue
+            if binding.get('next_state')=='quota': binding['next_state']='auto'
+            if legacy and binding.get('bubble_mode')!='off' and binding.get('audio_subtitles',True) and any(clip_bubble_text(c) for c in clips_for(binding)):
+                binding['bubble_mode']='audio'
     return result
 
 def save_atomic(path,data,backup=True):
@@ -82,7 +86,7 @@ def export_bundle(destination,settings,root,portable=False):
             if (root/name).is_file(): files[name]=root/name
         for file in root.glob('*.py'): files['source/'+file.name]=file
         for file in (root/'source').glob('*.py'): files.setdefault('source/'+file.name,file)
-    manifest=dict(format='shorekeeper-portable' if portable else 'shorekeeper-profile',schema_version=6,created_at=time.time(),warnings=warnings,files={name:dict(bytes=p.stat().st_size,sha256=hashlib.sha256(p.read_bytes()).hexdigest()) for name,p in files.items()})
+    manifest=dict(format='shorekeeper-portable' if portable else 'shorekeeper-profile',schema_version=7,created_at=time.time(),warnings=warnings,files={name:dict(bytes=p.stat().st_size,sha256=hashlib.sha256(p.read_bytes()).hexdigest()) for name,p in files.items()})
     destination.parent.mkdir(parents=True,exist_ok=True); temp=destination.with_suffix(destination.suffix+'.tmp')
     try:
         with zipfile.ZipFile(temp,'w',zipfile.ZIP_DEFLATED,compresslevel=4) as z:

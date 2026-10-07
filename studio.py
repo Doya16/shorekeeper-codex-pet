@@ -54,7 +54,7 @@ class BindingEditor(QDialog):
         desc=QLabel('单次：完整播放一遍，再等待设置的秒数。\n循环：总时长为 0 时持续播放；拖动松开、鼠标移开仍会结束相应交互。'); desc.setWordWrap(True); play.addRow(desc)
         self.timing=QLabel(); self.timing.setWordWrap(True); play.addRow(self.timing)
         bubble=self.form_tab('气泡与字体')
-        bubble.addRow('气泡内容',self.combo('bubble_mode',[('默认 / 已公开进度','auto'),('使用我的台词','custom'),('此状态不显示气泡','off')]))
+        bubble.addRow('气泡内容',self.combo('bubble_mode',[('默认 / 已公开进度','auto'),('使用我的台词','custom'),('自定义音频+字幕','audio'),('此状态不显示气泡','off')]))
         self.bubble_text=QPlainTextEdit(); self.bubble_text.setPlaceholderText('例如：事情办好啦！{quota}\n支持 {state}、{quota}、{task}、{progress}'); self.bubble_text.setMinimumHeight(130); self.bubble_text.textChanged.connect(lambda:self.change('bubble_text',self.bubble_text.toPlainText())); self.controls['bubble_text']=self.bubble_text; bubble.addRow('自定义台词',self.guard('bubble_text',self.bubble_text))
         bubble.addRow('气泡显示时长',self.number('bubble_seconds',0,600,.5,' 秒',zero='此状态期间始终显示'))
         families=[('跟随全局气泡字体','')]+[(f,f) for f in pet.font_families]
@@ -62,10 +62,10 @@ class BindingEditor(QDialog):
             if f not in pet.font_families: families.append((f,f))
         bubble.addRow('这个状态的字体',self.guard('font_family',self.combo('font_family',families,editable=True)))
         bubble.addRow('这个状态的字号',self.number('font_size',0,40,1,' px',zero='跟随全局字号'))
-        helper=QLabel('全局字体、额度条字号和设置面板字号在“外观、声音与迁移”中调整。'); helper.setWordWrap(True); bubble.addRow(helper)
+        helper=QLabel('气泡左右边界跟随角色当前大小，长文案自动换行，不限制行数。\n“自定义音频+字幕”只显示抽中语音的配对文案，播完收起；没有配对文案时不显示气泡。\n全局字体、额度条字号和设置面板字号在“外观、声音与迁移”中调整。'); helper.setWordWrap(True); bubble.addRow(helper)
         paired_button=QPushButton('为每条语音填写独立的配对气泡 →'); paired_button.clicked.connect(lambda:self.tabs.setCurrentIndex(3)); bubble.addRow(paired_button)
         voice=self.form_tab('语音与配对气泡')
-        paired=QCheckBox('按抽中条目显示配对气泡（文案留空时沿用通用气泡）'); self.controls['audio_subtitles']=paired; paired.toggled.connect(lambda value:self.change('audio_subtitles',value)); voice.addRow(paired)
+        paired=QLabel('配对气泡请在“气泡与字体 → 气泡内容”选择“自定义音频+字幕”。'); paired.setWordWrap(True); voice.addRow(paired)
         self.voice_pool=VoicePoolEditor(pet,lambda:self.state); self.voice_pool.changed.connect(lambda rows:self.change('audio_clips',rows)); voice.addRow(self.voice_pool)
         voice.addRow('自动播报频率',self.combo('audio_policy',[('每次进入状态（遵守冷却时间）','entry'),('同一轮任务只播一次','turn')]))
         notice=QLabel('自动语音先说完整句，切换 GIF 不会掐断。忙时保留一条待播提醒，待机／悬停不插队；主动试听和“停止声音”仍可中断。思考每轮只播一次，试听不占用次数。'); notice.setWordWrap(True); voice.addRow(notice)
@@ -155,10 +155,11 @@ class BindingEditor(QDialog):
         mode=PLAYBACKS[b['playback']]
         self.guards['hold_seconds'].lock(f'“{mode}”模式下无法修改“单次播完后再停留”；切换为“播放一次”即可调整。' if b['playback']!='once' else ('“保持此状态”模式下无法修改“单次播完后再停留”；请先更改播放结束后的切换方式。' if b['next_state']=='hold' else ''))
         self.guards['loop_seconds'].lock('“播放一次”模式下无法修改“循环总时长”；切换为循环播放即可调整。' if b['playback']=='once' else ('“保持此状态”模式下无法修改“循环总时长”；请先更改播放结束后的切换方式。' if b['next_state']=='hold' else ''))
-        bubble_mode={'auto':'默认 / 已公开进度','off':'此状态不显示气泡','custom':'使用我的台词'}[b['bubble_mode']]
+        bubble_mode={'auto':'默认 / 已公开进度','off':'此状态不显示气泡','custom':'使用我的台词','audio':'自定义音频+字幕'}[b['bubble_mode']]
         self.guards['bubble_text'].lock(f'“{bubble_mode}”模式下无法修改“自定义台词”；请选择“使用我的台词”。' if b['bubble_mode']!='custom' else '')
         for key,label in [('bubble_seconds','气泡显示时长'),('font_family','这个状态的字体'),('font_size','这个状态的字号')]:
             self.guards[key].lock(f'“此状态不显示气泡”模式下无法修改“{label}”；请先开启气泡。' if b['bubble_mode']=='off' else '')
+        if b['bubble_mode']=='audio': self.guards['bubble_seconds'].lock('“自定义音频+字幕”模式下无法修改“气泡显示时长”；气泡随配对语音播放，播完收起。')
         self.guards['audio_delay'].lock('“此状态关闭音频”模式下无法修改“进入状态后延迟”；请先勾选“此状态允许播放音频”。' if not b['audio_enabled'] else '')
     def change(self,key,value):
         if self.loading: return

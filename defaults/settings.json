@@ -6,7 +6,7 @@
       "playback": "pingpong",
       "bubble_text": "我来解决。",
       "bubble_seconds": 5.0,
-      "bubble_mode": "custom",
+      "bubble_mode": "audio",
       "font_family": "ZCOOL KuaiLe",
       "audio_clips": [
         {
@@ -69,13 +69,14 @@
           "title": "011-思考中1",
           "enabled": true
         }
-      ]
+      ],
+      "audio_delay": 0
     },
     "idle": {
       "asset": "p2-31",
       "playback": "pingpong",
       "speed": 0.75,
-      "bubble_mode": "custom",
+      "bubble_mode": "audio",
       "bubble_text": "指令或指令以外的事，都没有问题。",
       "audio_clips": [
         {
@@ -98,7 +99,7 @@
       "asset": "p1-09",
       "playback": "pingpong",
       "loop_seconds": 1.5,
-      "bubble_mode": "off",
+      "bubble_mode": "audio",
       "audio_clips": [
         {
           "file": "守岸人语音-20261006-200824-eda1e/004-拖拽1.wav",
@@ -142,7 +143,7 @@
       "asset": "p2-02",
       "bubble_text": "",
       "bubble_seconds": 4.0,
-      "bubble_mode": "custom",
+      "bubble_mode": "audio",
       "audio_clips": [
         {
           "file": "守岸人语音-20261006-200824-eda1e/004-拖拽1.wav",
@@ -192,7 +193,7 @@
       "asset": "p2-37",
       "hold_seconds": 0.5,
       "bubble_text": "欢迎回来，欢迎回到这片海岸，也欢迎你……再次来到我的身边。",
-      "bubble_mode": "custom",
+      "bubble_mode": "audio",
       "bubble_seconds": 3.0,
       "audio_clips": [
         {
@@ -262,7 +263,7 @@
       "bubble_text": "",
       "bubble_seconds": 4.0,
       "font_family": "ZCOOL KuaiLe",
-      "bubble_mode": "custom",
+      "bubble_mode": "audio",
       "audio_clips": [
         {
           "file": "守岸人语音-20261006-200824-eda1e/013-摸头语音4.wav",
@@ -290,7 +291,7 @@
       "bubble_text": "",
       "bubble_seconds": 3.0,
       "font_family": "",
-      "bubble_mode": "custom",
+      "bubble_mode": "audio",
       "font_size": 0,
       "audio_policy": "entry",
       "audio_clips": [
@@ -350,7 +351,7 @@
       "asset": "p2-38",
       "playback": "loop",
       "speed": 0.5,
-      "bubble_mode": "custom",
+      "bubble_mode": "audio",
       "audio_clips": [
         {
           "file": "守岸人语音-20261006-200824-eda1e/039-等待回应3.wav",
@@ -378,7 +379,7 @@
       "asset": "p1-20",
       "hold_seconds": 0.5,
       "bubble_text": "都给你，希望会有用。",
-      "bubble_mode": "custom",
+      "bubble_mode": "audio",
       "bubble_seconds": 5.0,
       "playback": "pingpong",
       "loop_seconds": 5.0,
@@ -408,7 +409,7 @@
       "asset": "p2-18",
       "hold_seconds": 0.5,
       "bubble_text": "这，不是结束……",
-      "bubble_mode": "custom",
+      "bubble_mode": "audio",
       "bubble_seconds": 3.0,
       "playback": "pingpong",
       "next_state": "hold",
@@ -436,7 +437,7 @@
     "paused": {
       "asset": "p1-03",
       "bubble_text": "有你想要的吗？",
-      "bubble_mode": "custom",
+      "bubble_mode": "audio",
       "bubble_seconds": 5.0,
       "audio_clips": [
         {
@@ -466,7 +467,7 @@
       "audio_clips": []
     }
   },
-  "schema_version": 6,
+  "schema_version": 7,
   "appearance": {
     "font_family": "LXGW WenKai",
     "bubble_font_family": "ZCOOL KuaiLe",

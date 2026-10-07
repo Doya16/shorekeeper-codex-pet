@@ -33,9 +33,9 @@ def clean_clips(value):
         if not isinstance(row,dict) or not isinstance(row.get('file'),str): continue
         path=row['file'].strip()[:2000]
         if not path: continue
-        clip=dict(file=path,subtitle=str(row.get('subtitle',''))[:4000],title=str(row.get('title',''))[:200],enabled=row.get('enabled',True) is not False)
+        clip=dict(file=path,subtitle=str(row.get('subtitle','')),title=str(row.get('title',''))[:200],enabled=row.get('enabled',True) is not False)
         # Keep source subtitles intact; a custom bubble can differ or be cleared.
-        if isinstance(row.get('bubble_text'),str): clip['bubble_text']=row['bubble_text'][:4000]
+        if isinstance(row.get('bubble_text'),str): clip['bubble_text']=row['bubble_text']
         result.append(clip)
     return result
 

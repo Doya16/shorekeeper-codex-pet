@@ -18,7 +18,7 @@ class VoicePoolEditor(QWidget):
         self.title=QLineEdit(); self.title.setPlaceholderText('这条语音的名称（可选）')
         self.path=QLineEdit(); self.path.setPlaceholderText('完整路径，或相对于音频目录的文件名')
         self.caption_label=QLabel('这条语音的配对气泡文案'); box.addWidget(self.caption_label)
-        self.caption=QPlainTextEdit(); self.caption.setPlaceholderText('只配对当前选中的这一条语音，可与原台词不同。\n留空：沿用该动作的通用气泡。支持 {state}、{quota}、{task}、{progress}。'); self.caption.setFixedHeight(110); box.addWidget(self.caption)
+        self.caption=QPlainTextEdit(); self.caption.setPlaceholderText('只配对当前选中的这一条语音，可与原台词不同。\n留空：此条语音不显示配对气泡。支持 {state}、{quota}、{task}、{progress}。'); self.caption.setFixedHeight(110); box.addWidget(self.caption)
         self.title.textEdited.connect(self.edit); self.path.textEdited.connect(self.edit); self.caption.textChanged.connect(self.edit)
         row=QHBoxLayout(); box.addLayout(row)
         for label,fn in [('预览选中语音 + 气泡',self.preview_selected),('随机预览一对',self.preview_random),('停止声音',pet.voice.stop)]:
@@ -48,11 +48,10 @@ class VoicePoolEditor(QWidget):
     def row_text(self,clip):
         title=clip['title'] or pathlib.Path(clip['file']).name
         text=clip_bubble_text(clip).replace('\n',' / ')
-        return title+'\n气泡：'+(text[:66]+('…' if len(text)>66 else '') if text else '沿用动作通用气泡（可在下方填写）')
+        return title+'\n气泡：'+(text[:66]+('…' if len(text)>66 else '') if text else '无配对气泡（可在下方填写）')
     def update_hint(self,binding,options):
         hints=[]
-        if not binding['audio_subtitles']: hints.append('配对显示已关闭：勾选上方“按抽中条目显示配对气泡”后生效。')
-        if binding['bubble_mode']=='off': hints.append('此动作关闭了气泡；到“气泡与字体”开启后才能显示文案。')
+        if binding['bubble_mode']!='audio': hints.append('配对文案暂不显示：请在“气泡与字体 → 气泡内容”选择“自定义音频+字幕”。')
         if not options['audio_enabled'] or not binding['audio_enabled']: hints.append('自动语音当前关闭，仍可使用预览按钮；开启声音后参与实际交互。')
         self.pair_hint.setText('\n'.join(hints) or '当前已开启配对显示；抽中哪条语音，就显示这一条的文案。')
     def save(self): self.changed.emit(clean_clips(self.clips))
@@ -75,7 +74,7 @@ class VoicePoolEditor(QWidget):
             path=pathlib.Path(value); caption=''
             try:
                 sidecar=path.with_suffix('.txt')
-                if sidecar.is_file() and sidecar.stat().st_size<64000: caption=sidecar.read_text('utf-8-sig')[:4000]
+                if sidecar.is_file(): caption=sidecar.read_text('utf-8-sig')
             except (OSError,UnicodeError): pass
             rows.append(dict(file=value,title=path.stem,subtitle=caption))
         if rows: self.append(rows)

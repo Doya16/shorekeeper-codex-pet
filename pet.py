@@ -219,7 +219,7 @@ class Pet(PetRenderer,QWidget):
 
     def voice_bubble(self):
         v=self.voice
-        return bool(v.busy and v.selected_clip and v.selected_state in STATES and self.binding(v.selected_state).get('audio_subtitles') and clip_bubble_text(v.selected_clip))
+        return bool(v.busy and v.selected_clip and v.selected_state in STATES and self.binding(v.selected_state)['bubble_mode']=='audio' and clip_bubble_text(v.selected_clip))
 
     def bubble_state(self): return self.voice.selected_state if self.voice_bubble() else self.state
     def bubble_binding(self): return self.binding(self.bubble_state())
@@ -346,11 +346,12 @@ class Pet(PetRenderer,QWidget):
         return '\n'.join(lines)+'\n* 表示缓存记录\n右键 → 刷新额度；Ctrl + 滚轮调整大小'
 
     def bubble_text(self):
-        if self.preview_id and self.override_text: return self.override_text
         b=self.binding(self.state)
         if self.voice_bubble():
             paired=clip_bubble_text(self.voice.selected_clip)
             if paired: return self.format_bubble(paired)
+        if b['bubble_mode'] in ('audio','off'): return ''
+        if self.preview_id and self.override_text: return self.override_text
         if b['bubble_mode']=='custom':
             return self.format_bubble(b['bubble_text'])
         if self.override: return STATES[self.state][1]
@@ -513,7 +514,7 @@ class Pet(PetRenderer,QWidget):
 
     def save_settings(self):
         try:
-            self.settings['schema_version']=6; self.settings['bindings']=self.bindings.to_dict(); self.settings['appearance']=dict(self.options); self.settings['scale']=self.requested_scale
+            self.settings['schema_version']=7; self.settings['bindings']=self.bindings.to_dict(); self.settings['appearance']=dict(self.options); self.settings['scale']=self.requested_scale
             save_atomic(SETTINGS,self.settings); return True
         except OSError: return False
 
@@ -580,7 +581,9 @@ def main():
                 from pcm_player import verify_output
                 with tempfile.TemporaryDirectory() as directory:
                     decoder_ok=verify_decoder(directory); output_ok=verify_output(directory)
-                report=dict(ok=len(pet.font_families)>=2 and decoder_ok and output_ok,audio_decoder=decoder_ok,audio_output=output_ok,version=VERSION,fonts=pet.font_families,assets=len(ASSETS),bindings=len(pet.bindings.overrides),root=str(ROOT),frozen=bool(getattr(sys,'frozen',False)),scale=pet.requested_scale,size_control_percent=pet.size_dialog.control.percent.value())
+                bubble_bounds=pet.bubble_left>=pet.pet_rect.left()*pet.scale_factor and pet.bubble_left+pet.bubble_window.width()<=pet.pet_rect.right()*pet.scale_factor
+                audio_mode=pet.binding_editor.controls['bubble_mode'].findText('自定义音频+字幕')>=0
+                report=dict(ok=len(pet.font_families)>=2 and decoder_ok and output_ok and bubble_bounds and audio_mode,audio_decoder=decoder_ok,audio_output=output_ok,bubble_bounds=bubble_bounds,audio_subtitle_mode=audio_mode,version=VERSION,fonts=pet.font_families,assets=len(ASSETS),bindings=len(pet.bindings.overrides),root=str(ROOT),frozen=bool(getattr(sys,'frozen',False)),scale=pet.requested_scale,size_control_percent=pet.size_dialog.control.percent.value())
                 (ROOT/'package-check.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf8')
             except Exception:
                 import traceback

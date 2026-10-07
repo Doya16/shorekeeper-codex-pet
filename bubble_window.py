@@ -1,4 +1,4 @@
-"""A non-interactive bubble that stays on screen without widening the pet."""
+"""A non-interactive bubble that follows the character's horizontal bounds."""
 from PySide6.QtCore import Qt,QRectF
 from PySide6.QtGui import QPainter,QPainterPath,QPen,QColor,QFontMetrics
 from PySide6.QtWidgets import QWidget
@@ -25,12 +25,13 @@ class SpeechBubble(QWidget):
         p.setPen(QPen(QColor('#adc6e7'),1.4)); p.setBrush(QColor(249,252,255,253)); p.drawPath(path)
         state=pet.bubble_state(); color='#d99436' if state in ('error','waiting') else '#588ccd'
         p.setPen(Qt.PenStyle.NoPen); p.setBrush(QColor(color)); p.drawEllipse(QRectF(24,27,8,8))
-        p.setPen(QColor('#315a88')); p.setFont(font(opts['font_family'],max(15,opts['ui_font_size']-1),True))
-        title='守岸人 · '+pet.state_title(state)
-        title=QFontMetrics(p.font()).elidedText(title,Qt.TextElideMode.ElideRight,round(width-70))
-        p.drawText(QRectF(42,20,width-70,27),title)
-        p.setFont(pet.bubble_font); p.setPen(QColor('#314963')); baseline=51+QFontMetrics(pet.bubble_font).ascent()
+        p.setPen(QColor('#315a88')); p.setFont(pet.bubble_title_font)
+        baseline=22+QFontMetrics(p.font()).ascent()
+        for line in pet.bubble_title_lines: p.drawText(42,round(baseline),line); baseline+=pet.bubble_title_height
+        p.setFont(pet.bubble_font); p.setPen(QColor('#314963')); baseline=pet.bubble_body_top+QFontMetrics(pet.bubble_font).ascent()
         for line in pet.bubble_lines: p.drawText(26,round(baseline),line); baseline+=pet.bubble_line_height
-        p.setPen(QColor('#ccdcee')); p.drawLine(25,round(r.bottom()-28),round(width-25),round(r.bottom()-28))
-        p.setPen(QColor('#6482a3')); p.setFont(font(opts['font_family'],max(13,opts['ui_font_size']-3)))
-        p.drawText(QRectF(25,r.bottom()-24,width-50,22),'双击互动 · 右键自定义'); p.end()
+        p.setPen(QColor('#ccdcee')); p.drawLine(25,round(pet.bubble_divider_y),round(width-25),round(pet.bubble_divider_y))
+        p.setPen(QColor('#6482a3')); p.setFont(pet.bubble_footer_font)
+        baseline=pet.bubble_divider_y+6+QFontMetrics(p.font()).ascent()
+        for line in pet.bubble_footer_lines: p.drawText(26,round(baseline),line); baseline+=pet.bubble_footer_height
+        p.end()

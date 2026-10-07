@@ -37,3 +37,9 @@ Promotional media
   The demonstration videos use an excerpt; the full music recording is not bundled.
 - Codex product icon: OpenAI, from the Codex application UI.
   Music and product marks remain the property of their respective owners.
+
+Showcase background
+- Original game UI textures: T_RoleSkillBg_UI.png, T_Nebula012.png, T_BackBStar.png.
+- Resource mirror: https://github.com/555me/Wuthering-Waves-GameAssets
+- Game and artwork: Wuthering Waves / KURO GAMES.
+- The video layers these textures with drifting light and twinkling stars.

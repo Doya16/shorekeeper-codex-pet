@@ -1,0 +1,488 @@
+{
+  "quiet": true,
+  "bindings": {
+    "thinking": {
+      "asset": "p1-12",
+      "playback": "pingpong",
+      "bubble_text": "我来解决。",
+      "bubble_seconds": 5.0,
+      "bubble_mode": "custom",
+      "font_family": "ZCOOL KuaiLe",
+      "audio_clips": [
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/033-思考中.wav",
+          "subtitle": "一切都将随你的心意衍生、改变。",
+          "title": "033-思考中",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/028-思考9.ogg",
+          "subtitle": "我将为你所用。",
+          "title": "028-思考9",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/027-思考8.ogg",
+          "subtitle": "我来解决。",
+          "title": "027-思考8",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/026-思考7.ogg",
+          "subtitle": "启用。",
+          "title": "026-思考7",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/025-思考6.ogg",
+          "subtitle": "载入。",
+          "title": "025-思考6",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/020-思考5.ogg",
+          "subtitle": "协星调律。",
+          "title": "020-思考5",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/017-思考4.wav",
+          "subtitle": "晶体似乎更亮了一些。",
+          "title": "017-思考4",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/016-思考3.wav",
+          "subtitle": "能量更迭，像机杼上的丝线。",
+          "title": "016-思考3",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/015-思考2.wav",
+          "subtitle": "而我透过它们，理解不曾抵达的世界。",
+          "title": "015-思考2",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/011-思考中1.ogg",
+          "subtitle": "明白了，我会承载你的需要。",
+          "title": "011-思考中1",
+          "enabled": true
+        }
+      ]
+    },
+    "idle": {
+      "asset": "p2-31",
+      "playback": "pingpong",
+      "speed": 0.75,
+      "bubble_mode": "custom",
+      "bubble_text": "指令或指令以外的事，都没有问题。",
+      "audio_clips": [
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/014-待机陪伴1.ogg",
+          "subtitle": "指令或指令以外的事，都没有问题。",
+          "title": "014-待机陪伴1",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/012-待机陪伴1.wav",
+          "subtitle": "守岸人，这个称呼就很好。它表示，某种因你而有的意义和决心。",
+          "title": "012-待机陪伴1",
+          "enabled": true
+        }
+      ],
+      "bubble_seconds": 3.0,
+      "audio_policy": "turn"
+    },
+    "doubleclick": {
+      "asset": "p1-09",
+      "playback": "pingpong",
+      "loop_seconds": 1.5,
+      "bubble_mode": "off",
+      "audio_clips": [
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/004-拖拽1.wav",
+          "subtitle": "嗯？",
+          "title": "004-拖拽1",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/005-拖拽2.wav",
+          "subtitle": "啊？",
+          "title": "005-拖拽2",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/009-拖拽4.wav",
+          "subtitle": "（语气词）",
+          "title": "009-拖拽4",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/010-拖拽5.wav",
+          "subtitle": "（语气词）",
+          "title": "010-拖拽5",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/021-拖拽7.ogg",
+          "subtitle": "不要紧。",
+          "title": "021-拖拽7",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/035-拖拽8.wav",
+          "subtitle": "嗯",
+          "title": "035-拖拽8",
+          "enabled": true
+        }
+      ]
+    },
+    "drag": {
+      "asset": "p2-02",
+      "bubble_text": "",
+      "bubble_seconds": 4.0,
+      "bubble_mode": "custom",
+      "audio_clips": [
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/004-拖拽1.wav",
+          "subtitle": "嗯？",
+          "title": "004-拖拽1",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/005-拖拽2.wav",
+          "subtitle": "啊？",
+          "title": "005-拖拽2",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/006-拖拽3.wav",
+          "subtitle": "是发生什么了吗",
+          "title": "006-拖拽3",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/009-拖拽4.wav",
+          "subtitle": "（语气词）",
+          "title": "009-拖拽4",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/010-拖拽5.wav",
+          "subtitle": "（语气词）",
+          "title": "010-拖拽5",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/018-拖拽语音.ogg",
+          "subtitle": "没事的。",
+          "title": "018-拖拽语音",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/019-拖拽6.ogg",
+          "subtitle": "我在这里。",
+          "title": "019-拖拽6",
+          "enabled": true
+        }
+      ]
+    },
+    "drop": {
+      "asset": "p2-37",
+      "hold_seconds": 0.5,
+      "bubble_text": "欢迎回来，欢迎回到这片海岸，也欢迎你……再次来到我的身边。",
+      "bubble_mode": "custom",
+      "bubble_seconds": 3.0,
+      "audio_clips": [
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/004-拖拽1.wav",
+          "subtitle": "嗯？",
+          "title": "004-拖拽1",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/005-拖拽2.wav",
+          "subtitle": "啊？",
+          "title": "005-拖拽2",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/006-拖拽3.wav",
+          "subtitle": "是发生什么了吗",
+          "title": "006-拖拽3",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/009-拖拽4.wav",
+          "subtitle": "（语气词）",
+          "title": "009-拖拽4",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/010-拖拽5.wav",
+          "subtitle": "（语气词）",
+          "title": "010-拖拽5",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/018-拖拽语音.ogg",
+          "subtitle": "没事的。",
+          "title": "018-拖拽语音",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/019-拖拽6.ogg",
+          "subtitle": "我在这里。",
+          "title": "019-拖拽6",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/021-拖拽7.ogg",
+          "subtitle": "不要紧。",
+          "title": "021-拖拽7",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/032-放下.wav",
+          "subtitle": "明明没有东西跳动，看见你的时候，却总能感到胸腔传来异响。",
+          "title": "032-放下",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/035-拖拽8.wav",
+          "subtitle": "嗯",
+          "title": "035-拖拽8",
+          "enabled": true
+        }
+      ]
+    },
+    "hover": {
+      "asset": "p1-04",
+      "bubble_text": "",
+      "bubble_seconds": 4.0,
+      "font_family": "ZCOOL KuaiLe",
+      "bubble_mode": "custom",
+      "audio_clips": [
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/013-摸头语音4.wav",
+          "subtitle": "我是守岸人，黑海岸的代行者，辅助泰缇斯的运算核心。",
+          "title": "013-摸头语音4",
+          "enabled": true
+        }
+      ],
+      "audio_avoid_repeat": true
+    },
+    "feed": {
+      "asset": "p1-16",
+      "bubble_text": "水是生命的底层物质，请不要忘记摄入足够的水分。",
+      "bubble_seconds": 5.0,
+      "bubble_mode": "custom",
+      "playback": "loop",
+      "loop_seconds": 5.0
+    },
+    "pet": {
+      "asset": "p2-10",
+      "playback": "pingpong",
+      "loop_seconds": 3.0,
+      "next_state": "auto",
+      "hold_seconds": 0.5,
+      "bubble_text": "",
+      "bubble_seconds": 3.0,
+      "font_family": "",
+      "bubble_mode": "custom",
+      "font_size": 0,
+      "audio_policy": "entry",
+      "audio_clips": [
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/001-摸头语音.wav",
+          "subtitle": "下次离开的时候……可以带上我一起吗？",
+          "title": "001-摸头语音",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/002-摸头语音2.wav",
+          "subtitle": "做这些……够帮助大家吗？",
+          "title": "002-摸头语音2",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/003-摸头语音3.wav",
+          "subtitle": "我有像你叮嘱过的那样，照顾好黑海岸吗？",
+          "title": "003-摸头语音3",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/034-摸头.wav",
+          "subtitle": "我的使命，在我真正存在前就已经定好",
+          "title": "034-摸头",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/038-摸头8.wav",
+          "subtitle": "再次见面，是只有我一个人知道的重逢。但不要紧，就算你已经忘记了我们之间的一切，我会记得，一直记得。",
+          "title": "038-摸头8",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/040-摸头9.wav",
+          "subtitle": "欢迎回来，欢迎回到这片海岸，也欢迎你……再次来到我的身边。",
+          "title": "040-摸头9",
+          "enabled": true
+        }
+      ]
+    },
+    "reading": {
+      "asset": "p2-07",
+      "bubble_text": "不管读过多少书，复现过多少次他人的经历，我都没办法补上那一部分的缺失。",
+      "bubble_mode": "off",
+      "font_family": ""
+    },
+    "writing": {
+      "asset": "p2-06",
+      "bubble_mode": "off"
+    },
+    "working": {
+      "asset": "p2-19",
+      "bubble_mode": "off"
+    },
+    "waiting": {
+      "asset": "p2-38",
+      "playback": "loop",
+      "speed": 0.5,
+      "bubble_mode": "custom",
+      "audio_clips": [
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/039-等待回应3.wav",
+          "subtitle": "计划的目标全都实现了吗？",
+          "title": "039-等待回应3",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/036-等待回应.wav",
+          "subtitle": "没有真正体验过，是没办法真正懂得的。",
+          "title": "036-等待回应",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/031-等待你回应.ogg",
+          "subtitle": "遗落的回响。",
+          "title": "031-等待你回应",
+          "enabled": true
+        }
+      ],
+      "bubble_text": "（codex等待回应）",
+      "bubble_seconds": 5.0
+    },
+    "done": {
+      "asset": "p1-20",
+      "hold_seconds": 0.5,
+      "bubble_text": "都给你，希望会有用。",
+      "bubble_mode": "custom",
+      "bubble_seconds": 5.0,
+      "playback": "pingpong",
+      "loop_seconds": 5.0,
+      "font_family": "",
+      "audio_clips": [
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/037-任务完成.wav",
+          "subtitle": "梦是愿望的达成",
+          "title": "037-任务完成",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/030-任务完成.ogg",
+          "subtitle": "都给你，希望会有用。",
+          "title": "030-任务完成",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/029-任务完成.ogg",
+          "subtitle": "有你想要的吗？",
+          "title": "029-任务完成",
+          "enabled": true
+        }
+      ]
+    },
+    "error": {
+      "asset": "p2-18",
+      "hold_seconds": 0.5,
+      "bubble_text": "这，不是结束……",
+      "bubble_mode": "custom",
+      "bubble_seconds": 3.0,
+      "playback": "pingpong",
+      "next_state": "hold",
+      "audio_clips": [
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/024-任务出错3.ogg",
+          "subtitle": "超出……使用限度。",
+          "title": "024-任务出错3",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/023-任务出错2.ogg",
+          "subtitle": "这，不是结束……",
+          "title": "023-任务出错2",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/022-任务出错.ogg",
+          "subtitle": "可用性降低。",
+          "title": "022-任务出错",
+          "enabled": true
+        }
+      ]
+    },
+    "paused": {
+      "asset": "p1-03",
+      "bubble_text": "有你想要的吗？",
+      "bubble_mode": "custom",
+      "bubble_seconds": 5.0,
+      "audio_clips": [
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/024-任务出错3.ogg",
+          "subtitle": "超出……使用限度。",
+          "title": "024-任务出错3",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/023-任务出错2.ogg",
+          "subtitle": "这，不是结束……",
+          "title": "023-任务出错2",
+          "enabled": true
+        },
+        {
+          "file": "守岸人语音-20261006-200824-eda1e/022-任务出错.ogg",
+          "subtitle": "可用性降低。",
+          "title": "022-任务出错",
+          "enabled": true
+        }
+      ]
+    },
+    "unknown": {
+      "asset": "p1-15",
+      "bubble_text": "群星静默，直至找到它们的路。",
+      "bubble_mode": "custom",
+      "audio_clips": []
+    }
+  },
+  "schema_version": 6,
+  "appearance": {
+    "font_family": "LXGW WenKai",
+    "bubble_font_family": "ZCOOL KuaiLe",
+    "bubble_font_size": 19,
+    "quota_font_size": 17,
+    "ui_font_size": 17,
+    "bubble_width": 389,
+    "pet_size": 230,
+    "volume": 10,
+    "audio_enabled": true,
+    "audio_cooldown": 8,
+    "audio_directory": "defaults/audio",
+    "codex_home": "",
+    "codex_executable": ""
+  },
+  "pack": "163",
+  "thread": "auto",
+  "scale": 0.85
+}

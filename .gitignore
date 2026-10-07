@@ -8,9 +8,9 @@ backups/
 qa/
 research/
 .audio-cache/
-settings.json
-settings.json.bak
-settings.json.tmp
+/settings.json
+/settings.json.bak
+/settings.json.tmp
 runtime.json
 voice-history.json
 pet.lock

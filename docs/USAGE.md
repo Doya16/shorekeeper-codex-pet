@@ -6,7 +6,7 @@
 
 **关键词：Codex 守岸人、Codex 桌宠、守岸人桌宠、Codex 插件、鸣潮守岸人、Shorekeeper desktop pet。**
 
-[下载 Windows 完整包](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) · [观看横屏演示（含语音与 BGM）](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.0/shorekeeper-landscape.mp4) · [观看竖屏演示](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.0/shorekeeper-portrait.mp4)
+[下载 Windows 完整包](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) · [观看横屏演示（含语音与 BGM）](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.1/shorekeeper-landscape.mp4) · [观看竖屏演示](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.1/shorekeeper-portrait.mp4)
 
 ![守岸人 Codex 桌宠：思考、查阅、编辑与配对气泡](social/cover-landscape.jpg)
 
@@ -17,7 +17,7 @@
 ## 开始使用
 
 1. 在 Windows 10/11 x64 上安装并登录 Codex。
-2. 从 Releases 下载 **Shorekeeper-Windows-v0.8.zip**，完整解压到可写目录。
+2. 从 Releases 下载 **Shorekeeper-Windows-v0.8.1.zip**，完整解压到可写目录。
 3. 双击 **Shorekeeper.exe**。保留同目录下的其他文件夹。
 4. 右键桌宠，选择 **自动跟随当前任务**。
 5. 右键 → **交互工作室**，开始选择你喜欢的表情和声音。

@@ -4,26 +4,26 @@
 
 **跟随 Codex 任务切换表情，支持自定义 GIF、语音和气泡台词。**
 
-[下载 Windows 版](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) · [观看演示](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.0/shorekeeper-landscape-r2.mp4) · [使用指南](docs/USAGE.md) · [问题反馈](https://github.com/Doya16/shorekeeper-codex-pet/issues)
+[下载 Windows 版](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) · [观看演示](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.1/shorekeeper-landscape.mp4) · [使用指南](docs/USAGE.md) · [问题反馈](https://github.com/Doya16/shorekeeper-codex-pet/issues)
 
 ![守岸人 Codex 桌宠](docs/social/cover-landscape.jpg)
 
 </div>
 
-适用于 **Windows 10/11 x64**。完整包附带默认配置、83 个 GIF、40 个音频文件和字体，解压后即可运行，无需安装 Python。
+适用于 **Windows 10/11 x64**。完整包附带 GB0227、GB0227 DLC、163 三套表情，共 83 个 GIF，以及 40 个音频文件、对应台词和字体。表情绑定、播放节奏、气泡、语音及外观已预设，解压后即可运行，无需安装 Python。
 
 ## 效果预览
 
-![思考、查阅、编辑时切换表情](docs/demo/preview.gif)
+![思考、查阅、编辑与循环表情展示](docs/social/showcase.gif)
 
-[横屏视频：互动与完整设置演示](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.0/shorekeeper-landscape-r2.mp4) · [竖屏视频](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.0/shorekeeper-portrait-r2.mp4)
+[横屏视频：互动与完整设置演示](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.1/shorekeeper-landscape.mp4) · [竖屏视频](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.1/shorekeeper-portrait.mp4)
 
-视频包含角色语音与守岸人角色曲 [《溯而复始》](https://www.bilibili.com/video/BV1jL4PeYEn8/)（鸣潮先约电台出品）。画面中的任务和额度为演示示例。
+视频包含角色语音与守岸人角色曲 [《溯而复始》](https://www.bilibili.com/video/BV1jL4PeYEn8/)（鸣潮先约电台出品）。展示页采用鸣潮角色界面的动态星空背景，右侧表情循环播放。画面中的任务和额度为演示示例。
 
 ## 下载与使用
 
 1. 在 Windows 上安装并登录 **Codex**。
-2. 打开 [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest)，下载 **Shorekeeper-Windows-v0.8.zip**。
+2. 打开 [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest)，下载 **Shorekeeper-Windows-v0.8.1.zip**。
 3. 完整解压，运行 **Shorekeeper.exe**，保留同目录的其他文件夹。
 4. 右键桌宠 → **自动跟随当前任务**；打开 **交互工作室**即可更换表情和语音。
 

@@ -481,7 +481,9 @@
     "audio_cooldown": 8,
     "audio_directory": "defaults/audio",
     "codex_home": "",
-    "codex_executable": ""
+    "codex_executable": "",
+    "bubble_width_ratio": 1.0,
+    "quota_scale": 1.0
   },
   "pack": "163",
   "thread": "auto",

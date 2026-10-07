@@ -18,6 +18,7 @@ from binding_editor import TRIGGERS
 from paths import VERSION,CODEX_HOME
 from voice_pool import task_key,clip_bubble_text
 from sizing import SizeDialog,normalize_scale
+from presentation_size import EdgeResize
 from media_library import load_catalog
 from presets import load_defaults,default_bindings
 
@@ -148,6 +149,7 @@ class Pet(PetRenderer,QWidget):
         self.settings=load_settings()
         self.options=appearance(self.settings); self.font_families=load_fonts(ROOT)
         self.position_ready=False; self.preferences=None; self.size_dialog=None; self.offline=offline
+        self.presentation_previews=set(); self.quota_resize=EdgeResize(self,self,'quota_scale')
         self.requested_scale=normalize_scale(self.settings.get('scale',1.0)); self.scale_factor=self.requested_scale
         self.pack=self.settings.get('pack','163')
         if self.pack not in PACKS: self.pack='163'
@@ -221,7 +223,9 @@ class Pet(PetRenderer,QWidget):
         v=self.voice
         return bool(v.busy and v.selected_clip and v.selected_state in STATES and self.binding(v.selected_state)['bubble_mode']=='audio' and clip_bubble_text(v.selected_clip))
 
-    def bubble_state(self): return self.voice.selected_state if self.voice_bubble() else self.state
+    def bubble_state(self):
+        if hasattr(self,'bubble_window') and self.bubble_window.edge_resize.active: return self.bubble_window.edge_resize.state
+        return self.voice.selected_state if self.voice_bubble() else self.state
     def bubble_binding(self): return self.binding(self.bubble_state())
     def on_voice_changed(self):
         if hasattr(self,'bubble_window'): self.update_layout(); self.update()
@@ -343,9 +347,11 @@ class Pet(PetRenderer,QWidget):
         for window in self.quota_data.get('windows',[]):
             reset=datetime.fromtimestamp(window['resets_at']).astimezone().strftime('%m/%d %H:%M') if window.get('resets_at') else '未知'
             lines.append(f"{window.get('name','Codex')} · {window['label']}剩余 {window['remaining']:g}% · 重置 {reset}")
-        return '\n'.join(lines)+'\n* 表示缓存记录\n右键 → 刷新额度；Ctrl + 滚轮调整大小'
+        return '\n'.join(lines)+'\n* 表示缓存记录\n拖动配额条左右两侧调整大小\n右键 → 刷新额度；Ctrl + 滚轮缩放桌宠'
 
     def bubble_text(self):
+        if hasattr(self,'bubble_window') and self.bubble_window.edge_resize.active: return self.bubble_window.edge_resize.text
+        if self.presentation_previews: return '这是气泡宽度预览。\n拖动左右边缘试试看，长台词会自动换行。'
         b=self.binding(self.state)
         if self.voice_bubble():
             paired=clip_bubble_text(self.voice.selected_clip)
@@ -366,11 +372,15 @@ class Pet(PetRenderer,QWidget):
         return text
 
     def mousePressEvent(self, event):
+        if self.quota_resize.begin(event,self.quota_hit_rect(),self.quota_base_width*self.scale_factor):
+            self.drag_offset=None; return
         if event.button()==Qt.MouseButton.LeftButton:
+            if not self.pet_rect.contains(event.position()/self.scale_factor): event.accept(); return
             self.hover_timer.stop(); self.click_timer.stop(); self.ignore_release=False
             self.drag_offset=event.globalPosition().toPoint()-self.pos(); self.drag_origin=event.globalPosition().toPoint(); self.dragged=False
 
     def mouseMoveEvent(self, event):
+        if self.quota_resize.move(event,self.quota_hit_rect()): return
         if self.drag_offset is not None and event.buttons()&Qt.MouseButton.LeftButton:
             if (event.globalPosition().toPoint()-self.drag_origin).manhattanLength()>6:
                 if not self.dragged: self.react('drag')
@@ -378,6 +388,7 @@ class Pet(PetRenderer,QWidget):
         elif not self.hovered and not self.hover_timer.isActive(): self.hover_timer.start(1000)
 
     def mouseReleaseEvent(self, event):
+        if self.quota_resize.finish(event): return
         if event.button()!=Qt.MouseButton.LeftButton: return
         if self.ignore_release:
             self.ignore_release=False; self.drag_offset=None; return
@@ -405,13 +416,15 @@ class Pet(PetRenderer,QWidget):
         self.hover_timer.start(1000); super().enterEvent(event)
 
     def leaveEvent(self,event):
+        if self.quota_resize.active: super().leaveEvent(event); return
+        self.unsetCursor()
         self.hover_timer.stop(); self.hovered=False
         if self.override=='hover': self.clear_override()
         super().leaveEvent(event)
 
     def hover_react(self):
         local=self.mapFromGlobal(QCursor.pos())/self.scale_factor
-        if self.drag_offset is None and not self.override and not self.hovered and self.underMouse() and self.pet_rect.contains(local):
+        if not self.quota_resize.active and self.drag_offset is None and not self.override and not self.hovered and self.underMouse() and self.pet_rect.contains(local):
             self.hovered=True; self.react('hover')
 
     def context_menu(self):
@@ -467,6 +480,22 @@ class Pet(PetRenderer,QWidget):
         if key.startswith('codex'): self.refresh_event.set()
         return ok
 
+    def quota_hit_rect(self):
+        r=self.quota_rect; s=self.scale_factor
+        return QRectF(r.x()*s,r.y()*s,r.width()*s,r.height()*s)
+
+    def set_presentation_size(self,key,value,save=True):
+        if key not in ('bubble_width_ratio','quota_scale'): raise ValueError('Unknown size control')
+        self.options[key]=round(value,4); self.settings['appearance']=dict(self.options); self.options=appearance(self.settings)
+        self.update_layout(); self.update()
+        return self.save_settings() if save else True
+
+    def set_bubble_preview(self,source,on):
+        if on: self.presentation_previews.add(source)
+        else: self.presentation_previews.discard(source)
+        self.update_layout(); self.update()
+        if on: self.show()
+
     def apply_style(self):
         QApplication.instance().setFont(font(self.options['font_family'],self.options['ui_font_size']))
         for dialog in (self.panel,self.binding_editor,self.preferences,self.size_dialog):
@@ -502,6 +531,7 @@ class Pet(PetRenderer,QWidget):
     def showEvent(self,event):
         self.update_bubble(); super().showEvent(event)
     def hideEvent(self,event):
+        self.quota_resize.finish()
         self.bubble_window.hide(); super().hideEvent(event)
 
     def screen_area(self):
@@ -581,9 +611,10 @@ def main():
                 from pcm_player import verify_output
                 with tempfile.TemporaryDirectory() as directory:
                     decoder_ok=verify_decoder(directory); output_ok=verify_output(directory)
-                bubble_bounds=pet.bubble_left>=pet.pet_rect.left()*pet.scale_factor and pet.bubble_left+pet.bubble_window.width()<=pet.pet_rect.right()*pet.scale_factor
+                bubble_bounds=pet.bubble_window.width()<=pet.screen_area().width()
                 audio_mode=pet.binding_editor.controls['bubble_mode'].findText('自定义音频+字幕')>=0
-                report=dict(ok=len(pet.font_families)>=2 and decoder_ok and output_ok and bubble_bounds and audio_mode,audio_decoder=decoder_ok,audio_output=output_ok,bubble_bounds=bubble_bounds,audio_subtitle_mode=audio_mode,version=VERSION,fonts=pet.font_families,assets=len(ASSETS),bindings=len(pet.bindings.overrides),root=str(ROOT),frozen=bool(getattr(sys,'frozen',False)),scale=pet.requested_scale,size_control_percent=pet.size_dialog.control.percent.value())
+                resize_controls=all(key in pet.size_dialog.presentation_control.controls for key in ('bubble_width_ratio','quota_scale'))
+                report=dict(ok=len(pet.font_families)>=2 and decoder_ok and output_ok and bubble_bounds and audio_mode and resize_controls,audio_decoder=decoder_ok,audio_output=output_ok,bubble_bounds=bubble_bounds,audio_subtitle_mode=audio_mode,resize_controls=resize_controls,version=VERSION,fonts=pet.font_families,assets=len(ASSETS),bindings=len(pet.bindings.overrides),root=str(ROOT),frozen=bool(getattr(sys,'frozen',False)),scale=pet.requested_scale,size_control_percent=pet.size_dialog.control.percent.value())
                 (ROOT/'package-check.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf8')
             except Exception:
                 import traceback

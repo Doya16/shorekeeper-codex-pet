@@ -6,6 +6,7 @@ from appearance import stylesheet,load_fonts
 from config_io import export_bundle,import_bundle,save_atomic
 from paths import ROOT,CODEX_HOME
 from sizing import SizeControl
+from presentation_size import PresentationControl
 
 class Jobs(QObject):
     finished=Signal(str); failed=Signal(str)
@@ -25,7 +26,7 @@ class Preferences(QDialog):
         visual.addRow('气泡文字',self.spin('bubble_font_size',12,40,' px'))
         visual.addRow('额度条文字',self.spin('quota_font_size',12,32,' px'))
         visual.addRow('设置面板文字',self.spin('ui_font_size',13,28,' px'))
-        bubble_note=QLabel('跟随角色当前大小；长文案自动换行，向下延伸。'); bubble_note.setWordWrap(True); visual.addRow('气泡宽度',bubble_note)
+        self.presentation_control=PresentationControl(pet); visual.addRow('气泡与配额 · 实时预览',self.presentation_control)
         visual.addRow('角色基础大小（100%）',self.spin('pet_size',140,420,' px'))
         add=QPushButton('添加本地字体文件…'); add.clicked.connect(self.add_font); visual.addRow(add)
         note=QLabel('已内置站酷快乐体与霞鹜文楷，随迁移包携带，无需安装到系统。单个状态也可以单独设置字体与字号。'); note.setWordWrap(True); visual.addRow(note)

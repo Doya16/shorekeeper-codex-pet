@@ -1,18 +1,37 @@
-"""A non-interactive bubble that follows the character's horizontal bounds."""
+"""A speech bubble with directly draggable horizontal resize handles."""
 from PySide6.QtCore import Qt,QRectF
 from PySide6.QtGui import QPainter,QPainterPath,QPen,QColor,QFontMetrics
 from PySide6.QtWidgets import QWidget
 from appearance import font
+from presentation_size import EdgeResize,paint_grips
 
 class SpeechBubble(QWidget):
     def __init__(self,pet):
-        flags=Qt.WindowType.Tool|Qt.WindowType.FramelessWindowHint|Qt.WindowType.WindowDoesNotAcceptFocus|Qt.WindowType.WindowTransparentForInput
+        flags=Qt.WindowType.Tool|Qt.WindowType.FramelessWindowHint|Qt.WindowType.WindowDoesNotAcceptFocus
         if pet.on_top: flags|=Qt.WindowType.WindowStaysOnTopHint
         super().__init__(pet,flags); self.pet=pet; self.arrow_x=0; self.above=True
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        self.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
         self.setWindowTitle('守岸人 · 气泡')
+        self.setMouseTracking(True); self.edge_resize=EdgeResize(self,pet,'bubble_width_ratio')
+        self.setToolTip('拖动左右两侧小竖线调整气泡宽度 · Ctrl + 滚轮缩放桌宠')
+
+    def hit_rect(self):
+        r=self.pet.bubble_rect; s=self.pet.bubble_scale
+        return QRectF(r.x()*s,r.y()*s,r.width()*s,r.height()*s)
+
+    def mousePressEvent(self,event):
+        self.edge_resize.begin(event,self.hit_rect(),self.pet.options['pet_size']*self.pet.scale_factor); event.accept()
+
+    def mouseMoveEvent(self,event): self.edge_resize.move(event,self.hit_rect()); event.accept()
+    def mouseReleaseEvent(self,event): self.edge_resize.finish(event); event.accept()
+    def mouseDoubleClickEvent(self,event): event.accept()
+    def wheelEvent(self,event): self.pet.wheelEvent(event)
+    def leaveEvent(self,event):
+        if not self.edge_resize.active: self.unsetCursor()
+        super().leaveEvent(event)
+    def hideEvent(self,event): self.edge_resize.finish(); super().hideEvent(event)
+    def contextMenuEvent(self,event): self.pet.contextMenuEvent(event)
 
     def paintEvent(self,event):
         pet=self.pet; opts=pet.options; width=pet.bubble_width; r=pet.bubble_rect
@@ -34,4 +53,5 @@ class SpeechBubble(QWidget):
         p.setPen(QColor('#6482a3')); p.setFont(pet.bubble_footer_font)
         baseline=pet.bubble_divider_y+6+QFontMetrics(p.font()).ascent()
         for line in pet.bubble_footer_lines: p.drawText(26,round(baseline),line); baseline+=pet.bubble_footer_height
+        paint_grips(p,r,pet.bubble_scale)
         p.end()

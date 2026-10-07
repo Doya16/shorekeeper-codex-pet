@@ -8,6 +8,7 @@ from bindings import PLAYBACKS
 from appearance import stylesheet
 from voice_editor import VoicePoolEditor
 from control_guard import GuardedField
+from presentation_size import PresentationControl
 from media_library import IMAGE_FILTER,IMAGE_HELP,import_images
 import pathlib
 
@@ -54,6 +55,7 @@ class BindingEditor(QDialog):
         desc=QLabel('单次：完整播放一遍，再等待设置的秒数。\n循环：总时长为 0 时持续播放；拖动松开、鼠标移开仍会结束相应交互。'); desc.setWordWrap(True); play.addRow(desc)
         self.timing=QLabel(); self.timing.setWordWrap(True); play.addRow(self.timing)
         bubble=self.form_tab('气泡与字体')
+        self.presentation_control=PresentationControl(pet,quota=False); bubble.addRow('气泡宽度（全局）',self.presentation_control)
         bubble.addRow('气泡内容',self.combo('bubble_mode',[('默认 / 已公开进度','auto'),('使用我的台词','custom'),('自定义音频+字幕','audio'),('此状态不显示气泡','off')]))
         self.bubble_text=QPlainTextEdit(); self.bubble_text.setPlaceholderText('例如：事情办好啦！{quota}\n支持 {state}、{quota}、{task}、{progress}'); self.bubble_text.setMinimumHeight(130); self.bubble_text.textChanged.connect(lambda:self.change('bubble_text',self.bubble_text.toPlainText())); self.controls['bubble_text']=self.bubble_text; bubble.addRow('自定义台词',self.guard('bubble_text',self.bubble_text))
         bubble.addRow('气泡显示时长',self.number('bubble_seconds',0,600,.5,' 秒',zero='此状态期间始终显示'))
@@ -62,7 +64,7 @@ class BindingEditor(QDialog):
             if f not in pet.font_families: families.append((f,f))
         bubble.addRow('这个状态的字体',self.guard('font_family',self.combo('font_family',families,editable=True)))
         bubble.addRow('这个状态的字号',self.number('font_size',0,40,1,' px',zero='跟随全局字号'))
-        helper=QLabel('气泡左右边界跟随角色当前大小，长文案自动换行，不限制行数。\n“自定义音频+字幕”只显示抽中语音的配对文案，播完收起；没有配对文案时不显示气泡。\n全局字体、额度条字号和设置面板字号在“外观、声音与迁移”中调整。'); helper.setWordWrap(True); bubble.addRow(helper)
+        helper=QLabel('气泡宽度可单独预览、拖边调整；桌宠缩放时按保存的比例同步变化。长文案自动换行，不限制行数。\n“自定义音频+字幕”只显示抽中语音的配对文案，播完收起；没有配对文案时不显示气泡。\n全局字体、额度条字号和设置面板字号在“外观、声音与迁移”中调整。'); helper.setWordWrap(True); bubble.addRow(helper)
         paired_button=QPushButton('为每条语音填写独立的配对气泡 →'); paired_button.clicked.connect(lambda:self.tabs.setCurrentIndex(3)); bubble.addRow(paired_button)
         voice=self.form_tab('语音与配对气泡')
         paired=QLabel('配对气泡请在“气泡与字体 → 气泡内容”选择“自定义音频+字幕”。'); paired.setWordWrap(True); voice.addRow(paired)

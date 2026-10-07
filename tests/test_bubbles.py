@@ -1,8 +1,8 @@
 """Behavioral checks for narrow bubbles, exclusive captions and saved profiles."""
 import copy,json,pathlib,shutil,tempfile,time,unittest,wave
 from unittest.mock import patch
-from PySide6.QtCore import QRect
-from PySide6.QtGui import QFontMetrics,QFontDatabase
+from PySide6.QtCore import QRect,Qt,QPointF,QEvent
+from PySide6.QtGui import QFontMetrics,QFontDatabase,QMouseEvent
 from PySide6.QtWidgets import QApplication
 import pet as module
 from renderer import wrap_text
@@ -46,7 +46,7 @@ class BubbleWidgetTests(unittest.TestCase):
 
     def tearDown(self):
         self.pet.voice.stop(); self.pet.hide(); self.pet.bubble_window.hide()
-        for dialog in (self.pet.binding_editor,self.pet.preferences):
+        for dialog in (self.pet.binding_editor,self.pet.preferences,self.pet.size_dialog):
             if dialog:
                 if hasattr(dialog,'timer'): dialog.timer.stop()
                 dialog.hide(); dialog.deleteLater()
@@ -81,6 +81,89 @@ class BubbleWidgetTests(unittest.TestCase):
         self.assertEqual(clean_clips([{'file':'voice.wav','subtitle':text,'bubble_text':text}])[0]['bubble_text'],text)
         self.assertTrue(p.save_settings())
         self.assertEqual(module.load_settings()['bindings']['idle']['bubble_text'],text)
+
+    def pointer(self,widget,kind,global_point,button,buttons):
+        local=QPointF(widget.mapFromGlobal(global_point.toPoint()))
+        event=QMouseEvent(kind,local,global_point,button,buttons,Qt.KeyboardModifier.NoModifier)
+        self.app.sendEvent(widget,event)
+
+    def drag_edge(self,widget,rect,side,dx):
+        point=QPointF(rect.left()+3 if side<0 else rect.right()-3,rect.center().y())
+        start=QPointF(widget.mapToGlobal(point.toPoint())); end=start+QPointF(dx,0)
+        self.pointer(widget,QEvent.Type.MouseButtonPress,start,Qt.MouseButton.LeftButton,Qt.MouseButton.LeftButton)
+        self.pointer(widget,QEvent.Type.MouseMove,end,Qt.MouseButton.NoButton,Qt.MouseButton.LeftButton)
+        self.pointer(widget,QEvent.Type.MouseButtonRelease,end,Qt.MouseButton.LeftButton,Qt.MouseButton.NoButton)
+
+    def test_both_edges_resize_bubble_and_quota_without_pet_interactions(self):
+        p=self.pet; p.move(-800,400); p.set_scale(1)
+        serial=p.controller.serial; state=p.state
+        for side in (-1,1):
+            p.set_presentation_size('bubble_width_ratio',1.5)
+            self.drag_edge(p.bubble_window,p.bubble_window.hit_rect(),side,side*35)
+            self.assertGreater(p.options['bubble_width_ratio'],1.5)
+            self.assertEqual(module.load_settings()['appearance']['bubble_width_ratio'],p.options['bubble_width_ratio'])
+            self.drag_edge(p.bubble_window,p.bubble_window.hit_rect(),side,-side*20)
+            self.assertLess(p.options['bubble_width_ratio'],1.5+70/230)
+            p.set_presentation_size('quota_scale',1)
+            before=p.quota_rect.height(); self.drag_edge(p,p.quota_hit_rect(),side,side*25)
+            self.assertGreater(p.options['quota_scale'],1); self.assertGreater(p.quota_rect.height(),before)
+            self.assertEqual(module.load_settings()['appearance']['quota_scale'],p.options['quota_scale'])
+            self.assertEqual(p.controller.serial,serial); self.assertEqual(p.state,state)
+            self.assertIsNone(p.drag_offset); self.assertFalse(p.click_timer.isActive())
+
+    def test_ratios_survive_zoom_screen_fitting_restart_and_transfer(self):
+        p=self.pet; p.screen_area=lambda:QRect(0,0,3000,2000)
+        p.set_presentation_size('bubble_width_ratio',2.15); p.set_presentation_size('quota_scale',1.6)
+        for zoom in (.5,.85,1,1.5,2):
+            p.set_scale(zoom)
+            self.assertAlmostEqual(p.bubble_window.width(),p.options['pet_size']*2.15*p.scale_factor,delta=2)
+            self.assertAlmostEqual(p.quota_rect.width()*p.scale_factor,p.quota_base_width*1.6*p.scale_factor)
+            self.assertAlmostEqual(p.quota_rect.height()*p.scale_factor,p.quota_base_height*1.6*p.scale_factor)
+        p.set_scale(1); base_width=p.quota_rect.width(); base_height=p.quota_rect.height()
+        p.options['pet_size']=345; p.update_layout()
+        self.assertAlmostEqual(p.quota_rect.width(),base_width*1.5)
+        self.assertAlmostEqual(p.quota_rect.height(),base_height*1.5)
+        p.options['pet_size']=230; p.update_layout()
+        p.screen_area=lambda:QRect(-500,0,500,400); p.update_layout(); p.clamp_position(); p.update_bubble()
+        self.assertLessEqual(p.bubble_window.width(),500); self.assertTrue(p.screen_area().contains(p.frameGeometry()))
+        self.assertEqual(p.options['bubble_width_ratio'],2.15); self.assertEqual(p.options['quota_scale'],1.6)
+        p.save_settings(); cfg=module.load_settings()
+        from appearance import appearance
+        self.assertEqual(appearance(cfg)['bubble_width_ratio'],2.15)
+        self.assertEqual(appearance(cfg)['quota_scale'],1.6)
+        archive=self.root.parent/'sizing.zip'; self.assertEqual(export_bundle(archive,cfg,self.root),[])
+        restored=import_bundle(archive,self.root.parent/'another-pc')
+        self.assertEqual(restored['appearance'],cfg['appearance'])
+        self.assertEqual(restored['bindings'],cfg['bindings'])
+
+    def test_preview_and_sliders_are_synced_without_playing_audio_or_changing_bindings(self):
+        p=self.pet; before=copy.deepcopy(p.bindings.to_dict()); serial=p.controller.serial
+        p.set_binding('idle',bubble_mode='off'); before=copy.deepcopy(p.bindings.to_dict())
+        p.open_size(); control=p.size_dialog.presentation_control
+        control.preview.setChecked(True)
+        self.assertTrue(p.bubble_visible()); self.assertIn('预览',p.bubble_text()); self.assertFalse(p.voice.busy)
+        control.controls['bubble_width_ratio'][0].setValue(175)
+        control.controls['quota_scale'][1].setValue(135)
+        self.assertEqual(control.controls['bubble_width_ratio'][1].value(),175)
+        p.open_preferences(); other=p.preferences.presentation_control
+        self.assertEqual(other.controls['quota_scale'][0].value(),135)
+        p.set_presentation_size('bubble_width_ratio',1.9)
+        self.assertEqual(control.controls['bubble_width_ratio'][1].value(),190)
+        self.assertEqual(other.controls['bubble_width_ratio'][1].value(),190)
+        p.size_dialog.hide(); self.assertFalse(p.presentation_previews); self.assertFalse(p.bubble_visible())
+        self.assertEqual(p.bindings.to_dict(),before); self.assertEqual(p.controller.serial,serial)
+
+    def test_bubble_does_not_disappear_mid_resize_when_audio_finishes(self):
+        p=self.pet; p.set_binding('idle',bubble_mode='audio')
+        p.voice.busy=True; p.voice.selected_state='idle'; p.voice.selected_clip={'subtitle':'播完前开始调整'}
+        p.update_layout(); rect=p.bubble_window.hit_rect()
+        start=QPointF(p.bubble_window.mapToGlobal(QPointF(rect.right()-3,rect.center().y()).toPoint()))
+        self.pointer(p.bubble_window,QEvent.Type.MouseButtonPress,start,Qt.MouseButton.LeftButton,Qt.MouseButton.LeftButton)
+        self.assertTrue(p.bubble_window.edge_resize.active)
+        p.voice._finish()
+        self.assertTrue(p.bubble_visible()); self.assertEqual(p.bubble_text(),'播完前开始调整')
+        self.pointer(p.bubble_window,QEvent.Type.MouseButtonRelease,start,Qt.MouseButton.LeftButton,Qt.MouseButton.NoButton)
+        self.assertFalse(p.bubble_visible())
 
     def test_paired_bubble_survives_gif_change_then_hides_without_generic_fallback(self):
         p=self.pet

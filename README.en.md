@@ -40,7 +40,7 @@ The updated **1 minute 50 second** video shows simulated Codex conversations and
 The application uses Chinese interface labels. This guide keeps those labels alongside their English meanings so you can find the matching controls.
 
 1. Install **Codex** on Windows and sign in.
-2. Open [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) and download **Shorekeeper-Windows-v0.9.2.zip**.
+2. Open [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) and download **Shorekeeper-Windows-v0.9.3.zip**.
 3. Extract the entire archive and run **守岸人Codex桌宠启动.exe**. Keep the other folders alongside the executable.
 4. Right-click the pet → **自动跟随当前任务** (automatically follow the current task). Open **交互工作室** (Interaction Studio) to change expressions and voices.
 

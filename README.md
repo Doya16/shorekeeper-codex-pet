@@ -38,7 +38,7 @@
 ## 下载与使用
 
 1. 在 Windows 上安装并登录 **Codex**。
-2. 打开 [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest)，下载 **Shorekeeper-Windows-v0.9.4.zip**。
+2. 打开 [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest)，下载 **Shorekeeper-Windows-v0.9.5.zip**。
 3. 完整解压，运行 **守岸人Codex桌宠启动.exe**，保留同目录的其他文件夹。
 4. 右键桌宠 → **自动跟随当前任务**；打开 **交互工作室**即可更换表情和语音。
 
@@ -151,3 +151,9 @@ python -m venv .venv
 运行检查：`.\.venv\Scripts\python.exe -m unittest discover -s tests`。
 
 </details>
+
+## 版本更新
+
+每次启动后会在后台检查 GitHub 正式版本，发现新版时弹出提示。也可右键桌宠 → **检查更新…**，或在 **外观、声音与迁移 → 版本与更新** 中手动检查、关闭启动检查、恢复已忽略版本的提醒。
+
+提示中可打开更新页面、备份配置与素材、稍后提醒或忽略当前新版。检查不会下载或覆盖文件。更新时请选择适用于当前版本的**程序补丁**，退出桌宠后覆盖程序目录；GIF、音频、气泡、字体和个人设置会保留。使用**完整包**时请解压到新目录，再导入已导出的配置与素材包。

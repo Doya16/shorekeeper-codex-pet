@@ -186,7 +186,7 @@ class Pet(PetRenderer,QWidget):
         self.icon=QIcon(str(ROOT/'assets/shorekeeper.ico'))
         if self.icon.isNull(): self.icon=QIcon(QPixmap.fromImage(icon_im))
         self.setWindowIcon(self.icon); QApplication.instance().setWindowIcon(self.icon)
-        self.tray=QSystemTrayIcon(self.icon,self); self.tray.setToolTip('守岸人 · 点击唤醒/隐藏')
+        self.tray=QSystemTrayIcon(self.icon,self); self.tray.setToolTip('守岸人 · Codex · 点击唤醒/隐藏')
         menu=QMenu(); menu.addAction('显示 / 隐藏',self.toggle_visible); menu.addAction('调整大小…',self.open_size); menu.addAction('自动跟随当前任务',lambda:self.select_thread('auto')); menu.addAction('陪伴面板',self.open_panel); menu.addAction('交互工作室',self.open_bindings); menu.addAction('外观、声音与迁移',self.open_preferences); menu.addAction('刷新额度',self.refresh_quota); menu.addSeparator(); menu.addAction('退出守岸人',self.shutdown); self.tray.setContextMenu(menu)
         self.tray.activated.connect(lambda reason:self.toggle_visible() if reason==QSystemTrayIcon.ActivationReason.Trigger else None)
         if not offline: self.tray.show()

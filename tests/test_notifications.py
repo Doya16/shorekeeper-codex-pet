@@ -91,7 +91,7 @@ class NotificationWidgetTests(unittest.TestCase):
         p.open_preferences();p.preferences.controls['launch_with_codex'].setChecked(True)
         saved=json.loads(module.SETTINGS.read_text('utf8'));self.assertTrue(saved['appearance']['launch_with_codex'])
         self.assertEqual(saved['bindings']['idle']['audio_chance'],35)
-        self.assertEqual(p.tray.toolTip(),'守岸人 · 点击唤醒/隐藏')
+        self.assertEqual(p.tray.toolTip(),'守岸人 · Codex · 点击唤醒/隐藏')
 
 class VoiceFrequencyTests(unittest.TestCase):
     @classmethod

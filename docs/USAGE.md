@@ -17,7 +17,7 @@
 ## 开始使用
 
 1. 在 Windows 10/11 x64 上安装并登录 Codex。
-2. 从 Releases 下载 **Shorekeeper-Windows-v0.9.1.zip**，完整解压到可写目录。
+2. 从 Releases 下载 **Shorekeeper-Windows-v0.9.2.zip**，完整解压到可写目录。
 3. 双击 **守岸人Codex桌宠启动.exe**。保留同目录下的其他文件夹。
 4. 右键桌宠，选择 **自动跟随当前任务**。
 5. 右键 → **交互工作室**，开始选择你喜欢的表情和声音。

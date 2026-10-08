@@ -8,7 +8,7 @@
 
 **A desktop companion that changes expressions with your Codex tasks, with customizable GIFs, voices, and speech bubbles.**
 
-[Download for Windows](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) · [Watch the demo](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.1/shorekeeper-landscape.mp4) · [User guide (Chinese)](docs/USAGE.md) · [Report an issue](https://github.com/Doya16/shorekeeper-codex-pet/issues)
+[Download for Windows](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) · [Watch the demo](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.1/shorekeeper-landscape-v091.mp4) · [User guide (Chinese)](docs/USAGE.md) · [Report an issue](https://github.com/Doya16/shorekeeper-codex-pet/issues)
 
 ![Shorekeeper Codex Desktop Pet](docs/social/cover-landscape.jpg)
 
@@ -18,11 +18,22 @@ For **Windows 10/11 x64**. The complete package includes three expression packs 
 
 ## Preview
 
-![Thinking, reading, editing, and looping expressions](docs/social/showcase.gif)
+![Simulated Codex interaction: thinking, reading, editing, and separate project completion notifications](docs/social/showcase.gif)
 
-[Landscape video: interactions and the full settings walkthrough](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.1/shorekeeper-landscape.mp4) · [Portrait video](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.1/shorekeeper-portrait.mp4)
+[Landscape video: interactions and the full settings walkthrough](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.1/shorekeeper-landscape-v091.mp4) · [Portrait video](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.1/shorekeeper-portrait-v091.mp4)
 
-Tasks and quota values shown are demonstration examples.
+The updated **1 minute 50 second** video shows simulated Codex conversations and editing, separate completion notifications for multiple projects, mouse interactions, and current settings. **The Codex window is a simulation with fictional projects, conversations, and quota values.** The pet, speech bubbles, and settings panels show the current application UI. The video uses Chinese UI labels and character voices.
+
+| Time | Demonstration |
+| --- | --- |
+| 00:01 | Thinking, reading, and editing; the opening voice plays once per task |
+| 00:19 | One project finishes, then the pet returns to another project's editing state |
+| 00:41 | Dragging, dropping, double-clicking, and head pats, with complete voice playback |
+| 00:57 | GIF selection, playback settings, multiple voices, and individually paired subtitles |
+| 01:19 | Idle voice frequency, live resizing, and launching with Codex |
+| 01:37 | Saving all settings and exporting a complete portable package |
+
+![One project finishes while another continues editing](docs/social/multi-project.jpg)
 
 ## Download and get started
 
@@ -82,11 +93,15 @@ If a voice clip's paired text is empty, that clip displays no bubble. When using
 
 **Resizing:** right-click → **调整大小** (Resize), or hold **Ctrl + mouse wheel** while hovering over the pet. Bubble width and quota bar size have separate sliders and percentage fields. Enable **显示气泡预览（无声音）** (show bubble preview, without sound) to adjust the bubble even when no line is playing. Drag either edge of a visible bubble or either side of the quota bar; text scales along with it. Changes save automatically, and subsequent overall resizing preserves both relative proportions.
 
-![Live preview of bubble width and quota bar size](docs/demo/resize-controls.png)
+![Live preview of bubble width and quota bar size](docs/social/size-preview.jpg)
+
+[View the complete resize panel](docs/demo/resize-controls.png)
 
 Bubble width ranges from 75% to 400% of the character width; the quota bar ranges from 50% to 250% of its original size. If it does not fit on screen, the layout adjusts temporarily without overwriting your saved proportions. See the [user guide (Chinese)](docs/USAGE.md) for detailed format limits and settings.
 
 ## Saving and migration
+
+![Save GIFs, voices, subtitles, fonts, and all settings](docs/social/portable-profile.jpg)
 
 Changes save automatically. To save or export manually, use **right-click → 外观、声音与迁移 → 保存与迁移** (Appearance, Sound & Migration → Save & Migrate).
 

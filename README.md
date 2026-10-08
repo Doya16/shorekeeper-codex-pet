@@ -8,7 +8,7 @@
 
 **跟随 Codex 任务切换表情，支持自定义 GIF、语音和气泡台词。**
 
-[下载 Windows 版](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) · [观看演示](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.1/shorekeeper-landscape.mp4) · [使用指南](docs/USAGE.md) · [问题反馈](https://github.com/Doya16/shorekeeper-codex-pet/issues)
+[下载 Windows 版](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) · [观看演示](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.1/shorekeeper-landscape-v091.mp4) · [使用指南](docs/USAGE.md) · [问题反馈](https://github.com/Doya16/shorekeeper-codex-pet/issues)
 
 ![守岸人 Codex 桌宠](docs/social/cover-landscape.jpg)
 
@@ -18,11 +18,22 @@
 
 ## 效果预览
 
-![思考、查阅、编辑与循环表情展示](docs/social/showcase.gif)
+![Codex 模拟交互：思考、查阅、编辑与多项目完成提醒](docs/social/showcase.gif)
 
-[横屏视频：互动与完整设置演示](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.1/shorekeeper-landscape.mp4) · [竖屏视频](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.8.1/shorekeeper-portrait.mp4)
+[横屏视频：互动与完整设置演示](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.1/shorekeeper-landscape-v091.mp4) · [竖屏视频](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.1/shorekeeper-portrait-v091.mp4)
 
-画面中的任务和额度为演示示例。
+新版演示约 **1 分 50 秒**，包含模拟 Codex 对话、逐行编辑、多个项目分别完成的提醒，以及鼠标互动和完整设置。**Codex 窗口为模拟交互，项目、对话和额度均为示例**；桌宠、气泡和设置面板展示当前版本界面。
+
+| 时间 | 展示内容 |
+| --- | --- |
+| 00:01 | 思考 → 查阅 → 编辑；回到思考时不重复开场语音 |
+| 00:19 | 第一个项目完成时提醒，随后恢复另一项目的编辑表情 |
+| 00:41 | 拖动、放下、双击和摸头，语音完整播放 |
+| 00:57 | 自选 GIF、播放节奏、多条语音与逐条字幕配对 |
+| 01:19 | 待机语音频率、实时调整大小、随 Codex 启动 |
+| 01:37 | 保存全部配置，导出便携完整包 |
+
+![一个项目完成时，另一个项目继续编辑](docs/social/multi-project.jpg)
 
 ## 下载与使用
 
@@ -80,11 +91,15 @@
 
 **调整大小**：右键 → 调整大小，或将鼠标放在桌宠上按 **Ctrl + 滚轮**。气泡宽度与配额条大小有各自的滑块和百分比输入；勾选 **显示气泡预览（无声音）**，没有台词时也能调整。气泡出现时可拖动左右边缘，配额条也可拖动两侧，文字会一起缩放。修改自动保存，之后整体缩放仍保留两者的相对比例。
 
-![气泡宽度与配额条大小实时预览](docs/demo/resize-controls.png)
+![气泡宽度与配额条大小实时预览](docs/social/size-preview.jpg)
+
+[查看完整调整面板](docs/demo/resize-controls.png)
 
 气泡宽度支持角色宽度的 75%–400%，配额条支持原大小的 50%–250%。屏幕放不下时临时适配，不覆盖保存的比例。详细格式限制和各项参数见 [使用指南](docs/USAGE.md)。
 
 ## 保存与迁移
+
+![保存 GIF、声音、字幕、字体和全部配置](docs/social/portable-profile.jpg)
 
 修改会自动保存。手动保存或导出：**右键 → 外观、声音与迁移 → 保存与迁移**。
 

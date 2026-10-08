@@ -10,11 +10,15 @@
 
 [下载 Windows 版](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) · [观看演示](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.1/shorekeeper-landscape-v091.mp4) · [使用指南](docs/USAGE.md) · [问题反馈](https://github.com/Doya16/shorekeeper-codex-pet/issues)
 
-![守岸人 Codex 桌宠](docs/social/cover-landscape.jpg)
+![守岸人 Codex 桌宠：自选表情与语音互动](docs/social/cover-landscape.jpg)
+
+[横屏封面](docs/social/cover-landscape.jpg) · [4:3 封面](docs/social/cover-4x3.jpg) · [竖屏封面](docs/social/cover-portrait.jpg)
 
 </div>
 
 适用于 **Windows 10/11 x64**。完整包附带 三套表情，共 83 个 GIF，以及 40 个音频文件、对应台词和字体。表情绑定、播放节奏、气泡、语音及外观已预设，解压后即可运行，无需安装 Python。
+
+也有 [DeepSeek Harness 版](https://github.com/Doya16/shorekeeper-deepseek-pet)，两版可以同时运行，分别保存设置。
 
 ## 效果预览
 
@@ -22,7 +26,7 @@
 
 [横屏视频：互动与完整设置演示](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.1/shorekeeper-landscape-v091.mp4) · [竖屏视频](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.1/shorekeeper-portrait-v091.mp4)
 
-新版演示约 **1 分 50 秒**，包含模拟 Codex 对话、逐行编辑、多个项目分别完成的提醒，以及鼠标互动和完整设置。**Codex 窗口为模拟交互，项目、对话和额度均为示例**；桌宠、气泡和设置面板展示当前版本界面。
+演示录制于 **v0.9.1**，约 **1 分 50 秒**，包含模拟 Codex 对话、逐行编辑、多个项目分别完成的提醒，以及鼠标互动和完整设置。**Codex 窗口为模拟交互，项目、对话和额度均为示例**；桌宠、气泡和设置面板为录制版本的实际界面。启动检查更新等后续功能见下方说明。
 
 | 时间 | 展示内容 |
 | --- | --- |
@@ -44,6 +48,23 @@
 
 声音默认开启，音量为 10%。在「外观、声音与迁移 → 声音」中调整或关闭。
 
+## 检查更新与保留配置升级
+
+当前版本：**v0.9.5**。每次启动桌宠后，自动在后台检查 GitHub 正式版本；发现新版才弹出提示。右键 → **检查更新…** 可随时手动检查。
+
+在 **外观、声音与迁移 → 版本与更新** 中，可关闭启动检查、立即检查或恢复已忽略版本的提醒。新版提示支持 **打开更新页面、备份配置与素材、稍后提醒、忽略此版本**。网络检查失败不会打断桌宠。
+
+![版本与更新设置](docs/demo/update-settings.png)
+
+**更新提醒不会自动下载安装。** 按当前版本选择下载方式：
+
+| 当前情况 | 如何更新 |
+| --- | --- |
+| 已有 v0.9.4 | 下载 [v0.9.5 程序补丁](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.5/Shorekeeper-Update-Check-Patch-v0.9.5.zip)，退出桌宠，将补丁解压到原目录并覆盖同名文件，然后重新启动 |
+| 首次使用，或安装了其他旧版 | 下载 [v0.9.5 完整包](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.5/Shorekeeper-Windows-v0.9.5.zip)，解压到新目录；已有配置时，再导入自己导出的配置与素材 ZIP |
+
+程序补丁保留 **GIF / 图片、音频、气泡字幕、字体和个人设置**。更新前可在 **保存与迁移 → 导出配置与素材包（ZIP）** 留一份备份。程序补丁直接解压覆盖，不在设置中导入。
+
 ## 功能
 
 - **跟随任务**：思考、查阅、编辑、等待和完成时，切换到对应的表情。多个项目同时运行时，各会话的完成提醒依次播放，之后回到正在工作的任务。
@@ -51,11 +72,14 @@
 - **自选素材**：每种交互单独选择 GIF 或图片；循环、速度、停留时间和下一状态均可调整。
 - **语音与台词**：同一动作加入多条语音，逐条配对气泡文案，再随机抽取一组播放。
 - **外观与配额**：实时缩放，调整字体和字号，桌宠下方显示算力配额。
+- **更新提醒**：每次启动检查新版，支持手动检查、稍后提醒和忽略版本。
 - **保存与迁移**：将 GIF、声音、气泡、字体和全部配置一起打包，带到另一台电脑。
 
 同一轮任务可以只播放一次思考开场语音。切换 GIF 后，当前语音会继续播放到结束。待机语音默认本次桌宠启动只播放一次；也可选择每次进入，或按概率和最短间隔偶尔播放。主动试听不占用自动播报次数。
 
 **随 Codex 启动**：右键 → 外观、声音与迁移 → 连接 Codex → 勾选「随 Codex 启动桌宠」。关闭并重新打开 Codex 后会再次自动出现。取消勾选可关闭联动。此选项默认关闭，随配置迁移，在新电脑首次手动启动桌宠后恢复。
+
+**声音与托盘**：Windows 音量合成器显示「守岸人 · Codex」，可单独调节音量。托盘提示为「守岸人 · Codex · 点击唤醒/隐藏」，单击即可切换显示。
 
 | 语音触发频率 | 随 Codex 启动 |
 | --- | --- |
@@ -119,7 +143,7 @@
 
 **某些数值框是灰色的？** 当前模式不使用该设置，悬停查看提示。例如调整单次播放后的停留时间，需要选择适用的播放模式。
 
-**没有随 Codex 启动？** 更新到 v0.9.4 后先手动运行一次桌宠，并确认已勾选「随 Codex 启动桌宠」。修改程序所在目录后，也需要在新目录手动运行一次。
+**没有随 Codex 启动？** 更新到最新版后先手动运行一次桌宠，并确认已勾选「随 Codex 启动桌宠」。修改程序所在目录后，也需要在新目录手动运行一次。
 
 **遇到其他问题？** 到 [Issues](https://github.com/Doya16/shorekeeper-codex-pet/issues) 附上系统版本、操作步骤和报错截图。
 
@@ -151,9 +175,3 @@ python -m venv .venv
 运行检查：`.\.venv\Scripts\python.exe -m unittest discover -s tests`。
 
 </details>
-
-## 版本更新
-
-每次启动后会在后台检查 GitHub 正式版本，发现新版时弹出提示。也可右键桌宠 → **检查更新…**，或在 **外观、声音与迁移 → 版本与更新** 中手动检查、关闭启动检查、恢复已忽略版本的提醒。
-
-提示中可打开更新页面、备份配置与素材、稍后提醒或忽略当前新版。检查不会下载或覆盖文件。更新时请选择适用于当前版本的**程序补丁**，退出桌宠后覆盖程序目录；GIF、音频、气泡、字体和个人设置会保留。使用**完整包**时请解压到新目录，再导入已导出的配置与素材包。

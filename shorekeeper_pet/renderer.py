@@ -1,6 +1,6 @@
 import math,time
 from PySide6.QtCore import Qt,QRectF
-from PySide6.QtGui import QPainter,QPainterPath,QPen,QColor,QFontMetrics
+from PySide6.QtGui import QPainter,QPainterPath,QPen,QColor,QFontMetrics,QFont
 from .appearance import font
 from .bindings import MANUAL
 from .voice_pool import clip_bubble_text
@@ -8,6 +8,7 @@ from .bubble_window import SpeechBubble
 from PySide6.QtWidgets import QApplication
 from .sizing import fitted_scale
 from .presentation_size import paint_grips
+from .quota import quota_view
 
 def wrap_text(text,metrics,width):
     lines=[]; line=''
@@ -108,15 +109,20 @@ class PetRenderer:
         p.setOpacity(1); self.last_image=frame
         p.save(); p.translate(self.quota_rect.topLeft()); quota_scale=self.quota_display_scale*self.quota_pet_factor; p.scale(quota_scale,quota_scale)
         bar=QRectF(0,0,self.quota_base_width/self.quota_pet_factor,self.quota_base_height/self.quota_pet_factor)
-        windows=self.quota_data.get('windows') or []; remaining=min((w['remaining'] for w in windows),default=0)
-        low=windows and remaining<20; border='#a67125' if low else '#4276ad'; fill='#d99032' if low else '#397cc3'
+        view=quota_view(self.quota_data); remaining=view.remaining
+        low=view.mode in ('depleted','blocked') or (remaining is not None and remaining<20)
+        credit_mode=view.mode=='credits'
+        border='#7a5aac' if credit_mode else '#a67125' if low else '#4276ad'; fill='#d99032' if low else '#397cc3'
         p.setPen(Qt.PenStyle.NoPen); p.setBrush(QColor(20,43,77,50)); p.drawRoundedRect(bar.translated(0,2),11,11)
-        p.setPen(QPen(QColor(border),1.6)); p.setBrush(QColor('#fff4de' if low else '#edf5ff')); p.drawRoundedRect(bar,11,11)
+        p.setPen(QPen(QColor(border),1.6)); p.setBrush(QColor('#f4eeff' if credit_mode else '#fff4de' if low else '#edf5ff')); p.drawRoundedRect(bar,11,11)
         track=QRectF(bar.left()+11,bar.bottom()-9,bar.width()-22,4)
-        p.setPen(Qt.PenStyle.NoPen); p.setBrush(QColor('#c1d3e7')); p.drawRoundedRect(track,2,2)
-        if windows:
+        p.setPen(Qt.PenStyle.NoPen)
+        if remaining is not None:
+            p.setBrush(QColor('#c1d3e7')); p.drawRoundedRect(track,2,2)
             p.setBrush(QColor(fill)); p.drawRoundedRect(QRectF(track.left(),track.top(),track.width()*max(0,min(100,remaining))/100,track.height()),2,2)
-        p.setFont(self.quota_font); p.setPen(QColor('#744d13' if low else '#204e7d'))
-        label=QFontMetrics(self.quota_font).elidedText(self.quota_label(compact=True),Qt.TextElideMode.ElideRight,round(bar.width()-18))
+        label=self.quota_label(compact=True); label_font=QFont(self.quota_font)
+        available=bar.width()-18; measured=QFontMetrics(label_font).horizontalAdvance(label)
+        if measured>available: label_font.setPixelSize(max(7,int(label_font.pixelSize()*available/measured)))
+        p.setFont(label_font); p.setPen(QColor('#65478e' if credit_mode else '#744d13' if low else '#204e7d'))
         p.drawText(QRectF(bar.left()+9,bar.top()+3,bar.width()-18,bar.height()-14),Qt.AlignmentFlag.AlignCenter,label)
         paint_grips(p,bar,self.scale_factor*quota_scale); p.restore(); p.end()

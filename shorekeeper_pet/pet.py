@@ -22,6 +22,7 @@ from .presentation_size import EdgeResize
 from .media_library import load_catalog
 from .presets import load_defaults,default_bindings
 from .update_ui import UpdateController
+from .quota import quota_view,quota_label,quota_details,refresh_seconds
 
 SETTINGS=ROOT/'settings.json'
 STATES={
@@ -267,13 +268,15 @@ class Pet(PetRenderer,QWidget):
     def watch_quota(self):
         while not self.stop_event.is_set():
             self.refresh_event.clear()
+            interval=refresh_seconds(self.quota_data)
             try:
                 if (self.rate_client.executable,self.rate_client.codex_home)!=(self.options['codex_executable'],self.options['codex_home']):
                     self.rate_client.close(); self.rate_client=RateClient(self.options['codex_executable'],self.options['codex_home'])
-                self.worker.quota.emit(self.rate_client.read())
+                result=self.rate_client.read(); interval=refresh_seconds(result)
+                self.worker.quota.emit(result)
             except Exception:
                 self.worker.quota.emit(dict(error='刷新暂时失败，显示最近记录。'))
-            self.refresh_event.wait(120)
+            self.refresh_event.wait(interval)
 
     def refresh_quota(self):
         self.refresh_event.set()
@@ -359,19 +362,10 @@ class Pet(PetRenderer,QWidget):
         self.update()
 
     def quota_label(self,compact=False):
-        q=self.quota_data
-        if not q.get('windows'): return '算力配额：--' if compact else ('额度读取中…' if not q.get('error') else '额度暂不可用')
-        w=min(q['windows'],key=lambda row:row['remaining'])
-        stale=time.time()-q.get('updated_at',0)>300 or q.get('error')
-        label=f"算力配额：{w['remaining']:g}%" if compact else f"{w['label']}剩余 {w['remaining']:g}%"
-        return label+(' *' if compact else ' · 缓存') if stale or q.get('source')!='live' else label
+        return quota_label(self.quota_data,compact)
 
     def quota_details(self):
-        lines=[self.quota_label()]
-        for window in self.quota_data.get('windows',[]):
-            reset=datetime.fromtimestamp(window['resets_at']).astimezone().strftime('%m/%d %H:%M') if window.get('resets_at') else '未知'
-            lines.append(f"{window.get('name','Codex')} · {window['label']}剩余 {window['remaining']:g}% · 重置 {reset}")
-        return '\n'.join(lines)+'\n* 表示缓存记录\n拖动配额条左右两侧调整大小\n右键 → 刷新额度；Ctrl + 滚轮缩放桌宠'
+        return quota_details(self.quota_data)
 
     def bubble_text(self):
         if hasattr(self,'bubble_window') and self.bubble_window.edge_resize.active: return self.bubble_window.edge_resize.text
@@ -606,6 +600,7 @@ class Pet(PetRenderer,QWidget):
     def write_health(self):
         data=dict(version=VERSION,pid=os.getpid(),updated_at=time.time(),state=self.state,visible=self.isVisible(),quota_source=self.quota_data.get('source'),quota_updated_at=self.quota_data.get('updated_at'),quota_available=bool(self.quota_data.get('windows')),rate_error=self.quota_data.get('error'),thread_count=len(self.thread_list),animation=self.animation_id,custom_bindings=len(self.bindings.overrides),font=self.options['bubble_font_family'])
         data.update(update_status=self.updates.status,update_check_pending=self.updates.busy)
+        data.update(quota_mode=quota_view(self.quota_data).mode,quota_label=self.quota_label(compact=True))
         data.update(follow=self.monitor.selected,thread_id=self.live_status.get('thread_id'),live_state=self.live_status.get('state'),owner=self.controller.owner,scale=self.requested_scale,display_scale=self.scale_factor,window_size=[self.width(),self.height()])
         try:
             (ROOT/'runtime.json').write_text(json.dumps(data,ensure_ascii=False,indent=2),encoding='utf-8')

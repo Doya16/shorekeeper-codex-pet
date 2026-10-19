@@ -44,7 +44,7 @@ The **1 minute 50 second** video, recorded with **v0.9.1**, shows simulated Code
 The application uses Chinese interface labels. This guide keeps those labels alongside their English meanings so you can find the matching controls.
 
 1. Install **Codex** on Windows and sign in.
-2. Open [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) and download **Shorekeeper-Windows-v0.9.5.zip**.
+2. Open [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) and download **Shorekeeper-Windows-v0.9.6.zip**.
 3. Extract the entire archive and run **守岸人Codex桌宠启动.exe**. Keep the other folders alongside the executable.
 4. Right-click the pet → **自动跟随当前任务** (automatically follow the current task). Open **交互工作室** (Interaction Studio) to change expressions and voices.
 
@@ -52,7 +52,7 @@ Sound is enabled by default at 10% volume. Adjust or disable it under **外观�
 
 ## Checking for updates and keeping your settings
 
-Current version: **v0.9.5**. After each launch, the pet checks GitHub for a stable release and prompts you when a newer one is available. Right-click → **检查更新…** (Check for updates) to check manually.
+Current version: **v0.9.6**. After each launch, the pet checks GitHub for a stable release and prompts you when a newer one is available. Right-click → **检查更新…** (Check for updates) to check manually.
 
 Open **外观、声音与迁移 → 版本与更新** (Appearance, Sound & Migration → Version & Updates) to turn startup checks off, check immediately, or restore ignored version reminders. A new-version prompt lets you open the release page, back up settings and media, remind you later, or ignore that version. A failed background check does not interrupt the pet.
 
@@ -62,8 +62,8 @@ Open **外观、声音与迁移 → 版本与更新** (Appearance, Sound & Migra
 
 | Your installation | How to update |
 | --- | --- |
-| v0.9.4 | Download the [v0.9.5 program patch](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.5/Shorekeeper-Update-Check-Patch-v0.9.5.zip), exit the pet, extract over its existing folder, and restart |
-| New installation or another older version | Extract the [v0.9.5 full package](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.5/Shorekeeper-Windows-v0.9.5.zip) into a new folder, then import your exported settings and assets ZIP if you have one |
+| v0.9.5 | Download the [v0.9.6 program patch](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.6/Shorekeeper-Credits-Patch-v0.9.6.zip), exit the pet, extract over its existing folder, and restart |
+| New installation or another older version | Extract the [v0.9.6 full package](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.6/Shorekeeper-Windows-v0.9.6.zip) into a new folder, then import your exported settings and assets ZIP if you have one |
 
 The program patch preserves **GIFs / images, audio, bubble captions, fonts, and personal settings**. Before updating, use **保存与迁移 → 导出配置与素材包（ZIP）** (Save & Migrate → Export Settings & Assets ZIP) to keep a backup. Extract program patches into the application folder; do not import them as settings.
 
@@ -73,7 +73,7 @@ The program patch preserves **GIFs / images, audio, bubble captions, fonts, and 
 - **Mouse interactions:** configure separate responses for a single-click head pat, double-click, dragging, dropping, and offering milk tea.
 - **Custom assets:** choose a GIF or image for each interaction and adjust looping, speed, hold time, and the next state.
 - **Voices and lines:** add multiple voice clips to one action, pair each with bubble text, and play a randomly selected pair.
-- **Appearance and quota:** resize in real time, change fonts and font sizes, and show usage quota below the pet.
+- **Appearance and quota:** resize in real time, change fonts and font sizes, and show included usage remaining, switching to the separate credit balance when the allowance is exhausted.
 - **Update reminders:** startup and manual checks, with remind-later and ignore-version options.
 - **Save and migrate:** package GIFs, audio, bubble text, fonts, and all settings for another computer.
 
@@ -88,6 +88,14 @@ The thinking introduction voice can play just once per task turn. When the GIF c
 | ![Play on every entry, once per launch, or occasionally](docs/demo/voice-frequency.png) | ![Startup integration toggle](docs/demo/startup-setting.png) |
 
 Bubble width and quota bar size can be adjusted and previewed independently, then scale with the pet using their saved proportions. Long lines wrap automatically without truncating text or limiting the number of lines. With **自定义音频+字幕** (custom audio + subtitles), only the text paired with the selected voice appears, and the bubble closes when playback ends; the action's generic lines do not appear afterward. In the bundled configuration, this mode is already enabled for actions with paired voices and subtitles.
+
+## Included usage and credit balance
+
+The bar shows **套餐剩余：98%** (included usage remaining) for the account's usage window. It is not money or a fixed number of requests. When the allowance is exhausted and the account returns a credit balance, the bar switches to **点数余额：1,234.56** (credit balance), with a purple border and no percentage progress bar.
+
+Credit mode refreshes about every **30 seconds**; included usage refreshes about every **2 minutes**. Right-click → **刷新额度** to refresh immediately. After the allowance resets, the percentage display returns. Hover to see the full balance, usage windows, and reset times. Missing balances stay unknown; failed refreshes mark the last reading as cached.
+
+Credit consumption depends on model, input/output, caching, and other usage factors. Credits are separate from the included allowance; showing a balance does not establish that an individual request was billed. See the [official usage guide](https://learn.chatgpt.com/docs/pricing).
 
 ## Customization
 

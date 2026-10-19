@@ -4,6 +4,7 @@ import json, os, pathlib, queue, re, shutil, sqlite3, subprocess, threading, tim
 from datetime import datetime
 
 from .paths import ROOT,CODEX_HOME
+from .quota import quota_from_limits
 
 def timestamp(value):
     try:
@@ -12,21 +13,7 @@ def timestamp(value):
         return 0.0
 
 def windows_from_limits(result):
-    buckets = result.get('rateLimitsByLimitId') or {}
-    if not buckets and result.get('rateLimits'):
-        item = result['rateLimits']
-        buckets = {item.get('limitId') or item.get('limit_id') or 'codex': item}
-    rows=[]
-    for key, bucket in buckets.items():
-        for kind in ('primary','secondary'):
-            w=bucket.get(kind)
-            if not w: continue
-            used=w.get('usedPercent', w.get('used_percent'))
-            if not isinstance(used,(int,float)): continue
-            minutes=w.get('windowDurationMins', w.get('window_minutes'))
-            duration = '每周' if minutes==10080 else (f'{minutes//60} 小时' if minutes and minutes%60==0 else f'{minutes} 分钟' if minutes else '额度窗口')
-            rows.append(dict(bucket=key,name=bucket.get('limitName') or bucket.get('limit_name') or key,kind=kind,label=duration,remaining=max(0,min(100,100-used)),resets_at=w.get('resetsAt',w.get('resets_at'))))
-    return rows
+    return quota_from_limits(result)['windows']
 
 def discover_codex(explicit=''):
     if explicit: return str(pathlib.Path(explicit)) if pathlib.Path(explicit).is_file() else None
@@ -103,7 +90,7 @@ class RateClient:
                 self.sequence+=1
                 self._send({'id':self.sequence,'method':'account/rateLimits/read'})
                 result=self._response(self.sequence)
-                return dict(windows=windows_from_limits(result),updated_at=time.time(),source='live',error=None)
+                return dict(quota_from_limits(result),updated_at=time.time(),source='live',error=None)
             except Exception:
                 self.close()
                 raise
@@ -167,7 +154,7 @@ class SessionReader:
             elif kind=='token_count':
                 limits=payload.get('rate_limits')
                 if limits:
-                    self.rate=dict(windows=windows_from_limits({'rateLimits':limits}),updated_at=when,source='session',error=None)
+                    self.rate=dict(quota_from_limits({'rateLimits':limits}),updated_at=when,source='session',error=None)
                 return
             elif kind in ('error','turn_failed'):
                 self.terminal('error',when,payload.get('turn_id'))

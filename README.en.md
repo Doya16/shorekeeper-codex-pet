@@ -44,7 +44,7 @@ The **1 minute 50 second** video, recorded with **v0.9.1**, shows simulated Code
 The application uses Chinese interface labels. This guide keeps those labels alongside their English meanings so you can find the matching controls.
 
 1. Install **Codex** on Windows and sign in.
-2. Open [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) and download **Shorekeeper-Windows-v0.9.7.zip**.
+2. Open [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) and download **Shorekeeper-Windows-v0.9.8.zip**.
 3. Extract the entire archive and run **守岸人Codex桌宠启动.exe**. Keep the other folders alongside the executable.
 4. Right-click the pet → **自动跟随当前任务** (automatically follow the current task). Open **交互工作室** (Interaction Studio) to change expressions and voices.
 
@@ -52,7 +52,7 @@ Sound is enabled by default at 10% volume. Adjust or disable it under **外观�
 
 ## Checking for updates and keeping your settings
 
-Current version: **v0.9.7**. After each launch, the pet checks GitHub for a stable release and prompts you when a newer one is available. Right-click → **检查更新…** (Check for updates) to check manually.
+Current version: **v0.9.8**. After each launch, the pet checks GitHub for a stable release and prompts you when a newer one is available. Right-click → **检查更新…** (Check for updates) to check manually.
 
 Open **外观、声音与迁移 → 版本与更新** (Appearance, Sound & Migration → Version & Updates) to turn startup checks off, check immediately, or restore ignored version reminders. A new-version prompt lets you open the release page, back up settings and media, remind you later, or ignore that version. A failed background check does not interrupt the pet.
 
@@ -62,8 +62,8 @@ Open **外观、声音与迁移 → 版本与更新** (Appearance, Sound & Migra
 
 | Your installation | How to update |
 | --- | --- |
-| v0.9.6 | Download the [v0.9.7 program patch](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.7/Shorekeeper-Quota-Style-Patch-v0.9.7.zip), exit the pet, extract over its existing folder, and restart |
-| New installation or another older version | Extract the [v0.9.7 full package](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.7/Shorekeeper-Windows-v0.9.7.zip) into a new folder, then import your exported settings and assets ZIP if you have one |
+| v0.9.7 | Download the [v0.9.8 program patch](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.8/Shorekeeper-Quota-Name-Patch-v0.9.8.zip), exit the pet, extract over its existing folder, and restart |
+| New installation or another older version | Extract the [v0.9.8 full package](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.8/Shorekeeper-Windows-v0.9.8.zip) into a new folder, then import your exported settings and assets ZIP if you have one |
 
 The program patch preserves **GIFs / images, audio, bubble captions, fonts, and personal settings**. Before updating, use **保存与迁移 → 导出配置与素材包（ZIP）** (Save & Migrate → Export Settings & Assets ZIP) to keep a backup. Extract program patches into the application folder; do not import them as settings.
 
@@ -91,7 +91,7 @@ Bubble width and quota bar size can be adjusted and previewed independently, the
 
 ## Included usage and credit balance
 
-The bar shows **套餐剩余：98%** (included usage remaining) for the account's usage window. It is not money or a fixed number of requests. When the allowance is exhausted and the account returns a credit balance, the bar switches to **超限代偿：1,234.56** (credit balance), with a purple border and centered text in a compact frame, without space reserved for a progress bar. The included-usage frame uses a soft Shorekeeper blue palette.
+The bar shows **套餐剩余：98%** (included usage remaining) for the account's usage window. It is not money or a fixed number of requests. When the allowance is exhausted and the account returns a credit balance, the bar switches to **超限配额：1,234.56** (credit balance), with a purple border and centered text in a compact frame, without space reserved for a progress bar. The included-usage frame uses a soft Shorekeeper blue palette.
 
 Credit mode refreshes about every **30 seconds**; included usage refreshes about every **2 minutes**. Right-click → **刷新额度** to refresh immediately. After the allowance resets, the percentage display returns. Hover to see the full balance, usage windows, and reset times. Missing balances stay unknown; failed refreshes mark the last reading as cached.
 

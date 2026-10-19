@@ -25,8 +25,8 @@ class CreditQuotaTests(unittest.TestCase):
 
     def test_exhausted_plan_shows_changing_balance_without_percentage(self):
         before, after = normalized(), normalized(balance='1201.1234')
-        self.assertEqual(quota_label(before), '超限代偿：1,234.56')
-        self.assertEqual(quota_label(after), '超限代偿：1,201.12')
+        self.assertEqual(quota_label(before), '超限配额：1,234.56')
+        self.assertEqual(quota_label(after), '超限配额：1,201.12')
         self.assertIsNone(quota_view(after).remaining)
         self.assertIn('1,201.1234 credits', quota_details(after))
         self.assertIn('重置', quota_details(after))
@@ -59,11 +59,11 @@ class CreditQuotaTests(unittest.TestCase):
         view = quota_view(normalized(credits=None))
         self.assertEqual(view.label, '套餐额度已用完')
         self.assertIn('未返回', quota_details(normalized(credits=None)))
-        self.assertEqual(quota_view(normalized(balance=None)).label, '超限代偿：未知')
+        self.assertEqual(quota_view(normalized(balance=None)).label, '超限配额：未知')
 
     def test_unlimited_credits_do_not_mean_unlimited_plan(self):
         data = normalized(credits=dict(hasCredits=True, unlimited=True, balance=None))
-        self.assertEqual(quota_view(data).label, '超限代偿：不限额')
+        self.assertEqual(quota_view(data).label, '超限配额：不限额')
         self.assertIsNone(quota_view(data).remaining)
 
     def test_spend_control_blocks_despite_positive_balance(self):
@@ -72,7 +72,7 @@ class CreditQuotaTests(unittest.TestCase):
 
     def test_zero_balance_and_recharge(self):
         self.assertEqual(quota_view(normalized(balance='0')).mode, 'depleted')
-        self.assertEqual(quota_view(normalized(balance='0')).label, '超限代偿：0')
+        self.assertEqual(quota_view(normalized(balance='0')).label, '超限配额：0')
         self.assertEqual(quota_view(normalized(balance='10')).mode, 'credits')
 
     def test_has_no_credits_flag_is_respected(self):
@@ -96,7 +96,7 @@ class CreditQuotaTests(unittest.TestCase):
         snake = dict(limit_id='codex', primary=dict(used_percent=100, window_minutes=10080),
                      credits=dict(has_credits=True, balance='1234.5678'))
         for item in (camel, snake):
-            self.assertEqual(quota_view(quota_from_limits({'rateLimits':item})).label, '超限代偿：1,234.56')
+            self.assertEqual(quota_view(quota_from_limits({'rateLimits':item})).label, '超限配额：1,234.56')
 
     def test_legacy_view_can_supply_missing_same_bucket_metadata(self):
         data = payload()

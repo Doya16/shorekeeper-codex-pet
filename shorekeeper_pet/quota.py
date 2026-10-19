@@ -102,16 +102,16 @@ def quota_view(data):
         return QuotaView('plan', f'套餐剩余：{remaining:g}%', remaining, selected)
     # No claim that an individual request was billed: this is an account balance.
     if credits.get('unlimited'):
-        return QuotaView('credits', '点数：不限额', bucket=selected)
+        return QuotaView('credits', '超限代偿：不限额', bucket=selected)
     if balance is not None and credits.get('has_credits') is not False:
         return QuotaView('credits' if balance > 0 else 'depleted',
-                         '点数余额：' + format_credits(balance, True), bucket=selected)
+                         '超限代偿：' + format_credits(balance, True), bucket=selected)
     if credits.get('has_credits') is True:
-        return QuotaView('credits', '点数余额：未知', bucket=selected)
+        return QuotaView('credits', '超限代偿：未知', bucket=selected)
     if remaining == 0:
         return QuotaView('depleted', '套餐额度已用完', bucket=selected)
     if balance == 0 or credits.get('has_credits') is False:
-        return QuotaView('depleted', '可用点数：0', bucket=selected)
+        return QuotaView('depleted', '超限代偿：0', bucket=selected)
     return QuotaView('unknown', '额度：--', bucket=selected)
 
 
@@ -138,12 +138,12 @@ def quota_details(data):
     for bucket in data.get('buckets', []):
         credits = bucket.get('credits')
         if credits is None:
-            lines.append(f"{bucket['name']} · 点数余额未返回")
+            lines.append(f"{bucket['name']} · 超限代偿（点数余额）未返回")
         else:
             value = '不限额' if credits.get('unlimited') else format_credits(credits.get('balance'))
             if credits.get('has_credits') is False and credits.get('balance') is None:
                 value = '无可用点数'
-            lines.append(f"{bucket['name']} · 点数余额 {value} credits")
+            lines.append(f"{bucket['name']} · 超限代偿（点数余额）{value} credits")
         if bucket.get('spend_control_reached'):
             lines.append('已达到支出限制；有余额也不代表当前可继续使用。')
     if quota_view(data).mode in ('credits', 'depleted'):

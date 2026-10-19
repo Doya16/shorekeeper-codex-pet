@@ -34,7 +34,8 @@ class PetRenderer:
         size=opts['pet_size']
         self.quota_pet_factor=size/230
         metrics=QFontMetrics(self.quota_font)
-        bar_height=max(39,metrics.height()+18)*self.quota_pet_factor
+        has_progress=quota_view(self.quota_data).remaining is not None
+        bar_height=(max(31,metrics.height()+10)+(8 if has_progress else 0))*self.quota_pet_factor
         bar_width=min(230,max(146,metrics.horizontalAdvance(self.quota_label(compact=True))+28))*self.quota_pet_factor
         self.scale_factor=fitted_scale(self.requested_scale,size+8,size+bar_height+14,area.width(),area.height())
         self.quota_base_width=bar_width; self.quota_base_height=bar_height
@@ -112,17 +113,19 @@ class PetRenderer:
         view=quota_view(self.quota_data); remaining=view.remaining
         low=view.mode in ('depleted','blocked') or (remaining is not None and remaining<20)
         credit_mode=view.mode=='credits'
-        border='#7a5aac' if credit_mode else '#a67125' if low else '#4276ad'; fill='#d99032' if low else '#397cc3'
+        border='#7a5aac' if credit_mode else '#a67125' if low else '#6788b4'; fill='#d99032' if low else '#6e9fd0'
         p.setPen(Qt.PenStyle.NoPen); p.setBrush(QColor(20,43,77,50)); p.drawRoundedRect(bar.translated(0,2),11,11)
-        p.setPen(QPen(QColor(border),1.6)); p.setBrush(QColor('#f4eeff' if credit_mode else '#fff4de' if low else '#edf5ff')); p.drawRoundedRect(bar,11,11)
+        p.setPen(QPen(QColor(border),1.6)); p.setBrush(QColor('#f4eeff' if credit_mode else '#fff4de' if low else '#e1f3ff')); p.drawRoundedRect(bar,11,11)
         track=QRectF(bar.left()+11,bar.bottom()-9,bar.width()-22,4)
         p.setPen(Qt.PenStyle.NoPen)
         if remaining is not None:
-            p.setBrush(QColor('#c1d3e7')); p.drawRoundedRect(track,2,2)
+            p.setBrush(QColor('#b6d3ed')); p.drawRoundedRect(track,2,2)
             p.setBrush(QColor(fill)); p.drawRoundedRect(QRectF(track.left(),track.top(),track.width()*max(0,min(100,remaining))/100,track.height()),2,2)
         label=self.quota_label(compact=True); label_font=QFont(self.quota_font)
         available=bar.width()-18; measured=QFontMetrics(label_font).horizontalAdvance(label)
         if measured>available: label_font.setPixelSize(max(7,int(label_font.pixelSize()*available/measured)))
-        p.setFont(label_font); p.setPen(QColor('#65478e' if credit_mode else '#744d13' if low else '#204e7d'))
-        p.drawText(QRectF(bar.left()+9,bar.top()+3,bar.width()-18,bar.height()-14),Qt.AlignmentFlag.AlignCenter,label)
+        p.setFont(label_font); p.setPen(QColor('#65478e' if credit_mode else '#744d13' if low else '#4f72a2'))
+        # A balance has no progress track: use symmetric vertical padding.
+        text_rect=bar.adjusted(9,3,-9,-11 if remaining is not None else -3)
+        p.drawText(text_rect,Qt.AlignmentFlag.AlignCenter,label)
         paint_grips(p,bar,self.scale_factor*quota_scale); p.restore(); p.end()

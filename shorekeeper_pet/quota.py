@@ -99,7 +99,7 @@ def quota_view(data):
     if bucket.get('spend_control_reached'):
         return QuotaView('blocked', '已达支出上限', bucket=selected)
     if remaining is not None and remaining > 0:
-        return QuotaView('plan', f'套餐剩余：{remaining:g}%', remaining, selected)
+        return QuotaView('plan', f'算力配额：{remaining:g}%', remaining, selected)
     # No claim that an individual request was billed: this is an account balance.
     if credits.get('unlimited'):
         return QuotaView('credits', '超限配额：不限额', bucket=selected)
@@ -109,7 +109,7 @@ def quota_view(data):
     if credits.get('has_credits') is True:
         return QuotaView('credits', '超限配额：未知', bucket=selected)
     if remaining == 0:
-        return QuotaView('depleted', '套餐额度已用完', bucket=selected)
+        return QuotaView('depleted', '算力配额已用完', bucket=selected)
     if balance == 0 or credits.get('has_credits') is False:
         return QuotaView('depleted', '超限配额：0', bucket=selected)
     return QuotaView('unknown', '额度：--', bucket=selected)
@@ -134,7 +134,7 @@ def quota_details(data):
             reset = datetime.fromtimestamp(window['resets_at']).astimezone().strftime('%m/%d %H:%M') if window.get('resets_at') else '未知'
         except (ValueError, OSError, OverflowError):
             reset = '未知'
-        lines.append(f"{window.get('name', 'Codex')} · {window['label']}套餐剩余 {window['remaining']:g}% · 重置 {reset}")
+        lines.append(f"{window.get('name', 'Codex')} · {window['label']}算力配额剩余 {window['remaining']:g}% · 重置 {reset}")
     for bucket in data.get('buckets', []):
         credits = bucket.get('credits')
         if credits is None:

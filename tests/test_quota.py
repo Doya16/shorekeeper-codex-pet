@@ -21,7 +21,7 @@ def normalized(**kwargs):
 class CreditQuotaTests(unittest.TestCase):
     def test_plan_uses_its_own_remaining_percent_even_with_credits(self):
         view = quota_view(normalized(used=25))
-        self.assertEqual((view.mode, view.label, view.remaining), ('plan', '套餐剩余：75%', 75))
+        self.assertEqual((view.mode, view.label, view.remaining), ('plan', '算力配额：75%', 75))
 
     def test_exhausted_plan_shows_changing_balance_without_percentage(self):
         before, after = normalized(), normalized(balance='1201.1234')
@@ -33,7 +33,7 @@ class CreditQuotaTests(unittest.TestCase):
 
     def test_reset_returns_to_included_usage(self):
         self.assertEqual(quota_view(normalized()).mode, 'credits')
-        self.assertEqual(quota_view(normalized(used=0)).label, '套餐剩余：100%')
+        self.assertEqual(quota_view(normalized(used=0)).label, '算力配额：100%')
 
     def test_short_window_can_exhaust_before_weekly(self):
         data = payload(used=15)
@@ -57,7 +57,7 @@ class CreditQuotaTests(unittest.TestCase):
 
     def test_missing_credits_is_unknown_not_zero(self):
         view = quota_view(normalized(credits=None))
-        self.assertEqual(view.label, '套餐额度已用完')
+        self.assertEqual(view.label, '算力配额已用完')
         self.assertIn('未返回', quota_details(normalized(credits=None)))
         self.assertEqual(quota_view(normalized(balance=None)).label, '超限配额：未知')
 
@@ -137,7 +137,7 @@ class CreditQuotaTests(unittest.TestCase):
         pet = Mock(); pet.quota_data = normalized(); pet.panel = None
         empty = normalized(credits=None); empty['updated_at'] += 1
         Pet.on_quota(pet, empty)
-        self.assertEqual(quota_view(pet.quota_data).label, '套餐额度已用完')
+        self.assertEqual(quota_view(pet.quota_data).label, '算力配额已用完')
         older = normalized(); older['updated_at'] = empty['updated_at']-5
         Pet.on_quota(pet, older)
         self.assertEqual(pet.quota_data, empty)

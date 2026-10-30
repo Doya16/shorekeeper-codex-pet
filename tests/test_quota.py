@@ -28,8 +28,8 @@ class CreditQuotaTests(unittest.TestCase):
         self.assertEqual(quota_label(before), '超限配额：1,234.56')
         self.assertEqual(quota_label(after), '超限配额：1,201.12')
         self.assertIsNone(quota_view(after).remaining)
-        self.assertIn('1,201.1234 credits', quota_details(after))
-        self.assertIn('重置', quota_details(after))
+        self.assertNotIn('credits', quota_details(after))
+        self.assertIn('下次刷新', quota_details(after))
 
     def test_reset_returns_to_included_usage(self):
         self.assertEqual(quota_view(normalized()).mode, 'credits')
@@ -58,7 +58,7 @@ class CreditQuotaTests(unittest.TestCase):
     def test_missing_credits_is_unknown_not_zero(self):
         view = quota_view(normalized(credits=None))
         self.assertEqual(view.label, '算力配额已用完')
-        self.assertIn('未返回', quota_details(normalized(credits=None)))
+        self.assertNotIn('超限配额', quota_details(normalized(credits=None)))
         self.assertEqual(quota_view(normalized(balance=None)).label, '超限配额：未知')
 
     def test_unlimited_credits_do_not_mean_unlimited_plan(self):
@@ -68,7 +68,7 @@ class CreditQuotaTests(unittest.TestCase):
 
     def test_spend_control_blocks_despite_positive_balance(self):
         self.assertEqual(quota_view(normalized(spendControlReached=True)).mode, 'blocked')
-        self.assertIn('有余额也不代表', quota_details(normalized(spendControlReached=True)))
+        self.assertNotIn('有余额也不代表', quota_details(normalized(spendControlReached=True)))
 
     def test_zero_balance_and_recharge(self):
         self.assertEqual(quota_view(normalized(balance='0')).mode, 'depleted')
@@ -113,6 +113,28 @@ class CreditQuotaTests(unittest.TestCase):
         self.assertEqual(refresh_seconds(normalized()), 30)
         self.assertEqual(refresh_seconds(normalized(balance='0')), 30)
         self.assertEqual(refresh_seconds(normalized(used=5)), 120)
+
+    def test_tooltip_contains_local_reset_date_and_hour_minute_countdown_only(self):
+        from datetime import datetime
+        reset=1800000000;data=normalized(used=57)
+        text=quota_details(data,now=reset-3661)
+        self.assertIn(datetime.fromtimestamp(reset).astimezone().strftime('%Y/%m/%d %H:%M'),text)
+        self.assertIn('（1小时2分钟后）',text)
+        for absent in ('43%', '1234', 'credits', '最近读取', '缓存记录', '30 秒'):
+            self.assertNotIn(absent,text)
+        self.assertEqual(text.splitlines()[1:],['*表示额度未更新','拖动余额框修改大小','点击余额框刷新余额'])
+
+    def test_tooltip_handles_unknown_expired_and_multiple_reset_windows(self):
+        for reset in (None,True,float('nan'),float('inf'),1e30):
+            data=normalized();data['windows'][0]['resets_at']=reset
+            self.assertIn('时间未知',quota_details(data,now=1800000000))
+        self.assertIn('时间未知',quota_details({}))
+        data=normalized();self.assertIn('已到刷新时间',quota_details(data,now=1800000001))
+        data['windows'].append(dict(bucket='codex',label='5 小时',remaining=30,resets_at=1800003600))
+        data['windows'].append(dict(bucket='review',label='其他',remaining=0,resets_at=1800003600))
+        text=quota_details(data,now=1799996400)
+        self.assertIn('每周下次刷新',text);self.assertIn('5 小时下次刷新',text)
+        self.assertNotIn('其他',text);self.assertIn('2小时0分钟后',text)
 
     def test_live_client_preserves_credits_without_requesting_inference(self):
         client = RateClient()

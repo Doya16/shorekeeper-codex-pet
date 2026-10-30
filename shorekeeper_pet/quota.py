@@ -127,32 +127,30 @@ def quota_label(data, compact=False):
     return label
 
 
-def quota_details(data):
-    lines = [quota_label(data)]
-    for window in data.get('windows', []):
+def quota_details(data, now=None):
+    now = time.time() if now is None else now
+    lines = []
+    windows = data.get('windows') or []
+    selected = quota_view(data).bucket
+    windows = [w for w in windows if not selected or w.get('bucket') == selected]
+    for window in windows:
+        reset = window.get('resets_at')
+        label = window.get('label', '额度')
+        if not selected and window.get('name'):
+            label = window['name'] + ' · ' + label
         try:
-            reset = datetime.fromtimestamp(window['resets_at']).astimezone().strftime('%m/%d %H:%M') if window.get('resets_at') else '未知'
+            if isinstance(reset, bool) or not isinstance(reset, (int, float)) or not math.isfinite(reset):
+                raise ValueError('Unknown reset')
+            date = datetime.fromtimestamp(reset).astimezone().strftime('%Y/%m/%d %H:%M')
+            minutes = max(0, math.ceil((reset - now) / 60))
+            hours, minutes = divmod(minutes, 60)
+            suffix = f'（{hours}小时{minutes}分钟后）' if reset > now else '（已到刷新时间）'
+            lines.append(f'{label}下次刷新：{date}{suffix}')
         except (ValueError, OSError, OverflowError):
-            reset = '未知'
-        lines.append(f"{window.get('name', 'Codex')} · {window['label']}算力配额剩余 {window['remaining']:g}% · 重置 {reset}")
-    for bucket in data.get('buckets', []):
-        credits = bucket.get('credits')
-        if credits is None:
-            lines.append(f"{bucket['name']} · 超限配额（点数余额）未返回")
-        else:
-            value = '不限额' if credits.get('unlimited') else format_credits(credits.get('balance'))
-            if credits.get('has_credits') is False and credits.get('balance') is None:
-                value = '无可用点数'
-            lines.append(f"{bucket['name']} · 超限配额（点数余额）{value} credits")
-        if bucket.get('spend_control_reached'):
-            lines.append('已达到支出限制；有余额也不代表当前可继续使用。')
-    if quota_view(data).mode in ('credits', 'depleted'):
-        lines.append('套餐额度与额外点数分别计算；点数没有固定总量，不显示百分比。')
-    lines.append('credits 为用量点数，不是货币或固定任务次数；余额不表示当前请求已扣费。')
-    if data.get('updated_at'):
-        lines.append('最近读取：' + datetime.fromtimestamp(data['updated_at']).astimezone().strftime('%m/%d %H:%M:%S'))
-    lines += ['* 表示缓存记录；点数模式约每 30 秒刷新',
-              '拖动左右两侧调整大小；右键 → 刷新额度']
+            lines.append(f'{label}下次刷新：时间未知')
+    if not windows:
+        lines.append('下次刷新：时间未知')
+    lines += ['*表示额度未更新', '拖动余额框修改大小', '点击余额框刷新余额']
     return '\n'.join(lines)
 
 

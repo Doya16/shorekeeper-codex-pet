@@ -8,7 +8,7 @@
 
 **A desktop companion that changes expressions with your Codex tasks, with customizable GIFs, voices, and speech bubbles.**
 
-[Download for Windows](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) · [Watch the demo](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.13.1/shorekeeper-codex-landscape-v0131.mp4) · [User guide (Chinese)](docs/USAGE.md) · [Report an issue](https://github.com/Doya16/shorekeeper-codex-pet/issues)
+[Download for Windows](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) · [Watch the demo](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.13.1/shorekeeper-codex-landscape-v0131-r2.mp4) · [User guide (Chinese)](docs/USAGE.md) · [Report an issue](https://github.com/Doya16/shorekeeper-codex-pet/issues)
 
 ![Shorekeeper Codex Desktop Pet: custom expressions and voice interactions](docs/social/cover-landscape.jpg)
 
@@ -24,7 +24,7 @@ A [DeepSeek Harness edition](https://github.com/Doya16/shorekeeper-deepseek-pet)
 
 ![Current task interactions and new desktop controls](docs/social/showcase.gif)
 
-[Landscape · 1920×1080](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.13.1/shorekeeper-codex-landscape-v0131.mp4) · [Portrait · 1080×1920](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.13.1/shorekeeper-codex-portrait-v0131.mp4)
+[Landscape · 1920×1080](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.13.1/shorekeeper-codex-landscape-v0131-r2.mp4) · [Portrait · 1080×1920](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.13.1/shorekeeper-codex-portrait-v0131-r2.mp4)
 
 The **03:11** walkthrough uses **v0.13.1**, with new recordings of the pet and current settings. It covers task interactions, multiple conversation notifications, custom media, lock and click-through, mute, balance refresh, sizing, app icons, client lifecycle, update sources, and complete migration. Portrait and landscape use separate layouts.
 

@@ -125,7 +125,7 @@ class PetRenderer:
         if remaining is not None:
             p.setBrush(QColor('#b6d3ed')); p.drawRoundedRect(track,2,2)
             p.setBrush(QColor(fill)); p.drawRoundedRect(QRectF(track.left(),track.top(),track.width()*max(0,min(100,remaining))/100,track.height()),2,2)
-        label=self.quota_label(compact=True); label_font=QFont(self.quota_font)
+        label=self.quota_display_label(); label_font=QFont(self.quota_font)
         available=bar.width()-18; measured=QFontMetrics(label_font).horizontalAdvance(label)
         if measured>available: label_font.setPixelSize(max(7,int(label_font.pixelSize()*available/measured)))
         p.setFont(label_font); p.setPen(QColor('#65478e' if credit_mode else '#744d13' if low else '#4f72a2'))

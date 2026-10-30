@@ -42,7 +42,7 @@
 ## 下载与使用
 
 1. 在 Windows 上安装并登录 **Codex**。
-2. 打开 [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest)，下载 **Shorekeeper-Windows-v0.12.0.zip**。
+2. 打开 [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest)，下载 **Shorekeeper-Windows-v0.13.0.zip**。
 3. 完整解压，运行 **守岸人Codex桌宠启动.exe**，保留同目录的其他文件夹。
 4. 右键桌宠 → **设置**，在 **交互工作室**中更换表情和语音，在 **连接 Codex** 中选择跟随的会话。
 
@@ -75,11 +75,23 @@
 
 ![统一设置中的桌面与声音选项](docs/demo/unified-settings.png)
 
+## 随客户端退出
+
+在 **设置 → 连接 Codex** 中，可分别勾选 **随 Codex 启动桌宠** 和 **随 Codex 完全退出而关闭**。
+
+退出联动默认开启：客户端完全退出约 8–10 秒后关闭桌宠。关闭窗口但仍在托盘运行时，桌宠继续陪伴；有多个客户端实例时，最后一个退出后才关闭。短暂重启不会立即关掉桌宠。先手动打开桌宠、尚未启动客户端时，桌宠会等待客户端运行。
+
+![连接与退出联动](docs/demo/connection-settings.png)
+
 ## 检查更新与保留配置升级
 
-当前版本：**v0.12.0**。每次启动桌宠后，自动在后台检查 GitHub 正式版本；发现新版才弹出提示。右键 → **设置 → 版本与更新 → 立即检查更新** 可随时手动检查。
+当前版本：**v0.13.0**。每次启动桌宠后，自动在后台检查正式版本；发现新版才弹出提示。右键 → **设置 → 版本与更新 → 立即检查更新** 可随时手动检查。
 
 在 **设置 → 版本与更新** 中，可关闭启动检查、立即检查或恢复已忽略版本的提醒。新版提示支持 **打开更新页面、备份配置与素材、稍后提醒、忽略此版本**。网络检查失败不会打断桌宠。
+
+**更新来源**可选 **自动选择／GitHub 官方源／镜像加速（中国大陆网络）**。自动模式先尝试 GitHub，超时或连接失败时切换镜像；手动固定来源后只使用该来源。更新窗口会显示本次来源，并提供完整包、程序补丁与校验文件的下载按钮。
+
+镜像加速由第三方 [GH-Proxy](https://gh-proxy.com/docs/github-accelerator) 提供，仅访问公开版本信息和下载文件。镜像可能存在同步延迟，可切回 GitHub 检查。选择会随配置保存和迁移。
 
 ![版本与更新设置](docs/demo/update-settings.png)
 
@@ -87,8 +99,8 @@
 
 | 当前情况 | 如何更新 |
 | --- | --- |
-| 已有 v0.11.0 | 下载 [v0.12.0 程序补丁](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.12.0/Shorekeeper-Settings-Patch-v0.12.0.zip)，退出桌宠，将补丁解压到原目录并覆盖同名文件，然后重新启动 |
-| 首次使用，或安装了其他旧版 | 下载 [v0.12.0 完整包](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.12.0/Shorekeeper-Windows-v0.12.0.zip)，解压到新目录；已有配置时，再导入自己导出的配置与素材 ZIP |
+| 已有 v0.12.0 | 下载 [v0.13.0 程序补丁](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.13.0/Shorekeeper-Settings-Patch-v0.13.0.zip)，退出桌宠，将补丁解压到原目录并覆盖同名文件，然后重新启动 |
+| 首次使用，或安装了其他旧版 | 下载 [v0.13.0 完整包](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.13.0/Shorekeeper-Windows-v0.13.0.zip)，解压到新目录；已有配置时，再导入自己导出的配置与素材 ZIP |
 
 程序补丁保留 **GIF / 图片、音频、气泡字幕、字体和个人设置**。更新前可在 **保存与迁移 → 导出配置与素材包（ZIP）** 留一份备份。程序补丁直接解压覆盖，不在设置中导入。
 

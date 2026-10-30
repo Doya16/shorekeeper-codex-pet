@@ -8,7 +8,7 @@
 
 **跟随 Codex 任务切换表情，支持自定义 GIF、语音和气泡台词。**
 
-[下载 Windows 版](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) · [观看演示](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.1/shorekeeper-landscape-v091.mp4) · [使用指南](docs/USAGE.md) · [问题反馈](https://github.com/Doya16/shorekeeper-codex-pet/issues)
+[下载 Windows 版](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) · [观看演示](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.13.1/shorekeeper-codex-landscape-v0131.mp4) · [使用指南](docs/USAGE.md) · [问题反馈](https://github.com/Doya16/shorekeeper-codex-pet/issues)
 
 ![守岸人 Codex 桌宠：自选表情与语音互动](docs/social/cover-landscape.jpg)
 
@@ -22,22 +22,32 @@
 
 ## 效果预览
 
-![Codex 模拟交互：思考、查阅、编辑与多项目完成提醒](docs/social/showcase.gif)
+![最新版任务互动、锁定穿透与额度刷新](docs/social/showcase.gif)
 
-[横屏视频：互动与完整设置演示](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.1/shorekeeper-landscape-v091.mp4) · [竖屏视频](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.1/shorekeeper-portrait-v091.mp4)
+[横屏演示 · 1920×1080](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.13.1/shorekeeper-codex-landscape-v0131.mp4) · [竖屏演示 · 1080×1920](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.13.1/shorekeeper-codex-portrait-v0131.mp4)
 
-演示录制于 **v0.9.1**，约 **1 分 50 秒**，包含模拟 Codex 对话、逐行编辑、多个项目分别完成的提醒，以及鼠标互动和完整设置。**Codex 窗口为模拟交互，项目、对话和额度均为示例**；桌宠、气泡和设置面板为录制版本的实际界面。启动检查更新等后续功能见下方说明。
+演示对应 **v0.13.1**，时长 **03:11**。全部换成当前桌宠与设置界面，展示任务跟随、多会话完成提醒、自选素材、语音字幕、锁定穿透、快捷静音、余额刷新、大小字体、图标、启停联动、更新来源与完整迁移。横屏、竖屏分别排版。
+
+**客户端窗口、任务、余额和新版提醒为示例；桌宠与设置为当前版本实际界面。**
 
 | 时间 | 展示内容 |
 | --- | --- |
-| 00:01 | 思考 → 查阅 → 编辑；回到思考时不重复开场语音 |
-| 00:19 | 第一个项目完成时提醒，随后恢复另一项目的编辑表情 |
-| 00:41 | 拖动、放下、双击和摸头，语音完整播放 |
-| 00:57 | 自选 GIF、播放节奏、多条语音与逐条字幕配对 |
-| 01:19 | 待机语音频率、实时调整大小、随 Codex 启动 |
-| 01:37 | 保存全部配置，导出便携完整包 |
+| 00:01 | 跟随任务 |
+| 00:30 | 多个会话 |
+| 00:50 | 桌面互动 |
+| 01:06 | 更轻巧的陪伴 |
+| 01:24 | 额度与余额 |
+| 01:36 | 自己搭配 |
+| 02:14 | 外观与摆放 |
+| 02:31 | 启停与更新 |
+| 02:53 | 保存与迁移 |
+| 03:03 | 下载与使用 |
 
-![一个项目完成时，另一个项目继续编辑](docs/social/multi-project.jpg)
+![一个会话完成时，另一个继续编辑](docs/social/multi-project.jpg)
+
+| 锁定、淡化与点击穿透 | 底部余额框刷新反馈 |
+| --- | --- |
+| ![悬停小锁与点击穿透](docs/social/lock-click-through.jpg) | ![余额框内显示刷新中](docs/social/balance-refresh.jpg) |
 
 ## 下载与使用
 
@@ -132,7 +142,7 @@
 
 底部的 **算力配额：98%** 表示套餐时间窗口内的可用比例，不是现金或固定提问次数。套餐耗尽后，如果账户提供了 credits 余额，会自动切换为 **超限配额：1,234.56**（额外点数余额），使用紫色边框，文字水平、垂直居中，框体不再保留进度条空位。套餐额度框采用柔和的守岸人蓝色。实际数值以当前账户为准。
 
-点数模式约每 **30 秒**读取一次，套餐模式约每 **2 分钟**读取一次；可右键 → **刷新额度**立即刷新。套餐重置后自动恢复百分比显示。悬停可查看完整点数余额、各窗口剩余比例和重置时间；余额未返回时显示未知，读取失败时标记缓存，不把未知当作零。
+点数模式约每 **30 秒**读取一次，套餐模式约每 **2 分钟**读取一次；可右键 → **刷新额度**立即刷新。套餐重置后自动恢复百分比显示。悬停可查看下次刷新日期与倒计时；余额未返回时显示未知，读取失败时标记缓存，不把未知当作零。
 
 点数消耗与所用模型、输入输出和缓存等因素有关。点数余额与套餐额度分别计算；余额本身不说明某条请求已经扣费。见 [官方用量说明](https://learn.chatgpt.com/docs/pricing) 和 [显示状态说明](docs/USAGE.md#大小配额与跟随会话)。
 

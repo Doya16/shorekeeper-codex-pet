@@ -8,7 +8,7 @@
 
 **A desktop companion that changes expressions with your Codex tasks, with customizable GIFs, voices, and speech bubbles.**
 
-[Download for Windows](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) · [Watch the demo](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.1/shorekeeper-landscape-v091.mp4) · [User guide (Chinese)](docs/USAGE.md) · [Report an issue](https://github.com/Doya16/shorekeeper-codex-pet/issues)
+[Download for Windows](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) · [Watch the demo](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.13.1/shorekeeper-codex-landscape-v0131.mp4) · [User guide (Chinese)](docs/USAGE.md) · [Report an issue](https://github.com/Doya16/shorekeeper-codex-pet/issues)
 
 ![Shorekeeper Codex Desktop Pet: custom expressions and voice interactions](docs/social/cover-landscape.jpg)
 
@@ -22,22 +22,32 @@ A [DeepSeek Harness edition](https://github.com/Doya16/shorekeeper-deepseek-pet)
 
 ## Preview
 
-![Simulated Codex interaction: thinking, reading, editing, and separate project completion notifications](docs/social/showcase.gif)
+![Current task interactions and new desktop controls](docs/social/showcase.gif)
 
-[Landscape video: interactions and the full settings walkthrough](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.1/shorekeeper-landscape-v091.mp4) · [Portrait video](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.1/shorekeeper-portrait-v091.mp4)
+[Landscape · 1920×1080](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.13.1/shorekeeper-codex-landscape-v0131.mp4) · [Portrait · 1080×1920](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.13.1/shorekeeper-codex-portrait-v0131.mp4)
 
-The **1 minute 50 second** video, recorded with **v0.9.1**, shows simulated Codex conversations and editing, separate completion notifications for multiple projects, mouse interactions, and the settings available in that release. **The Codex window is a simulation with fictional projects, conversations, and quota values.** The pet, speech bubbles, and settings panels show the recorded version. See below for later additions, including update notifications. The video uses Chinese UI labels and character voices.
+The **03:11** walkthrough uses **v0.13.1**, with new recordings of the pet and current settings. It covers task interactions, multiple conversation notifications, custom media, lock and click-through, mute, balance refresh, sizing, app icons, client lifecycle, update sources, and complete migration. Portrait and landscape use separate layouts.
+
+**The client window, tasks, balances and available-update notification are examples.** Pet animations and settings are rendered from the current application. The video uses Chinese labels and character voices.
 
 | Time | Demonstration |
 | --- | --- |
-| 00:01 | Thinking, reading, and editing; the opening voice plays once per task |
-| 00:19 | One project finishes, then the pet returns to another project's editing state |
-| 00:41 | Dragging, dropping, double-clicking, and head pats, with complete voice playback |
-| 00:57 | GIF selection, playback settings, multiple voices, and individually paired subtitles |
-| 01:19 | Idle voice frequency, live resizing, and launching with Codex |
-| 01:37 | Saving all settings and exporting a complete portable package |
+| 00:01 | Task states and one opening voice per turn |
+| 00:30 | Separate completion notifications |
+| 00:50 | Dragging, dropping, double-clicking and head pats |
+| 01:06 | Hover lock, click-through, fade and mute |
+| 01:24 | Visible balance refresh and account display |
+| 01:36 | GIFs, playback, paired audio/captions and frequency |
+| 02:14 | Sizing, fonts and app-badged icons |
+| 02:31 | Client lifecycle, update notifications and download sources |
+| 02:53 | Save, migration and desktop shortcuts |
+| 03:03 | Download and setup |
 
-![One project finishes while another continues editing](docs/social/multi-project.jpg)
+![One conversation finishes while another continues editing](docs/social/multi-project.jpg)
+
+| Lock and click-through | Visible balance refresh |
+| --- | --- |
+| ![Hover lock and fade](docs/social/lock-click-through.jpg) | ![Inline refresh state](docs/social/balance-refresh.jpg) |
 
 ## Download and get started
 
@@ -129,7 +139,7 @@ Bubble width and quota bar size can be adjusted and previewed independently, the
 
 The bar shows **算力配额：98%** (included usage remaining) for the account's usage window. It is not money or a fixed number of requests. When the allowance is exhausted and the account returns a credit balance, the bar switches to **超限配额：1,234.56** (credit balance), with a purple border and centered text in a compact frame, without space reserved for a progress bar. The included-usage frame uses a soft Shorekeeper blue palette.
 
-Credit mode refreshes about every **30 seconds**; included usage refreshes about every **2 minutes**. Right-click → **刷新额度** to refresh immediately. After the allowance resets, the percentage display returns. Hover to see the full balance, usage windows, and reset times. Missing balances stay unknown; failed refreshes mark the last reading as cached.
+Credit mode refreshes about every **30 seconds**; included usage refreshes about every **2 minutes**. Right-click → **刷新额度** to refresh immediately. After the allowance resets, the percentage display returns. Hover to see the next reset date, time, and countdown. Missing balances stay unknown; failed refreshes mark the last reading as cached.
 
 Credit consumption depends on model, input/output, caching, and other usage factors. Credits are separate from the included allowance; showing a balance does not establish that an individual request was billed. See the [official usage guide](https://learn.chatgpt.com/docs/pricing).
 
@@ -159,7 +169,7 @@ Supported images: GIF, animated WebP, PNG, JPG/JPEG, and static WebP. Audio: WAV
 
 If a voice clip's paired text is empty, that clip displays no bubble. When using default content or **使用我的台词** (use my lines), the bubble shows only the selected content. Other lines you have entered are retained and can be edited again after switching modes.
 
-**Resizing:** right-click → **调整大小** (Resize), or hold **Ctrl + mouse wheel** while hovering over the pet. Bubble width and quota bar size have separate sliders and percentage fields. Enable **显示气泡预览（无声音）** (show bubble preview, without sound) to adjust the bubble even when no line is playing. Drag either edge of a visible bubble or either side of the quota bar; text scales along with it. Changes save automatically, and subsequent overall resizing preserves both relative proportions.
+**Resizing:** right-click → **设置 → 字体与大小** (Settings → Fonts & Size), or hold **Ctrl + mouse wheel** while hovering over the pet. Bubble width and quota bar size have separate sliders and percentage fields. Enable **显示气泡预览（无声音）** (show bubble preview, without sound) to adjust the bubble even when no line is playing. Drag either edge of a visible bubble or either side of the quota bar; text scales along with it. Changes save automatically, and subsequent overall resizing preserves both relative proportions.
 
 ![Live preview of bubble width and quota bar size](docs/social/size-preview.jpg)
 
@@ -185,7 +195,7 @@ On another computer, install Codex and sign in, fully extract the portable packa
 
 **Expressions do not follow a new task?** Open **设置 → 连接 Codex → 跟随的会话** and select **自动跟随最近活动** (automatically follow the current task). Change a pinned session under **设置 → 连接 Codex** (Settings → Connect to Codex).
 
-**A `*` after the quota, or `--` instead of a value?** `*` indicates cached data; `--` means no data is available. Right-click → **刷新额度** (refresh quota). Hover to see the full usage windows and reset times.
+**A `*` after the quota, or `--` instead of a value?** `*` indicates cached data; `--` means no data is available. Right-click → **刷新额度** (refresh quota). Hover to see the next reset date, time, and countdown.
 
 **Some numeric fields are greyed out?** The current mode does not use that setting. Hover for a hint. For example, adjusting the hold time after a single playback requires a compatible playback mode.
 

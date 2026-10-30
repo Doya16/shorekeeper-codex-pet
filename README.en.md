@@ -44,17 +44,27 @@ The **1 minute 50 second** video, recorded with **v0.9.1**, shows simulated Code
 The application uses Chinese interface labels. This guide keeps those labels alongside their English meanings so you can find the matching controls.
 
 1. Install **Codex** on Windows and sign in.
-2. Open [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) and download **Shorekeeper-Windows-v0.9.9.zip**.
+2. Open [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) and download **Shorekeeper-Windows-v0.10.0.zip**.
 3. Extract the entire archive and run **守岸人Codex桌宠启动.exe**. Keep the other folders alongside the executable.
-4. Right-click the pet → **自动跟随当前任务** (automatically follow the current task). Open **交互工作室** (Interaction Studio) to change expressions and voices.
+4. Right-click the pet → **设置 → 连接 Codex → 跟随的会话 → 自动跟随最近活动** (automatically follow the current task). Open **交互工作室** (Interaction Studio) to change expressions and voices.
 
-Sound is enabled by default at 10% volume. Adjust or disable it under **外观、声音与迁移 → 声音** (Appearance, Sound & Migration → Sound).
+Sound is enabled by default at 10% volume. Adjust or disable it under **设置 → 桌面与声音** (Settings → Desktop & Sound).
+
+## Settings, mute and lock
+
+Right-click the pet or tray icon → **设置…** (Settings). One window contains size and fonts, the interaction studio, desktop and sound, save and migration, client connection, and updates.
+
+- **安静陪伴（静音）** (Mute) immediately stops current and queued audio, and silences automatic speech and previews. Unmuting restores the original volume without replaying missed speech.
+- **锁定桌宠** (Lock pet) prevents dragging, clicks, double-clicks, hover reactions and wheel/edge resizing. Task animations and completion notifications continue. Right-click or use the tray to unlock.
+- Both options save automatically and travel with exported settings and portable packages. The old quiet-companion option becomes mute; locking is off by default.
+
+![Unified desktop and sound settings](docs/demo/unified-settings.png)
 
 ## Checking for updates and keeping your settings
 
-Current version: **v0.9.9**. After each launch, the pet checks GitHub for a stable release and prompts you when a newer one is available. Right-click → **检查更新…** (Check for updates) to check manually.
+Current version: **v0.10.0**. After each launch, the pet checks GitHub for a stable release and prompts you when a newer one is available. Right-click → **设置 → 版本与更新 → 立即检查更新** (Check for updates) to check manually.
 
-Open **外观、声音与迁移 → 版本与更新** (Appearance, Sound & Migration → Version & Updates) to turn startup checks off, check immediately, or restore ignored version reminders. A new-version prompt lets you open the release page, back up settings and media, remind you later, or ignore that version. A failed background check does not interrupt the pet.
+Open **设置 → 版本与更新** (Settings → Version & Updates) to turn startup checks off, check immediately, or restore ignored version reminders. A new-version prompt lets you open the release page, back up settings and media, remind you later, or ignore that version. A failed background check does not interrupt the pet.
 
 ![Version and update settings](docs/demo/update-settings.png)
 
@@ -62,8 +72,8 @@ Open **外观、声音与迁移 → 版本与更新** (Appearance, Sound & Migra
 
 | Your installation | How to update |
 | --- | --- |
-| v0.9.8 | Download the [v0.9.9 program patch](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.9/Shorekeeper-Quota-Name-Patch-v0.9.9.zip), exit the pet, extract over its existing folder, and restart |
-| New installation or another older version | Extract the [v0.9.9 full package](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.9.9/Shorekeeper-Windows-v0.9.9.zip) into a new folder, then import your exported settings and assets ZIP if you have one |
+| v0.9.9 | Download the [v0.10.0 program patch](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.10.0/Shorekeeper-Settings-Patch-v0.10.0.zip), exit the pet, extract over its existing folder, and restart |
+| New installation or another older version | Extract the [v0.10.0 full package](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.10.0/Shorekeeper-Windows-v0.10.0.zip) into a new folder, then import your exported settings and assets ZIP if you have one |
 
 The program patch preserves **GIFs / images, audio, bubble captions, fonts, and personal settings**. Before updating, use **保存与迁移 → 导出配置与素材包（ZIP）** (Save & Migrate → Export Settings & Assets ZIP) to keep a backup. Extract program patches into the application folder; do not import them as settings.
 
@@ -79,7 +89,7 @@ The program patch preserves **GIFs / images, audio, bubble captions, fonts, and 
 
 The thinking introduction voice can play just once per task turn. When the GIF changes, the current voice continues until it finishes. Idle voices play only once per pet launch by default; you can also choose every entry or occasional playback based on a probability and minimum interval. Manual previews do not count toward automatic playback limits.
 
-**Launch with Codex:** right-click → **外观、声音与迁移 → 连接 Codex** (Appearance, Sound & Migration → Connect to Codex) → enable **随 Codex 启动桌宠** (launch the pet with Codex). Uncheck it to disable the connection. This option is off by default and migrates with your settings. On a new computer, it is restored after you launch the pet manually for the first time.
+**Launch with Codex:** right-click → **设置 → 连接 Codex** (Settings → Connect to Codex) → enable **随 Codex 启动桌宠** (launch the pet with Codex). Uncheck it to disable the connection. This option is off by default and migrates with your settings. On a new computer, it is restored after you launch the pet manually for the first time.
 
 **Audio and tray:** Windows Volume Mixer lists the pet as **守岸人 · Codex**, so you can adjust its volume separately. Its tray tooltip identifies the Codex edition; click the icon to show or hide the pet.
 
@@ -99,7 +109,7 @@ Credit consumption depends on model, input/output, caching, and other usage fact
 
 ## Customization
 
-Right-click the pet → **交互工作室** (Interaction Studio). Select an action on the left, then change its settings on the right.
+Right-click the pet → **设置 → 交互工作室** (Interaction Studio). Select an action on the left, then change its settings on the right.
 
 | What to change | Where to find it |
 | --- | --- |
@@ -135,7 +145,7 @@ Bubble width ranges from 75% to 400% of the character width; the quota bar range
 
 ![Save GIFs, voices, subtitles, fonts, and all settings](docs/social/portable-profile.jpg)
 
-Changes save automatically. To save or export manually, use **right-click → 外观、声音与迁移 → 保存与迁移** (Appearance, Sound & Migration → Save & Migrate).
+Changes save automatically. To save or export manually, use **right-click → 设置 → 保存与迁移** (Settings → Save & Migrate).
 
 | Export format | Includes |
 | --- | --- |
@@ -147,7 +157,7 @@ On another computer, install Codex and sign in, fully extract the portable packa
 
 ## FAQ
 
-**Expressions do not follow a new task?** Right-click and select **自动跟随当前任务** (automatically follow the current task). Change a pinned session under **外观、声音与迁移 → 连接 Codex** (Appearance, Sound & Migration → Connect to Codex).
+**Expressions do not follow a new task?** Open **设置 → 连接 Codex → 跟随的会话** and select **自动跟随最近活动** (automatically follow the current task). Change a pinned session under **设置 → 连接 Codex** (Settings → Connect to Codex).
 
 **A `*` after the quota, or `--` instead of a value?** `*` indicates cached data; `--` means no data is available. Right-click → **刷新额度** (refresh quota). Hover to see the full usage windows and reset times.
 

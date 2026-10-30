@@ -487,7 +487,9 @@
     "codex_executable": "",
     "launch_with_codex": false,
     "audio_muted": false,
-    "interaction_locked": false
+    "interaction_locked": false,
+    "lock_button_transparency": 35,
+    "lock_button_size": 100
   },
   "pack": "163",
   "thread": "auto",

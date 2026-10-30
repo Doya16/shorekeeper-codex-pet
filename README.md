@@ -42,11 +42,20 @@
 ## 下载与使用
 
 1. 在 Windows 上安装并登录 **Codex**。
-2. 打开 [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest)，下载 **Shorekeeper-Windows-v0.11.0.zip**。
+2. 打开 [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest)，下载 **Shorekeeper-Windows-v0.12.0.zip**。
 3. 完整解压，运行 **守岸人Codex桌宠启动.exe**，保留同目录的其他文件夹。
 4. 右键桌宠 → **设置**，在 **交互工作室**中更换表情和语音，在 **连接 Codex** 中选择跟随的会话。
 
 声音默认开启，音量为 10%。在「设置 → 桌面与声音」中调整或关闭。
+
+## 图标与桌面快捷方式
+
+- 默认图标在守岸人右下角显示 APP 小标：**Codex 使用黑白 GPT 图标，DeepSeek 使用蓝色鲸鱼**。
+- 在 **设置 → 桌面与声音 → 底部栏与托盘图标** 中选择 **纯净图标 / APP 小标**，立即生效，选择随配置保存和迁移。
+- 完整解压后，首次启动 Windows 版会自动创建桌面快捷方式。误删后，在 **设置 → 保存与迁移 → 创建桌面快捷方式** 中重新创建。
+- 换电脑后先完整解压、启动一次；快捷方式指向新电脑上的程序位置。
+
+![图标样式与桌面快捷方式设置](docs/demo/shortcut-settings.png)
 
 ## 设置、静音与锁定
 
@@ -68,7 +77,7 @@
 
 ## 检查更新与保留配置升级
 
-当前版本：**v0.11.0**。每次启动桌宠后，自动在后台检查 GitHub 正式版本；发现新版才弹出提示。右键 → **设置 → 版本与更新 → 立即检查更新** 可随时手动检查。
+当前版本：**v0.12.0**。每次启动桌宠后，自动在后台检查 GitHub 正式版本；发现新版才弹出提示。右键 → **设置 → 版本与更新 → 立即检查更新** 可随时手动检查。
 
 在 **设置 → 版本与更新** 中，可关闭启动检查、立即检查或恢复已忽略版本的提醒。新版提示支持 **打开更新页面、备份配置与素材、稍后提醒、忽略此版本**。网络检查失败不会打断桌宠。
 
@@ -78,8 +87,8 @@
 
 | 当前情况 | 如何更新 |
 | --- | --- |
-| 已有 v0.10.1 | 下载 [v0.11.0 程序补丁](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.11.0/Shorekeeper-Settings-Patch-v0.11.0.zip)，退出桌宠，将补丁解压到原目录并覆盖同名文件，然后重新启动 |
-| 首次使用，或安装了其他旧版 | 下载 [v0.11.0 完整包](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.11.0/Shorekeeper-Windows-v0.11.0.zip)，解压到新目录；已有配置时，再导入自己导出的配置与素材 ZIP |
+| 已有 v0.11.0 | 下载 [v0.12.0 程序补丁](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.12.0/Shorekeeper-Settings-Patch-v0.12.0.zip)，退出桌宠，将补丁解压到原目录并覆盖同名文件，然后重新启动 |
+| 首次使用，或安装了其他旧版 | 下载 [v0.12.0 完整包](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.12.0/Shorekeeper-Windows-v0.12.0.zip)，解压到新目录；已有配置时，再导入自己导出的配置与素材 ZIP |
 
 程序补丁保留 **GIF / 图片、音频、气泡字幕、字体和个人设置**。更新前可在 **保存与迁移 → 导出配置与素材包（ZIP）** 留一份备份。程序补丁直接解压覆盖，不在设置中导入。
 

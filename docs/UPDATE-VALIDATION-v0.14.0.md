@@ -25,3 +25,7 @@
 | Shorekeeper-Program-Update-v0.14.0.zip | 125547888 | `aea0938f7840956041b5f6a11c78a2e189dcd13f6c1bba4f903652b76ae642ba` |
 | Shorekeeper-AutoUpdate-v0.14.0.json | 53145 | `c18d6ec39f5f6955c64b82c91c09d54746a250deb086e49d3a2419ed2be82429` |
 | Shorekeeper-Settings-Patch-v0.14.0.zip | 125548308 | `9c8a883b14722bbffd0690b80ae658ffe6c0e6d211159bbb2c7cfbbddb97ff80` |
+
+## 公开发行后复核
+
+旧版实际 EXE 能发现本次公开新版。手动程序补丁覆盖后运行实际 EXE 通过，原配置保留。公开 GitHub 元数据、更新清单与程序包均已实际下载，ZIP 及全部文件摘要匹配；5 个发行附件的服务端大小和 SHA-256 与本地测试产物一致。

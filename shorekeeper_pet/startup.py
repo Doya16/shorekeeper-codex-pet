@@ -3,7 +3,7 @@ import ctypes,json,os,pathlib,re,subprocess,sys,tempfile,time
 import xml.etree.ElementTree as ET
 from datetime import datetime,timedelta
 from ctypes import wintypes
-from .paths import ROOT
+from .paths import ROOT,EXECUTABLE_NAME
 
 RUN_KEY=r'Software\Microsoft\Windows\CurrentVersion\Run'
 RUN_NAME='ShorekeeperCodexPet'
@@ -12,7 +12,7 @@ TASK_NS='http://schemas.microsoft.com/windows/2004/02/mit/task'
 
 def launch_args(root=ROOT,watch=False):
     root=pathlib.Path(root)
-    if getattr(sys,'frozen',False): args=[str(pathlib.Path(sys.executable).resolve())]
+    if getattr(sys,'frozen',False): args=[str(root/EXECUTABLE_NAME)]
     else:
         python=pathlib.Path(sys.executable)
         hidden=python.with_name('pythonw.exe')

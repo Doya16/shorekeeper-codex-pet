@@ -1,6 +1,6 @@
 <!-- README language switch -->
 [![中文](https://img.shields.io/badge/%E4%B8%AD%E6%96%87-555555?style=for-the-badge)](README.md) [![English](https://img.shields.io/badge/English-1677ff?style=for-the-badge)](README.en.md)
-**v0.13.3**: Show or hide the balance bar beside its size control, or from the single context-menu toggle below Refresh. Hiding removes its reserved space and mouse target, including screen-fit calculations. The preference travels with your settings and media.
+**v0.14.0**: Periodic silent update reminders and one-click program updates. Your settings and media stay in place; interrupted installs recover the previous version.
 
 <!-- /README language switch -->
 
@@ -56,7 +56,7 @@ The **03:11** walkthrough uses **v0.13.1**, with new recordings of the pet and c
 The application uses Chinese interface labels. This guide keeps those labels alongside their English meanings so you can find the matching controls.
 
 1. Install **Codex** on Windows and sign in.
-2. Open [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) and download **Shorekeeper-Windows-v0.13.3.zip**.
+2. Open [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest) and download **Shorekeeper-Windows-v0.14.0.zip**.
 3. Extract the entire archive and run **守岸人Codex桌宠启动.exe**. Keep the other folders alongside the executable.
 4. Right-click the pet → **设置 → 连接 Codex → 跟随的会话 → 自动跟随最近活动** (automatically follow the current task). Open **交互工作室** (Interaction Studio) to change expressions and voices.
 
@@ -96,7 +96,7 @@ Under **设置 → 连接 Codex**, startup and shutdown follow are separate opti
 
 ## Checking for updates and keeping your settings
 
-Current version: **v0.13.3**. After each launch, the pet checks for a stable release and prompts you when a newer one is available. Right-click → **设置 → 版本与更新 → 立即检查更新** (Check for updates) to check manually.
+Current version: **v0.14.0**. After each launch, the pet checks for a stable release and prompts you when a newer one is available. Right-click → **设置 → 版本与更新 → 立即检查更新** (Check for updates) to check manually.
 
 Open **设置 → 版本与更新** (Settings → Version & Updates) to turn startup checks off, check immediately, or restore ignored version reminders. A new-version prompt lets you open the release page, back up settings and media, remind you later, or ignore that version. A failed background check does not interrupt the pet.
 
@@ -106,14 +106,11 @@ The third-party [GH-Proxy](https://gh-proxy.com/docs/github-accelerator) mirror 
 
 ![Version and update settings](docs/demo/update-settings.png)
 
-**Updates are downloaded and installed manually.** Choose the package for your installed version:
+Use **Settings → Version & Updates → 一键更新** (One-click update), or **更新并重启守岸人** on the silent update card. The program downloads, verifies, installs and restarts while retaining your settings, GIFs, voices, captions and fonts. Checks run every 6 hours by default (configurable). Voice captions temporarily cover the update card; it returns afterward. **今日不再提醒** dismisses it for the rest of the local day, including after restart.
 
-| Your installation | How to update |
-| --- | --- |
-| v0.13.1 | Download the [v0.13.3 program patch](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.13.3/Shorekeeper-Settings-Patch-v0.13.3.zip), exit the pet, extract over its existing folder, and restart |
-| New installation or another older version | Extract the [v0.13.3 full package](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.13.3/Shorekeeper-Windows-v0.13.3.zip) into a new folder, then import your exported settings and assets ZIP if you have one |
+An interrupted download leaves the installed program intact; abandoned downloads are cleaned on the next launch. Interrupted installations and failed startup checks restore the previous program and settings.
 
-The program patch preserves **GIFs / images, audio, bubble captions, fonts, and personal settings**. Before updating, use **保存与迁移 → 导出配置与素材包（ZIP）** (Save & Migrate → Export Settings & Assets ZIP) to keep a backup. Extract program patches into the application folder; do not import them as settings.
+Users upgrading from an earlier version must first install the [v0.14.0 program patch](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.14.0/Shorekeeper-Settings-Patch-v0.14.0.zip): exit the pet, extract it into the existing folder, then restart. Subsequent updates can be completed inside the pet.
 
 ## Features
 

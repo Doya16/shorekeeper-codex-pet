@@ -360,6 +360,7 @@ class Pet(PetRenderer,QWidget):
         return quota_label(self.quota_data,compact)
 
     def quota_details(self):
+        if not self.options['show_quota']: return ''
         return quota_details(self.quota_data)
 
     def bubble_text(self):
@@ -486,12 +487,15 @@ class Pet(PetRenderer,QWidget):
             action=menu.addAction(label); action.setCheckable(True); action.setChecked(self.options[key])
             action.triggered.connect(lambda checked,key=key:self.set_option(key,checked))
         def refresh():
+            balance_action.setText('隐藏余额框' if self.options['show_quota'] else '显示余额框')
             for action in menu.actions():
                 if action.text()=='安静陪伴（静音）': action.setChecked(self.options['audio_muted'])
                 elif action.text() in ('摸摸头','递一杯奶茶'): action.setEnabled(not self.locked)
         menu.aboutToShow.connect(refresh)
         menu.addSeparator()
         menu.addAction('刷新额度',self.refresh_quota)
+        balance_action=menu.addAction('隐藏余额框' if self.options['show_quota'] else '显示余额框',
+            lambda:self.set_option('show_quota',not self.options['show_quota']))
         menu.addSeparator()
         if not tray: menu.addAction('暂时收起（托盘恢复）',self.hide)
         menu.addAction('关闭守岸人',self.shutdown); return menu
@@ -532,6 +536,9 @@ class Pet(PetRenderer,QWidget):
         path=pathlib.Path(self.options['audio_directory'] or 'audio'); return path if path.is_absolute() else ROOT/path
 
     def set_option(self,key,value):
+        if key=='show_quota' and value is False:
+            self.quota_press=None; self.quota_click_cancelled=True
+            self.quota_resize.finish(); self.unsetCursor()
         if key=='launch_with_codex' and not self.offline:
             from .startup import configure
             configure(bool(value),ROOT)
@@ -545,6 +552,7 @@ class Pet(PetRenderer,QWidget):
         return ok
 
     def quota_hit_rect(self):
+        if not self.options['show_quota']: return QRectF()
         r=self.quota_rect; s=self.scale_factor
         return QRectF(r.x()*s,r.y()*s,r.width()*s,r.height()*s)
 

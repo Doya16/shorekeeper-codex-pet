@@ -1,6 +1,6 @@
 <!-- README language switch -->
 [![中文](https://img.shields.io/badge/%E4%B8%AD%E6%96%87-1677ff?style=for-the-badge)](README.md) [![English](https://img.shields.io/badge/English-555555?style=for-the-badge)](README.en.md)
-**v0.13.2**：锁定后，角色和底部额度／余额框一起悬停淡化，透明度沿用设置；点击刷新、调整大小和解锁仍可使用。配置与素材保持不变。
+**v0.13.3**：可在余额框大小旁勾选显示，或从右键菜单中刷新下一项切换“隐藏余额框 / 显示余额框”。隐藏后不再占用底部和侧面空间，也不影响贴边及适合屏幕；选择随配置素材一起迁移。
 
 <!-- /README language switch -->
 
@@ -54,7 +54,7 @@
 ## 下载与使用
 
 1. 在 Windows 上安装并登录 **Codex**。
-2. 打开 [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest)，下载 **Shorekeeper-Windows-v0.13.2.zip**。
+2. 打开 [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest)，下载 **Shorekeeper-Windows-v0.13.3.zip**。
 3. 完整解压，运行 **守岸人Codex桌宠启动.exe**，保留同目录的其他文件夹。
 4. 右键桌宠 → **设置**，在 **交互工作室**中更换表情和语音，在 **连接 Codex** 中选择跟随的会话。
 
@@ -99,7 +99,7 @@
 
 ## 检查更新与保留配置升级
 
-当前版本：**v0.13.2**。每次启动桌宠后，自动在后台检查正式版本；发现新版才弹出提示。右键 → **设置 → 版本与更新 → 立即检查更新** 可随时手动检查。
+当前版本：**v0.13.3**。每次启动桌宠后，自动在后台检查正式版本；发现新版才弹出提示。右键 → **设置 → 版本与更新 → 立即检查更新** 可随时手动检查。
 
 在 **设置 → 版本与更新** 中，可关闭启动检查、立即检查或恢复已忽略版本的提醒。新版提示支持 **打开更新页面、备份配置与素材、稍后提醒、忽略此版本**。网络检查失败不会打断桌宠。
 
@@ -113,8 +113,8 @@
 
 | 当前情况 | 如何更新 |
 | --- | --- |
-| 已有 v0.13.1 | 下载 [v0.13.2 程序补丁](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.13.2/Shorekeeper-Settings-Patch-v0.13.2.zip)，退出桌宠，将补丁解压到原目录并覆盖同名文件，然后重新启动 |
-| 首次使用，或安装了其他旧版 | 下载 [v0.13.2 完整包](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.13.2/Shorekeeper-Windows-v0.13.2.zip)，解压到新目录；已有配置时，再导入自己导出的配置与素材 ZIP |
+| 已有 v0.13.2 | 下载 [v0.13.3 程序补丁](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.13.3/Shorekeeper-Settings-Patch-v0.13.3.zip)，退出桌宠，将补丁解压到原目录并覆盖同名文件，然后重新启动 |
+| 首次使用，或安装了其他旧版 | 下载 [v0.13.3 完整包](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.13.3/Shorekeeper-Windows-v0.13.3.zip)，解压到新目录；已有配置时，再导入自己导出的配置与素材 ZIP |
 
 程序补丁保留 **GIF / 图片、音频、气泡字幕、字体和个人设置**。更新前可在 **保存与迁移 → 导出配置与素材包（ZIP）** 留一份备份。程序补丁直接解压覆盖，不在设置中导入。
 

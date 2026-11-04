@@ -1,6 +1,6 @@
 <!-- README language switch -->
 [![中文](https://img.shields.io/badge/%E4%B8%AD%E6%96%87-1677ff?style=for-the-badge)](README.md) [![English](https://img.shields.io/badge/English-555555?style=for-the-badge)](README.en.md)
-**v0.14.0**：定时检查新版本，无声更新气泡可常驻；点击“更新并重启守岸人”即可下载程序更新、保留当前配置和素材并重启。“今日不再提醒”当天有效。下载中断会清理残留，安装中断或新版启动失败可恢复更新前版本。
+**v0.14.1**：一键更新新增发布者签名校验，第三方镜像无法伪造可安装的更新。定时检查新版本，无声更新气泡可常驻；点击“更新并重启守岸人”即可下载程序更新、保留当前配置和素材并重启。“今日不再提醒”当天有效。下载中断会清理残留，安装中断或新版启动失败可恢复更新前版本。
 
 <!-- /README language switch -->
 
@@ -54,7 +54,7 @@
 ## 下载与使用
 
 1. 在 Windows 上安装并登录 **Codex**。
-2. 打开 [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest)，下载 **Shorekeeper-Windows-v0.14.0.zip**。
+2. 打开 [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest)，下载 **Shorekeeper-Windows-v0.14.1.zip**。
 3. 完整解压，运行 **守岸人Codex桌宠启动.exe**，保留同目录的其他文件夹。
 4. 右键桌宠 → **设置**，在 **交互工作室**中更换表情和语音，在 **连接 Codex** 中选择跟随的会话。
 
@@ -99,13 +99,13 @@
 
 ## 检查更新与保留配置升级
 
-当前版本：**v0.14.0**。每次启动桌宠后，自动在后台检查正式版本；发现新版才弹出提示。右键 → **设置 → 版本与更新 → 立即检查更新** 可随时手动检查。
+当前版本：**v0.14.1**。每次启动桌宠后，自动在后台检查正式版本；发现新版才弹出提示。右键 → **设置 → 版本与更新 → 立即检查更新** 可随时手动检查。
 
 在 **设置 → 版本与更新** 中，可关闭启动检查、立即检查或恢复已忽略版本的提醒。新版提示支持 **打开更新页面、备份配置与素材、稍后提醒、忽略此版本**。网络检查失败不会打断桌宠。
 
-**更新来源**可选 **自动选择／GitHub 官方源／镜像加速（中国大陆网络）**。自动模式先尝试 GitHub，超时或连接失败时切换镜像；手动固定来源后只使用该来源。更新窗口会显示本次来源，并提供完整包、程序补丁与校验文件的下载按钮。
+**更新来源**可选 **自动选择／GitHub 官方源／镜像加速（中国大陆网络）**。自动模式先尝试 GitHub，无法从 GitHub 取得结果（超时、连接失败或 HTTP 错误）时切换镜像；手动固定来源后只使用该来源。更新窗口会显示本次来源，并提供完整包、程序补丁与校验文件的下载按钮。
 
-镜像加速由第三方 [GH-Proxy](https://gh-proxy.com/docs/github-accelerator) 提供，仅访问公开版本信息和下载文件。镜像可能存在同步延迟，可切回 GitHub 检查。选择会随配置保存和迁移。
+镜像加速由第三方 [GH-Proxy](https://gh-proxy.com/docs/github-accelerator) 提供，只负责传输公开版本信息和下载文件；一键更新始终校验发布者签名，校验失败不会安装。镜像可能存在同步延迟，可切回 GitHub 检查。选择会随配置保存和迁移。
 
 <img src="docs/demo/update-notice.png" width="360" alt="无声常驻更新气泡，版本号为示例">
 
@@ -115,7 +115,7 @@
 
 点击 **更新并重启守岸人** 或设置中的 **一键更新**，即可完成程序下载、校验、安装和重启。选择 **今日不再提醒** 后，当天重启也不会再出现。
 
-本版以前的用户：退出桌宠后，将 [v0.14.0 程序补丁](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.14.0/Shorekeeper-Settings-Patch-v0.14.0.zip) 解压覆盖原目录，或下载完整包到新目录再导入配置。本版开始支持桌宠内一键更新。
+本版以前的用户：退出桌宠后，将 [v0.14.1 程序补丁](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.14.1/Shorekeeper-Settings-Patch-v0.14.1.zip) 解压覆盖原目录，或下载完整包到新目录再导入配置。本版开始支持桌宠内一键更新。
 
 更新保留 GIF、声音、字幕、字体和全部个人设置。下载中断不会修改现有程序；下次启动清理残留。安装中断或新版启动失败会恢复旧版与设置。详见 [更新与恢复](docs/UPDATES.md)。
 

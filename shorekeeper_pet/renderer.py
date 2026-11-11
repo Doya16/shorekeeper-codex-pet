@@ -56,7 +56,7 @@ class PetRenderer:
         self.bubble_width=bubble_pixels/self.bubble_scale
         self.bubble_title_font=font(opts['font_family'],max(15,opts['ui_font_size']-1),True)
         title_metrics=QFontMetrics(self.bubble_title_font)
-        title='守岸人 · 尺寸预览' if self.presentation_previews else '守岸人 · '+self.state_title(self.bubble_state())
+        title='守岸人 · 尺寸预览' if self.presentation_previews else '守岸人 · 本轮花费' if self.cost_text else '守岸人 · '+self.state_title(self.bubble_state())
         self.bubble_title_lines=wrap_text(title,title_metrics,self.bubble_width-68)
         self.bubble_title_height=title_metrics.height()+2
         self.bubble_body_top=22+self.bubble_title_height*len(self.bubble_title_lines)+9
@@ -96,7 +96,7 @@ class PetRenderer:
         bubble.move(x,y); bubble.show(); bubble.update()
 
     def bubble_visible(self):
-        if self.presentation_previews or self.bubble_window.edge_resize.active: return True
+        if self.presentation_previews or self.bubble_window.edge_resize.active or self.cost_text: return True
         b=self.bubble_binding(); elapsed=time.monotonic()-self.controller.started
         if b['bubble_mode']=='off': return False
         if self.voice_bubble(): return True
@@ -109,6 +109,11 @@ class PetRenderer:
         opts=self.options; width=self.scene_width; b=self.binding(self.state)
         elapsed=(time.monotonic()-self.controller.started)*1000
         frame=self.animation.frame(elapsed*b['speed'],playback='once' if self.preview_id else b['playback'])
+        if getattr(self,'mirror_art',False):
+            # One flipped copy per frame, kept while the same frame is on screen.
+            cached=self.mirror_cache
+            if cached is None or cached[0] is not frame: cached=self.mirror_cache=(frame,frame.flipped(Qt.Orientation.Horizontal))
+            frame=cached[1]
         opacity=self.pointer_mode.avatar_opacity
         p.setOpacity(opacity)
         fraction=(time.monotonic()-self.transition_start)/.20

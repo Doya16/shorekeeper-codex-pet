@@ -130,12 +130,26 @@ class Pet(PetRenderer,QWidget):
         self.rate_client=RateClient(self.options['codex_executable'],self.options['codex_home']); self.worker=BridgeWorker(); self.stop_event=threading.Event(); self.refresh_event=threading.Event()
         from .quota_refresh import QuotaRefresh
         self.quota_refresh=QuotaRefresh(self.refresh_event)
+        self.cost_queue=[]; self.cost_text=''; self.cost_until=0
+        self.cost_hold_until=0; self.cost_hold_for=None; self.cost_float_report=None; self.cost_float_placer=None; self.cost_events={}
         self.worker.quota_read.connect(self.on_quota_read)
         from .client_lifetime import ClientLifetime
         self.client_lifetime=ClientLifetime()
         self.worker.client_exited.connect(self.on_client_exit)
         self.voice=VoicePlayer(ROOT,self); self.preview_audio_clip=None
         self.bubble_window=SpeechBubble(self); self.voice.changed.connect(self.on_voice_changed)
+        from .cost_float import CostFloat
+        self.cost_float=CostFloat(self)
+        from .celebrate import Confetti
+        self.confetti=Confetti(self)
+        from .edge_dock import EdgeDock
+        self.edge_dock=EdgeDock(self)
+        from .fullscreen_guard import FullscreenGuard
+        self.fullscreen_guard=FullscreenGuard(self)
+        from .rest_reminder import RestReminder
+        self.rest_reminder=RestReminder(self); self.mirror_art=False; self.mirror_cache=None
+        from .daily_recap import DailyStats
+        self.daily=DailyStats(SETTINGS.with_name('daily-stats.json')); self.slow_count=0
         self.worker.status.connect(self.on_status); self.worker.quota.connect(self.on_quota); self.worker.threads.connect(self.on_threads)
         self.drag_offset=None; self.drag_origin=None; self.dragged=False
         self.hovered=False; self.ignore_release=False
@@ -159,6 +173,9 @@ class Pet(PetRenderer,QWidget):
         area=QApplication.primaryScreen().availableGeometry()
         pos=self.settings.get('position',[area.right()-self.width()-35,area.bottom()-self.height()-18])
         self.move(*pos); self.clamp_position(); self.position_ready=True; self.apply_style()
+        dock=self.settings.get('dock')
+        if isinstance(dock,dict): self.edge_dock.restore(dock.get('side'),self.screen_area())
+        self.slow_timer=QTimer(self); self.slow_timer.setInterval(1000); self.slow_timer.timeout.connect(self.slow_tick); self.slow_timer.start()
         if not offline:
             threading.Thread(target=self.watch_status,daemon=True).start()
             threading.Thread(target=self.watch_quota,daemon=True).start()
@@ -279,6 +296,7 @@ class Pet(PetRenderer,QWidget):
         self.live_status=status
         for event in status.get('events',[]):
             identity=(event.get('state'),task_key(event) or (event.get('thread_id'),event.get('ended')))
+            self.daily.record(event)
             if event.get('state') in ('done','error','paused') and identity not in self.notification_seen:
                 self.notification_seen.add(identity); self.notifications.append(dict(event))
         # Polling may first observe reading/writing after the initial thinking
@@ -291,7 +309,12 @@ class Pet(PetRenderer,QWidget):
         # while another project's conversation remains active.
         if 'events' in status and state in ('done','error','paused'): state='idle'
         key=(status.get('thread_id'),state,status.get('started'),status.get('ended'))
-        self.controller.set_live(state,key,time.monotonic()); self.tick(); self.update_layout()
+        self.observe_turn_cost(status)
+        # A task at work comes out from the edge at once, so every working pose is seen whole.
+        if status.get('active') and not status.get('stale'): self.edge_dock.reveal()
+        # Keep the working animation while the completion waits for its amount.
+        if time.monotonic()>=self.cost_hold_until: self.controller.set_live(state,key,time.monotonic())
+        self.tick(); self.update_layout()
         if changed:
             self.bubble_until=time.monotonic()+(20 if status.get('state') in ('done','error','waiting') else 10)
         if self.panel: self.panel.refresh()
@@ -329,32 +352,137 @@ class Pet(PetRenderer,QWidget):
         now=time.monotonic()
         if self.notification and self.controller.owner!='notification': self.notification=None
         if self.notification and now>=self.notification_until and not self.voice.busy:
-            self.notification=None; self.controller.resume(now)
-        if not self.notification and self.notifications and not self.voice.busy and self.controller.owner!='preview' and self.drag_offset is None:
+            self.notification=None; self.controller.resume(now); self.edge_dock.tuck_later()
+        if not self.notification and self.notifications and now>=self.cost_hold_until and not self.voice.busy and self.controller.owner!='preview' and self.drag_offset is None:
             self.notification=self.notifications.popleft()
             state=self.notification['state']; b=self.binding(state)
             duration=playback_seconds(b,*self.animation_duration(b['asset']))
             self.notification_until=now+max(1,duration or 6)
             self.preview_id=None; self.override_text=''
-            self.controller.enter(state,now,'notification')
+            self.controller.enter(state,now,'notification'); self.edge_dock.reveal()
+            self.play_cost_float(self.notification)
             self.bubble_until=self.notification_until
         if not self.notification: self.controller.tick(now)
+        self.present_turn_cost(now)
+        placer=self.cost_float_placer
+        if placer and placer.isVisible():
+            placer.hide() if not self.isVisible() else placer.sync()
         entered=self.controller.serial!=self.last_serial
         if entered:
             self.last_serial=self.controller.serial; self.state=self.controller.state; self.anim_start=self.controller.started
             if self.controller.owner=='live': self.override=None; self.preview_id=None; self.override_text=''
             else: self.override=self.state
-        aid=self.preview_id or self.binding(self.state)['asset']
+        # A rest reminder keeps the cup of milk tea in hand; tucked against an edge, the resting pose is the
+        # one shown when the pointer is over the pet, flipped on the left edge.
+        art=self.state
+        if self.state=='idle' and self.rest_reminder.active: art='feed'
+        elif self.state=='idle' and self.edge_dock.showing_peek_art(): art='hover'
+        aid=self.preview_id or self.binding(art)['asset']
+        self.mirror_art=not self.preview_id and self.edge_dock.mirrored(aid)
         self.switch_animation(aid)
         if entered:
             binding=self.binding(self.state)
             if self.controller.owner=='preview' and self.preview_audio_clip is not None:
                 binding=dict(binding,audio_clips=[dict(self.preview_audio_clip,enabled=True)])
-            self.voice.trigger(self.state,binding,self.options,preview=self.controller.owner=='preview',task=task_key(self.notification or self.live_status),notification=self.controller.owner=='notification'); self.update_layout()
+            if not self.fullscreen_guard.hidden: self.voice.trigger(self.state,binding,self.options,preview=self.controller.owner=='preview',task=task_key(self.notification or self.live_status),notification=self.controller.owner=='notification'); self.update_layout()
         self.lock_button.refresh_visibility()
         self.pointer_mode.refresh()
         self.update_bubble()
         self.update()
+
+    def observe_turn_cost(self,status):
+        """Codex has no money balance: each completion carries the time it took."""
+        style=self.options['turn_cost_style']
+        if style=='off':return
+        for event in status.get('events',[]):
+            if event.get('state') not in ('done','error','paused'):continue
+            key=(event.get('thread_id'),event.get('turn_id'))
+            self.cost_events[key]=dict(event=event,report=None)
+            while len(self.cost_events)>32:self.cost_events.pop(next(iter(self.cost_events)))
+            if style in ('bubble','both'):self.queue_turn_bubble(event,None)
+
+    def turn_lines(self,event,report,compact):
+        """The time taken, when it is switched on in the settings."""
+        from .daily_recap import duration_text
+        if not self.options['turn_cost_show_time'] or not event:return []
+        started,ended=event.get('started'),event.get('ended')
+        if not (isinstance(started,(int,float)) and isinstance(ended,(int,float)) and ended>=started):return []
+        return [('用时 '+duration_text(ended-started,compact),'time')]
+
+    def queue_turn_bubble(self,event,report):
+        lines=self.turn_lines(event,report,False)
+        if not lines:return
+        text='这一轮'+'，'.join(line for line,kind in lines)
+        if report and report.get('shared'):text+='\n期间还有其他任务在跑，这是合计。'
+        self.cost_queue.append(text)
+
+    def play_cost_float(self,event):
+        entry=self.cost_events.pop((event.get('thread_id'),event.get('turn_id')),None)
+        balance,self.cost_float_report=self.cost_float_report,None
+        report=(entry or {}).get('report') or balance
+        if self.options['celebrate_done'] and event.get('state')=='done' and self.isVisible():self.confetti.burst()
+        if self.options['turn_cost_style'] not in ('float','both') or not self.isVisible():return
+        lines=self.turn_lines(event,report,True)
+        if lines:self.cost_float.play(lines)
+
+    def slow_tick(self):
+        self.fullscreen_guard.check();self.rest_reminder.check();self.edge_dock.update();self.slow_count+=1
+        if not self.offline and self.slow_count%60==15:self.show_due_recap()
+
+    def show_due_recap(self):
+        if not self.options['daily_recap']:return
+        text=self.daily.due()
+        if text:self.cost_queue.append((text,14))
+
+    def show_today_recap(self):
+        self.cost_queue.append((self.daily.today(),12))
+
+    def cost_float_anchor(self,height):
+        """Where the bottom of the text starts, centred on the pet, for the chosen preset."""
+        from .cost_float import INSIDE_MARGIN
+        rect=self.pet_rect; s=self.scale_factor; preset=self.options['turn_cost_anchor']
+        if preset=='above':y=rect.top()*s
+        elif preset=='inside':y=(rect.top()+rect.height()*INSIDE_MARGIN)*s+height
+        else:y=rect.bottom()*s
+        point=self.mapToGlobal(QPoint(round(rect.center().x()*s),round(y)))
+        return point.x(),point.y()
+
+    def set_cost_float_anchor(self,preset):
+        # A preset is an exact, symmetric position: any dragged adjustment is cleared.
+        self.set_option('turn_cost_anchor',preset); self.set_cost_float_offset(0,0)
+        placer=self.cost_float_placer
+        if placer and placer.isVisible():placer.sync()
+
+    def cost_float_position(self,size,rise,progress):
+        from .cost_float import place
+        a=self.screen_area(); s=self.scale_factor
+        offset=round(self.options['turn_cost_offset_x']*s),round(self.options['turn_cost_offset_y']*s)
+        return place(self.cost_float_anchor(size[1]),size,offset,(a.left(),a.top(),a.right(),a.bottom()),rise,progress)
+
+    def cost_float_offset_for(self,x,y,width,height):
+        from .cost_float import clamp_offset
+        ax,ay=self.cost_float_anchor(height); s=self.scale_factor
+        return clamp_offset((x+width//2-ax)/s,(y+height-ay)/s)
+
+    def set_cost_float_offset(self,dx,dy,save=True):
+        if save:
+            self.set_option('turn_cost_offset_x',dx); return self.set_option('turn_cost_offset_y',dy)
+        self.options['turn_cost_offset_x']=dx; self.options['turn_cost_offset_y']=dy
+
+    def toggle_cost_float_placer(self):
+        from .cost_float import CostFloatPlacer
+        if self.cost_float_placer is None:self.cost_float_placer=CostFloatPlacer(self)
+        placer=self.cost_float_placer
+        if placer.isVisible():placer.hide()
+        else:placer.sync();placer.show()
+
+    def present_turn_cost(self,now):
+        if self.cost_text and now>=self.cost_until:
+            self.cost_text='';self.update_layout();self.edge_dock.tuck_later()
+        # Wait for the completion line so the cost never covers a subtitle.
+        if self.cost_queue and not self.cost_text and not self.notification and not self.voice.busy and self.controller.owner!='preview':
+            item=self.cost_queue.pop(0); text,seconds=item if isinstance(item,tuple) else (item,8)
+            self.cost_text=text;self.cost_until=now+seconds;self.edge_dock.reveal();self.update_layout()
 
     def quota_label(self,compact=False):
         return quota_label(self.quota_data,compact)
@@ -366,6 +494,7 @@ class Pet(PetRenderer,QWidget):
     def bubble_text(self):
         if hasattr(self,'bubble_window') and self.bubble_window.edge_resize.active: return self.bubble_window.edge_resize.text
         if self.presentation_previews: return '这是气泡宽度预览。\n拖动左右边缘试试看，长台词会自动换行。'
+        if self.cost_text: return self.cost_text
         b=self.binding(self.state)
         if self.voice_bubble():
             paired=clip_bubble_text(self.voice.selected_clip)
@@ -416,7 +545,7 @@ class Pet(PetRenderer,QWidget):
         self.update_quota_cursor(event.position())
         if self.drag_offset is not None and event.buttons()&Qt.MouseButton.LeftButton:
             if (event.globalPosition().toPoint()-self.drag_origin).manhattanLength()>6:
-                if not self.dragged: self.react('drag')
+                if not self.dragged: self.edge_dock.undock(); self.react('drag')
                 self.dragged=True; self.move(event.globalPosition().toPoint()-self.drag_offset)
         elif not self.hovered and not self.hover_timer.isActive(): self.hover_timer.start(1000)
 
@@ -433,7 +562,10 @@ class Pet(PetRenderer,QWidget):
         if self.ignore_release:
             self.ignore_release=False; self.drag_offset=None; return
         if self.dragged:
-            self.clamp_position(); self.settings['position']=[self.x(),self.y()]; self.save_settings()
+            area=(QApplication.screenAt(QCursor.pos()) or self.screen()).availableGeometry()
+            if self.edge_dock.try_dock(area): target=self.edge_dock.target(False); self.settings['position']=[target.x(),target.y()]
+            else: self.clamp_position(); self.settings['position']=[self.x(),self.y()]
+            self.settings['dock']=self.edge_dock.state(); self.save_settings()
             self.react('drop')
         else:
             local=event.position()/self.scale_factor
@@ -458,6 +590,7 @@ class Pet(PetRenderer,QWidget):
         self.lock_button.refresh_visibility()
         self.update_quota_cursor()
         if not self.locked: self.hover_timer.start(1000)
+        self.edge_dock.hover_in()
         super().enterEvent(event)
 
     def leaveEvent(self,event):
@@ -465,6 +598,7 @@ class Pet(PetRenderer,QWidget):
         self.unsetCursor()
         self.hover_timer.stop(); self.hovered=False
         if self.override=='hover': self.clear_override()
+        self.edge_dock.hover_out()
         super().leaveEvent(event)
 
     def hover_react(self):
@@ -483,11 +617,14 @@ class Pet(PetRenderer,QWidget):
             for label,state in [('摸摸头','pet'),('递一杯奶茶','feed')]:
                 action=menu.addAction(label,lambda checked=False,state=state:self.react(state)); action.setEnabled(not self.locked)
         menu.addAction('设置…',self.open_preferences)
+        fullscreen_action=menu.addAction(self.fullscreen_label(),lambda:self.set_option('fullscreen_hide',not self.options['fullscreen_hide']))
+        menu.addAction('今日小结',self.show_today_recap)
         for label,key in [('安静陪伴（静音）','audio_muted')]:
             action=menu.addAction(label); action.setCheckable(True); action.setChecked(self.options[key])
             action.triggered.connect(lambda checked,key=key:self.set_option(key,checked))
         def refresh():
             balance_action.setText('隐藏余额框' if self.options['show_quota'] else '显示余额框')
+            fullscreen_action.setText(self.fullscreen_label())
             for action in menu.actions():
                 if action.text()=='安静陪伴（静音）': action.setChecked(self.options['audio_muted'])
                 elif action.text() in ('摸摸头','递一杯奶茶'): action.setEnabled(not self.locked)
@@ -499,6 +636,9 @@ class Pet(PetRenderer,QWidget):
         menu.addSeparator()
         if not tray: menu.addAction('暂时收起（托盘恢复）',self.hide)
         menu.addAction('关闭守岸人',self.shutdown); return menu
+
+    def fullscreen_label(self):
+        return '点击关闭全屏时隐藏' if self.options['fullscreen_hide'] else '点击开启全屏时隐藏'
 
     def contextMenuEvent(self,event):
         menu=self.context_menu(); menu.exec(event.globalPos()); menu.deleteLater()
@@ -547,7 +687,11 @@ class Pet(PetRenderer,QWidget):
         if key=='tray_icon_style':self.apply_icon()
         if (key=='audio_enabled' and not value) or (key=='audio_muted' and value): self.voice.stop()
         if key=='interaction_locked' and value: self.cancel_pointer_interaction()
-        if key in ('audio_muted','interaction_locked') and self.preferences: self.preferences.refresh_controls()
+        if key=='edge_dock' and not value and self.edge_dock.docked:
+            self.edge_dock.undock(); self.clamp_position(); self.settings['dock']=None; self.settings['position']=[self.x(),self.y()]; self.save_settings()
+        if key=='fullscreen_hide': self.fullscreen_guard.check()
+        if key in ('rest_reminder','rest_interval_minutes'): self.rest_reminder.options_changed()
+        if key in ('audio_muted','interaction_locked','fullscreen_hide','rest_reminder') and self.preferences: self.preferences.refresh_controls()
         if key.startswith('codex'): self.refresh_event.set()
         if key in ('check_updates_periodic','update_interval_hours','ignored_update_version','update_snoozed_date'):
             self.updates.reconfigure()
@@ -627,10 +771,14 @@ class Pet(PetRenderer,QWidget):
         self.bubble_window.hide(); super().hideEvent(event)
 
     def screen_area(self):
+        dock=getattr(self,'edge_dock',None)
+        if dock and dock.docked: return dock.area
         screen=QApplication.screenAt(self.frameGeometry().center()) or QApplication.screenAt(self.pos()) or QApplication.primaryScreen()
         return screen.availableGeometry()
 
     def clamp_position(self):
+        dock=getattr(self,'edge_dock',None)
+        if dock and dock.docked: dock.place(dock.tucked,animate=False); return
         area=self.screen_area()
         self.move(max(area.left(),min(self.x(),area.right()-self.width()+1)),max(area.top(),min(self.y(),area.bottom()-self.height()+1)))
 

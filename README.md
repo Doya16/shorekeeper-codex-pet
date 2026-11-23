@@ -1,5 +1,7 @@
 <!-- README language switch -->
 [![中文](https://img.shields.io/badge/%E4%B8%AD%E6%96%87-1677ff?style=for-the-badge)](README.md) [![English](https://img.shields.io/badge/English-555555?style=for-the-badge)](README.en.md)
+**v0.15.3**：一键更新后自动删除旧的程序版本：以前每次更新都会多留一份约 265 MB 的旧程序，现在新版启动两分钟后清理掉，只保留当前版本；还在使用的旧版本留到下次再删。
+
 **v0.15.2**：“稍后再提醒”可以自己填时长（1～240 分钟，默认 30）；台词结尾不再被吞掉；设置窗口完整显示所有预览。
 
 **v0.15.1**：飘字计时可设置加粗、斜体和自定义颜色。
@@ -60,7 +62,7 @@
 ## 下载与使用
 
 1. 在 Windows 上安装并登录 **Codex**。
-2. 打开 [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest)，下载 **Shorekeeper-Windows-v0.15.2.zip**。
+2. 打开 [Releases](https://github.com/Doya16/shorekeeper-codex-pet/releases/latest)，下载 **Shorekeeper-Windows-v0.15.3.zip**。
 3. 完整解压，运行 **守岸人Codex桌宠启动.exe**，保留同目录的其他文件夹。
 4. 右键桌宠 → **设置**，在 **交互工作室**中更换表情和语音，在 **连接 Codex** 中选择跟随的会话。
 
@@ -105,7 +107,7 @@
 
 ## 检查更新与保留配置升级
 
-当前版本：**v0.15.2**。每次启动桌宠后，自动在后台检查正式版本；发现新版才弹出提示。右键 → **设置 → 版本与更新 → 立即检查更新** 可随时手动检查。
+当前版本：**v0.15.3**。每次启动桌宠后，自动在后台检查正式版本；发现新版才弹出提示。右键 → **设置 → 版本与更新 → 立即检查更新** 可随时手动检查。
 
 在 **设置 → 版本与更新** 中，可关闭启动检查、立即检查或恢复已忽略版本的提醒。新版提示支持 **打开更新页面、备份配置与素材、稍后提醒、忽略此版本**。网络检查失败不会打断桌宠。
 
@@ -121,7 +123,7 @@
 
 点击 **更新并重启守岸人** 或设置中的 **一键更新**，即可完成程序下载、校验、安装和重启。选择 **今日不再提醒** 后，当天重启也不会再出现。
 
-本版以前的用户：退出桌宠后，将 [v0.15.2 程序补丁](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.15.2/Shorekeeper-Settings-Patch-v0.15.2.zip) 解压覆盖原目录，或下载完整包到新目录再导入配置。本版开始支持桌宠内一键更新。
+本版以前的用户：退出桌宠后，将 [v0.15.3 程序补丁](https://github.com/Doya16/shorekeeper-codex-pet/releases/download/v0.15.3/Shorekeeper-Settings-Patch-v0.15.3.zip) 解压覆盖原目录，或下载完整包到新目录再导入配置。本版开始支持桌宠内一键更新。
 
 更新保留 GIF、声音、字幕、字体和全部个人设置。下载中断不会修改现有程序；下次启动清理残留。安装中断或新版启动失败会恢复旧版与设置。详见 [更新与恢复](docs/UPDATES.md)。
 
